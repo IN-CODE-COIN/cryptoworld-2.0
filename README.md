@@ -1,8 +1,11 @@
 # Proyecto Final de Máster – Plataforma de Seguimiento de Criptomonedas
 
 **Autor:** Sergio López Ruiz
+<br/>
 **Email:** sergio.lopezr.88@gmail.com
+<br/>
 **Escuela:** EBIS Business Techschool – Máster en Fullstack Developer
+<br/>
 **Universidad:** EUNEIZ - Universidad de Vitoria-Gasteiz
 
 ---
