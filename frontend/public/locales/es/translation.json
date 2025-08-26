@@ -1,0 +1,127 @@
+{
+  "pages": {
+    "home": "Inicio",
+    "docs": "Documentación",
+    "contact": "Contacto",
+    "pricing": "Precios",
+    "settings": "Configuración",
+    "api": "Clave API & Uso",
+    "account": "Cuenta"
+  },
+  "headers": {
+    "home": {
+      "title": "Crea, escala y lanza con confianza",
+      "description": "Bienvenido a tu nuevo centro de desarrollo — rápido, flexible y diseñado para potenciar a tu equipo en cada etapa."
+    },
+    "account": {
+      "title": "Gestiona tu cuenta personal con facilidad",
+      "description": "Controla la configuración de tu cuenta y gestiona tus preferencias — todo desde un solo lugar. Te lo ponemos fácil para que estés organizado y seguro."
+    },
+    "pricing": {
+      "title": "Nuestros planes crecen contigo",
+      "description": "Planes que empoderan a tu equipo para lanzar sin fricciones. Nuestros modelos flexibles se adaptan a tu presupuesto."
+    },
+    "contact": {
+      "title": "¡Hablemos!",
+      "description": "Ya sea que tengas una pregunta, necesites soporte o quieras explorar cómo podemos ayudarte, estamos aquí para ti."
+    },
+    "documentation": {
+      "title": "Todo lo que necesitas para integrar y construir",
+      "description": "Explora nuestra documentación completa, referencias de API y guías para empezar en minutos."
+    },
+    "api": {
+      "title": "Gestiona tus claves API y uso",
+      "description": "Genera, monitorea y revoca tus claves API de forma segura. Controla tu acceso y límites fácilmente."
+    }
+  },
+  "pricing": {
+    "frequencies": {
+      "monthly": "Mensual",
+      "annually": "Anual"
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "description": "Para equipos pequeños",
+        "features": [
+          "Miembros ilimitados",
+          "5 espacios de trabajo",
+          "Soporte comunitario en Slack"
+        ],
+        "button": "Comenzar"
+      },
+      "starter": {
+        "name": "Inicial",
+        "description": "Para equipos en crecimiento",
+        "features": [
+          "Miembros ilimitados",
+          "10 espacios de trabajo",
+          "Soporte comunitario en Slack"
+        ],
+        "button": "Comenzar"
+      },
+      "enterprise": {
+        "name": "Empresarial",
+        "description": "Para necesidades personalizadas",
+        "features": [
+          "Miembros ilimitados",
+          "Espacios de trabajo ilimitados",
+          "Soporte prioritario",
+          "Inicio de sesión único (SSO)",
+          "Historial de 90 días"
+        ],
+        "button": "Contactanos"
+      }
+    },
+    "recommended": "Recomendado",
+    "included": "Incluido"
+  },
+  "settings": {
+    "title": "Configuración",
+    "theme": "Tema",
+    "language": "Idioma"
+  },
+  "language": {
+    "en": "Inglés",
+    "es": "Español",
+    "fr": "Francés"
+  },
+  "nav": {
+    "home": "Inicio",
+    "docs": "Documentación",
+    "contact": "Contacto",
+    "pricing": "Precios"
+  },
+  "contact": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "submit": "Enviar",
+    "validation": {
+      "required": "¡{{label}} es obligatorio!",
+      "email": "¡{{label}} no es un correo válido!"
+    }
+  },
+  "menu": {
+    "title": "Menú"
+  },
+  "header": {
+    "signin": "Iniciar sesión",
+    "signout": "Cerrar sesión"
+  },
+  "faqs": {
+    "title": "Preguntas frecuentes",
+    "description": "¿No encuentras la respuesta que buscas? No dudes en ponerte en contacto con nuestro",
+    "support_team": "equipo de soporte",
+    "question1": "¿Qué es la API de la SEC y qué datos puedo acceder a través de ella?",
+    "answer1": "La API de la SEC proporciona acceso a datos financieros presentados a la Comisión de Bolsa y Valores de EE.UU., incluyendo presentaciones de empresas, estados financieros y más.",
+    "question2": "¿Cómo puedo obtener una clave API para acceder a la API de la SEC?",
+    "answer2": "Para obtener una clave API, generalmente debe registrarse en el sitio web oficial de la SEC o en la plataforma que proporciona el servicio API y seguir sus instrucciones específicas para el acceso a la API.",
+    "question3": "¿Cuáles son los límites de tasa para la API de la SEC?",
+    "answer3": "Los límites de tasa para la API de la SEC pueden variar, pero generalmente hay límites en la cantidad de solicitudes que puede hacer por minuto o por día. Consulte la documentación de la API para obtener detalles específicos.",
+    "question4": "¿Puedo usar la API de la SEC para fines comerciales?",
+    "answer4": "Sí, puede usar la API de la SEC para fines comerciales, pero debe revisar los términos de servicio para garantizar el cumplimiento de cualquier restricción o requisito.",
+    "question5": "¿Qué debo hacer si encuentro errores al usar la API de la SEC?",
+    "answer5": "Si encuentra errores, consulte la documentación de la API para obtener consejos de solución de problemas. También puede contactar al equipo de soporte para obtener más ayuda."
+  }
+}

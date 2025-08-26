@@ -1,0 +1,127 @@
+{
+  "pages": {
+    "home": "Home",
+    "docs": "Documentation",
+    "contact": "Contact",
+    "pricing": "Pricing",
+    "settings": "Settings",
+    "api": "API key & Usage",
+    "account": "Account"
+  },
+  "headers": {
+    "home": {
+      "title": "Build, scale, and ship with confidence",
+      "description": "Welcome to your new development hub — fast, flexible, and designed to empower your team at every stage."
+    },
+    "account": {
+      "title": "Manage your personal account with ease",
+      "description": "Control your account settings and manage your preferences — all from one place. We make it simple to stay organized and secure."
+    },
+    "pricing": {
+      "title": "Our plans scale with you",
+      "description": "Plans that empower you and your team to ship without friction. Our flexible pricing models ensure that efficiency doesn’t come at the cost of your budget."
+    },
+    "contact": {
+      "title": "Let’s talk!",
+      "description": "Whether you have a question, need support, or want to explore how we can help your team, we’re here for you."
+    },
+    "documentation": {
+      "title": "Everything you need to integrate and build",
+      "description": "Explore our complete documentation, API references, and guides to help you get started in minutes."
+    },
+    "api": {
+      "title": "Manage your API keys and usage",
+      "description": "Securely generate, monitor, and revoke your API keys with ease. Keep control of your access and limits."
+    }
+  },
+  "pricing": {
+    "frequencies": {
+      "monthly": "Monthly",
+      "annually": "Annually"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "For small teams",
+        "features": [
+          "Unlimited members",
+          "5 workspaces",
+          "Community Slack Support"
+        ],
+        "button": "Get started"
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For growing teams",
+        "features": [
+          "Unlimited members",
+          "10 workspaces",
+          "Community Slack Support"
+        ],
+        "button": "Get started"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For custom needs",
+        "features": [
+          "Unlimited members",
+          "Unlimited workspaces",
+          "Priority Support",
+          "Single Sign-On (SSO)",
+          "90 days of history"
+        ],
+        "button": "Contact us"
+      }
+    },
+    "recommended": "Recommended",
+    "included": "Included"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "language": {
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French"
+  },
+  "nav": {
+    "home": "Home",
+    "docs": "Documentation",
+    "contact": "Contact",
+    "pricing": "Pricing"
+  },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Submit",
+    "validation": {
+      "required": "{{label}} is required!",
+      "email": "{{label}} is not a valid email!"
+    }
+  },
+  "menu": {
+    "title": "Menu"
+  },
+  "header": {
+    "signin": "Sign in",
+    "signout": "Sign out"
+  },
+  "faqs": {
+    "title": "Frequently asked questions",
+    "description": "Can’t find the answer you’re looking for? Don’t hesitate to get in touch with our",
+    "support_team": "support team",
+    "question1": "What is the SEC API and what data can I access through it?",
+    "answer1": "The SEC API provides access to financial data submitted to the U.S. Securities and Exchange Commission, including company filings, financial statements, and more.",
+    "question2": "How can I obtain an API key for accessing the SEC API?",
+    "answer2": "To obtain an API key, you typically need to register on the SEC's official website or the platform providing the API service and follow their specific instructions for API access.",
+    "question3": "What are the rate limits for the SEC API?",
+    "answer3": "The rate limits for the SEC API can vary, but typically there are limits on the number of requests you can make per minute or per day. Check the API documentation for specific details.",
+    "question4": "Can I use the SEC API for commercial purposes?",
+    "answer4": "Yes, you can use the SEC API for commercial purposes, but you should review the terms of service to ensure compliance with any restrictions or requirements.",
+    "question5": "What should I do if I encounter errors while using the SEC API?",
+    "answer5": "If you encounter errors, consult the API documentation for troubleshooting tips. You can also contact the support team for further assistance."
+  }
+}
