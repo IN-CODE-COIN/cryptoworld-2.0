@@ -1,18 +1,14 @@
 
-# Cryptoworld
+# Cryptoworld 2.0
 
-Este proyecto es una aplicación Laravel que incluye una plataforma de consulta, seguimiento y creación de carteras de cryptomondas, tambien incluye una API REST accesible desde rutas como `/api/users` donde puedes consultar todos los usuarios registrados en la plataforma.
+En la parte del backend, incluimos una API hecha con Laravel, desde donde vamos a servir toda la información al frontend via end points públicos y privados.
 
 ## 🛠 Tecnologías Utilizadas
 
-- **Laravel 10** – Framework backend en PHP.
-- **Blade** – Motor de plantillas para el frontend.
-- **JavaScript (ES6+)** – Scripts personalizados para funcionalidades interactivas.
-- **Tailwind CSS** – Frameworks de estilos (dependiendo de la configuración del proyecto).
+- **Laravel 12.19** – Framework backend en PHP.
 - **MySQL** – Sistema de gestión de base de datos.
-- **Laravel Breeze** – Para autenticación simple.
-- **Vite** – Herramienta de compilación frontend.
 - **L5-Swagger** – Documentación automática de la API.
+- **JWT** - Autenticación via tokens
 
 ---
 
@@ -40,8 +36,7 @@ La aplicación contiene:
 ### `routes/`
 Contiene los archivos de rutas del proyecto.
 
-- `web.php` – Rutas web, que renderizan vistas Blade como login, home, wallet, etc.
-- `api.php` – Rutas para la API REST (e.g., `/api/users`).
+- `api.php` – Rutas para la API REST (e.g., `/api/home`).
 
 ### `resources/`
 
