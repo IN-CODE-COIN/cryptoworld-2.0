@@ -39,6 +39,11 @@ El objetivo es ofrecer una herramienta **facil de usar y apta para todos los dip
 
 - **MySQL** – Gestión de la base de datos.
 
+### Testing
+
+- **PHP Unit** -
+- **Jest** -
+
 ---
 
 ## 🚀 Funcionalidades principales
