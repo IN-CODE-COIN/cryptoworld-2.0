@@ -20,15 +20,20 @@ const App: React.FC = () => {
             : antdTheme.defaultAlgorithm,
       }}
     >
-      <Layout className="min-h-screen">
+      <Layout className="min-h-screen" data-testid="app-layout">
         <ScrollToTop />
-        <SidebarMenu collapsed={collapsed} onCollapse={setCollapsed} />
+        <SidebarMenu
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          data-testid="sidebar"
+        />
         <Layout>
           <HeaderBar
+            data-testid="header-bar"
             collapsed={collapsed}
             toggleCollapsed={() => setCollapsed(!collapsed)}
           />
-          <MainContent />
+          <MainContent data-testid="main-content" />
         </Layout>
       </Layout>
     </ConfigProvider>

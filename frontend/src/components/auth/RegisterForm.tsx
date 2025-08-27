@@ -55,7 +55,7 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
         <Form.Item
           label="Nombre"
           name="name"
-          rules={[{ required: true, message: "Por favor ingresa tu nombre" }]}
+          rules={[{ required: true, message: "Por favor ingresa un nombre" }]}
         >
           <Input placeholder="User" />
         </Form.Item>
@@ -64,7 +64,14 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
           label="Correo"
           name="email"
           rules={[
-            { required: true, type: "email", message: "Correo inválido" },
+            {
+              type: "email",
+              message: "Por favor ingresa un correo válido",
+            },
+            {
+              required: true,
+              message: "Por favor ingresa un correo",
+            },
           ]}
         >
           <Input placeholder="user@email.com" />
