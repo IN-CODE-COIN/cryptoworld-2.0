@@ -1,8 +1,8 @@
-// HeaderContain.test.tsx
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { HeaderContain } from "./HeaderContain";
 import type { Location } from "react-router-dom";
+import type { Mock } from "vitest";
 
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router-dom")>();
@@ -20,7 +20,7 @@ describe("HeaderContain", () => {
   });
 
   const mockUseLocation = (pathname: string) => {
-    (useLocation as vi.Mock).mockReturnValue({ pathname } as Partial<Location>);
+    (useLocation as Mock).mockReturnValue({ pathname } as Partial<Location>);
   };
 
   it("muestra correctamente el título y descripción de 'cartera'", () => {
