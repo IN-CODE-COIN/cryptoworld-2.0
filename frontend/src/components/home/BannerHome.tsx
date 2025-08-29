@@ -54,7 +54,7 @@ export const BannerHome: React.FC = () => {
           title="Cerrar"
           className="p-2 text-gray-500"
           onClick={handleClose}
-          aria-label="Close"
+          aria-label="Cerrar"
         >
           <CloseOutlined className="text-base" aria-hidden={true} />
         </button>
