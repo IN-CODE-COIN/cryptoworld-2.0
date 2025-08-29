@@ -34,6 +34,7 @@ export const MainContent: React.FC = () => {
     <>
       <ScrollToTop />
       <Content
+        data-testid="main-content"
         style={{
           backgroundColor: theme === "dark" ? "#001529" : "#fff",
         }}
