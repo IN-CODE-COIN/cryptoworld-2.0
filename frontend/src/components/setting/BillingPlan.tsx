@@ -50,15 +50,24 @@ export const BillingPlan: React.FC = () => {
           </h3>
           <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <p className="flex items-center space-x-2">
+              <p
+                data-testid="plan-name"
+                className="flex items-center space-x-2"
+              >
                 <span className="font-medium text-gray-900 dark:text-gray-400">
                   {plan}
                 </span>
-                <span className="inline-flex items-center self-center rounded bg-gray-100 px-2 py-0.5 font-medium text-gray-500">
+                <span
+                  data-testid="plan-frequency"
+                  className="inline-flex items-center self-center rounded bg-gray-100 px-2 py-0.5 font-medium text-gray-500"
+                >
                   {frequency}
                 </span>
               </p>
-              <p className="mt-2 font-semibold text-gray-900 dark:text-gray-400">
+              <p
+                data-testid="plan-info"
+                className="mt-2 font-semibold text-gray-900 dark:text-gray-400"
+              >
                 {amount} {amountTime}{" "}
                 <span className="font-normal">(incl. IVA)</span>
               </p>
@@ -73,7 +82,10 @@ export const BillingPlan: React.FC = () => {
               <p className="font-medium text-gray-900 dark:text-gray-400 mt-1">
                 Periodo de Facturación
               </p>
-              <p className="mt-2 font-semibold text-gray-900 dark:text-gray-400">
+              <p
+                data-testid="billing-period"
+                className="mt-2 font-semibold text-gray-900 dark:text-gray-400"
+              >
                 {frequency} <span className="font-normal">({nextPayment})</span>
               </p>
               {plan === "Profesional" && (
