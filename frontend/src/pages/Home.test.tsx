@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Home } from "./Home"; // Asegúrate de que la ruta sea correcta
+import { Home } from "./Home";
 
 vi.mock("../components/global/HeaderContain", () => ({
   HeaderContain: ({ pageKey }: { pageKey: string }) => (
