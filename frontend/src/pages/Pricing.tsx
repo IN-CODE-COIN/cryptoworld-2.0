@@ -8,10 +8,6 @@ import { plans, sections } from "../config/plansDictionary";
 export const Pricing: React.FC = () => {
   const [billingFrequency] = React.useState<"mensual" | "anual">("anual");
 
-  /*const [billingFrequency, setBillingFrequency] = React.useState<
-    "monthly" | "annually"
-  >("annually");*/
-
   return (
     <section className="container md:w-5xl flex flex-col mx-auto">
       <HeaderContain pageKey="pricing" />
