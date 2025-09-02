@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/286</span>
+                <span class='fraction'>0/301</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/286</span>
+                <span class='fraction'>0/301</span>
             </div>
         
             
@@ -431,7 +431,23 @@
 <a name='L366'></a><a href='#L366'>366</a>
 <a name='L367'></a><a href='#L367'>367</a>
 <a name='L368'></a><a href='#L368'>368</a>
-<a name='L369'></a><a href='#L369'>369</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a>
+<a name='L380'></a><a href='#L380'>380</a>
+<a name='L381'></a><a href='#L381'>381</a>
+<a name='L382'></a><a href='#L382'>382</a>
+<a name='L383'></a><a href='#L383'>383</a>
+<a name='L384'></a><a href='#L384'>384</a>
+<a name='L385'></a><a href='#L385'>385</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -651,9 +667,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -789,6 +816,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1019,11 +1051,22 @@ type Coin = {
 <span class="cstat-no" title="statement not covered" >              {form.getFieldValue("type") === "buy" ? (</span>
 <span class="cstat-no" title="statement not covered" >                &lt;div className="relative"&gt;</span>
 <span class="cstat-no" title="statement not covered" >                  &lt;AutoComplete</span>
-                    //ref={inputRef}
+<span class="cstat-no" title="statement not covered" >                    aria-label="Criptomoneda"</span>
 <span class="cstat-no" title="statement not covered" >                    value={form.getFieldValue("crypto_name")}</span>
-<span class="cstat-no" title="statement not covered" >                    options={cryptoOptions.map((c) =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >                      value: `${c.name} (${c.symbol})`,</span>
-<span class="cstat-no" title="statement not covered" >                    }))}</span>
+<span class="cstat-no" title="statement not covered" >                    options={cryptoOptions.map((c) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                      return {</span>
+<span class="cstat-no" title="statement not covered" >                        value: `${c.name} (${c.symbol})`,</span>
+<span class="cstat-no" title="statement not covered" >                        label: (</span>
+<span class="cstat-no" title="statement not covered" >                          &lt;div</span>
+<span class="cstat-no" title="statement not covered" >                            data-testid={`crypto-option-${c.symbol}`}</span>
+<span class="cstat-no" title="statement not covered" >                            className="flex items-center gap-2"</span>
+                          &gt;
+<span class="cstat-no" title="statement not covered" >                            &lt;img src={c.iconUrl} alt={c.name} width={20} /&gt;{" "}</span>
+<span class="cstat-no" title="statement not covered" >                            {c.name} ({c.symbol})</span>
+<span class="cstat-no" title="statement not covered" >                          &lt;/div&gt;</span>
+                        ),
+<span class="cstat-no" title="statement not covered" >                      };</span>
+<span class="cstat-no" title="statement not covered" >                    })}</span>
 <span class="cstat-no" title="statement not covered" >                    onSearch={fetchCryptoSuggestions}</span>
 <span class="cstat-no" title="statement not covered" >                    onSelect={(value) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                      const selected = cryptoOptions.find(</span>
@@ -1158,7 +1201,12 @@ type Coin = {
 <span class="cstat-no" title="statement not covered" >          &lt;/Form.Item&gt;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >          &lt;Form.Item&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;Button type="primary" size="small" htmlType="submit"&gt;</span>
+<span class="cstat-no" title="statement not covered" >            &lt;Button</span>
+<span class="cstat-no" title="statement not covered" >              type="primary"</span>
+<span class="cstat-no" title="statement not covered" >              size="small"</span>
+<span class="cstat-no" title="statement not covered" >              htmlType="submit"</span>
+<span class="cstat-no" title="statement not covered" >              title="Guardar"</span>
+<span class="cstat-no" title="statement not covered" >            &gt;</span>
               Guardar
 <span class="cstat-no" title="statement not covered" >            &lt;/Button&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;/Form.Item&gt;</span>
@@ -1174,7 +1222,7 @@ type Coin = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-01T17:56:11.059Z
+                at 2025-09-02T16:56:38.994Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
