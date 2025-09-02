@@ -218,10 +218,15 @@ export const WalletTransactionForm: React.FC = () => {
               {form.getFieldValue("type") === "buy" ? (
                 <div className="relative">
                   <AutoComplete
-                    //ref={inputRef}
+                    aria-label="Criptomoneda"
                     value={form.getFieldValue("crypto_name")}
                     options={cryptoOptions.map((c) => ({
                       value: `${c.name} (${c.symbol})`,
+                      label: (
+                        <div data-testid={`crypto-option-${c.symbol}`} className="flex items-center gap-2">
+                          <img src={c.iconUrl} alt={c.name} width={20}/> {c.name} ({c.symbol})
+                        </div>
+                      ),
                     }))}
                     onSearch={fetchCryptoSuggestions}
                     onSelect={(value) => {
@@ -357,7 +362,12 @@ export const WalletTransactionForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" size="small" htmlType="submit">
+            <Button
+              type="primary"
+              size="small"
+              htmlType="submit"
+              title="Guardar"
+            >
               Guardar
             </Button>
           </Form.Item>
