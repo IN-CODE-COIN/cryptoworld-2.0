@@ -1,11 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Account } from "./Account";
+import { Cartera } from "./Cartera";
 
-vi.mock("../components/setting/SettingsAccount", () => ({
-  SettingsAccount: () => (
-    <div data-testid="settings-account">SettingsAccount</div>
-  ),
+vi.mock("../components/wallet/Wallet", () => ({
+  Wallet: () => <div data-testid="wallet">Wallet</div>,
 }));
 
 vi.mock("../components/global/HeaderContain", () => ({
@@ -14,16 +12,16 @@ vi.mock("../components/global/HeaderContain", () => ({
   ),
 }));
 
-describe("Account Component", () => {
+describe("Cartera Component", () => {
   it("debe renderizarse sin errores", () => {
-    render(<Account />);
+    render(<Cartera />);
     expect(screen.getByTestId("header-contain")).toBeInTheDocument();
-    expect(screen.getByTestId("settings-account")).toBeInTheDocument();
+    expect(screen.getByTestId("wallet")).toBeInTheDocument();
   });
 
-  it("debe contener HeaderContain con pageKey='account'", () => {
-    render(<Account />);
+  it("debe contener HeaderContain con pageKey='cartera'", () => {
+    render(<Cartera />);
     const headerContain = screen.getByTestId("header-contain");
-    expect(headerContain).toHaveTextContent("account");
+    expect(headerContain).toHaveTextContent("cartera");
   });
 });
