@@ -172,6 +172,7 @@ export const ShowMovementsList = () => {
             dataSource={data}
             pagination={{ pageSize: 10 }}
             size="small"
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}

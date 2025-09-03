@@ -237,6 +237,7 @@ export const Wallet: React.FC = () => {
           pagination={false}
           size="small"
           locale={{ emptyText: <Empty description="No hay movimientos." /> }}
+          scroll={{ x: "max-content" }}
         />
       </div>
       {/* Posiciones */}

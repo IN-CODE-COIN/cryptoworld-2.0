@@ -38,7 +38,7 @@ export const TablePlans: React.FC<TablePlansProps> = ({
 
   return (
     <section className="mx-auto">
-      <div className="mt-5 md:mt-10">
+      <div className="md:mt-10">
         <div className="relative">
           <div
             className="sticky top-0 z-20 h-28 w-full"
@@ -163,12 +163,15 @@ export const TablePlans: React.FC<TablePlansProps> = ({
                   <span className="sr-only">Link to activate plan</span>
                 </th>
                 {plans.map((plan) => {
-                  const activePlanName = isAuthenticated
-                    ? user?.rol === "normal"
-                      ? "Gratuito"
-                      : "Profesional"
-                    : "";
+                  const getPlanNameByRole = (role?: string): string => {
+                    if (role === "normal") return "Gratuito";
+                    if (role === "pro") return "Profesional";
+                    return "";
+                  };
 
+                  const activePlanName = isAuthenticated
+                    ? getPlanNameByRole(user?.rol)
+                    : "";
                   const isActivePlan = plan.name === activePlanName;
 
                   let buttonLabel = plan.buttonText;
@@ -203,7 +206,7 @@ export const TablePlans: React.FC<TablePlansProps> = ({
                   };
 
                   return (
-                    <td key={plan.name} className="px-2 pt-6 lg:px-8">
+                    <td key={plan.name} className="px-1 pt-6 lg:px-8">
                       <Button
                         type={buttonType}
                         className={sizeText}

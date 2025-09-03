@@ -22,15 +22,15 @@ export const plans: Plan[] = [
   {
     name: "Gratuito",
     price: "€0",
-    buttonText: "Comenzar",
-    buttonLink: "/",
+    buttonText: "Empezar",
+    buttonLink: "/settings",
     isStarter: false,
     isFree: true,
   },
   {
     name: "Profesional",
     price: { mensual: "€50", anual: "€490" },
-    buttonText: "Comenzar",
+    buttonText: "Empezar",
     buttonLink: "/pricing",
     isFree: false,
     isStarter: false,
@@ -38,7 +38,7 @@ export const plans: Plan[] = [
   {
     name: "Empresa",
     price: "Personalizado",
-    buttonText: "Contactanos",
+    buttonText: "Contacto",
     buttonLink: "/contact",
     isFree: false,
     isStarter: false,
