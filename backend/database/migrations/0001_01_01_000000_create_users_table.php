@@ -18,6 +18,18 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->decimal('balance', 18, 2)->default(0);
+
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->enum('rol', ['normal', 'pro'])->default('normal');
+            } else {
+                $table->string('rol')->default('normal');
+            }
+            
+            $table->enum('frequency', ['mensual', 'anual'])->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->boolean('has_used_trial')->default(false);
+            $table->date('pro_started_at')->nullable();
             $table->timestamps();
         });
 
