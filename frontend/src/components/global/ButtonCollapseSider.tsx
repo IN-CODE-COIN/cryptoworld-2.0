@@ -1,9 +1,8 @@
-// components/ButtonCollapseSider.tsx
 import React from "react";
 import { Button } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
-type Props = {
+export type Props = {
   collapsed: boolean;
   toggleCollapsed: () => void;
   theme?: "light" | "dark";

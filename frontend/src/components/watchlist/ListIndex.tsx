@@ -154,7 +154,8 @@ export const ListIndex = () => {
       key: "actions",
       render: (_: unknown, record: Coin) => (
         <Button
-          title="Eliminar"
+          aria-label={`Eliminar ${record.name}`}
+          title={`Eliminar ${record.name} de la lista`}
           type="text"
           danger
           icon={<DeleteOutlined />}

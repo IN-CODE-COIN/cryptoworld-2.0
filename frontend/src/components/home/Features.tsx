@@ -36,7 +36,7 @@ export const Features: React.FC = () => {
   return (
     <>
       <div className="mx-auto w-full max-w-6xl py-7">
-        <dl className="grid grid-cols-4 gap-10">
+        <dl data-testid="features-grid" className="grid grid-cols-4 gap-10">
           {features.map((item) => (
             <div
               key={item.title}

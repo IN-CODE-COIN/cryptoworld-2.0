@@ -56,6 +56,7 @@ export const HeaderBar = ({ collapsed, toggleCollapsed }: Props) => {
       />
 
       <div
+        data-testid="auth-button-wrapper"
         className={`${
           isMobile
             ? "flex me-1"

@@ -86,7 +86,12 @@ export const WalletMovementForm: React.FC = () => {
         <p className="text-sm text-gray-500 mb-4">
           Saldo disponible:{" "}
           <strong>
-            ${balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            $
+            {balance.toLocaleString("es-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 2,
+            })}
           </strong>
         </p>
 

@@ -184,7 +184,13 @@ export const Wallet: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 shadow rounded p-6 text-center">
         <h3 className="text-lg font-semibold">Efectivo</h3>
         <p className="text-3xl font-bold text-green-500 mt-2">
-          ${data.balance.toLocaleString()}
+          $
+          {data.balance.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+          })}
+          ;
         </p>
         <Link
           title="Ingresar / Retirar"
