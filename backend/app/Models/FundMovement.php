@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin IdeHelperFundMovement
+ */
 class FundMovement extends Model
 {
     public function user()
