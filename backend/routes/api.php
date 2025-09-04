@@ -29,12 +29,11 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/cartera/create', [WalletController::class, 'create']);
     Route::post('/cartera', [WalletController::class, 'store']);
     Route::get('/cartera/moves', [WalletController::class, 'show']);
-    Route::put('/cartera/{id}', [WalletController::class, 'update']);
+    //* Rutas para editar movimientos *//
+    Route::put('/cartera/moves/{id}', [WalletController::class, 'update']);
     //* Rutas de operaciones *//
     Route::get('/cartera/transaction/create', [CryptoTransactionController::class, 'create']);
     Route::post('/cartera/transaction', [CryptoTransactionController::class, 'store']);
-    //* Rutas para editar movimientos *//
-    Route::put('/cartera/moves/{id}', [WalletController::class, 'update']);
     //* Rutas del Pricing *//
     Route::get('/pricing', [PricingController::class, 'show']);
     Route::post('/start-trial', [PricingController::class, 'startTrial']);

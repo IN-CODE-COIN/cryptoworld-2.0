@@ -160,7 +160,7 @@ class WalletControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token",
-        ])->putJson("/api/cartera/{$movement->id}", $payload);
+        ])->putJson("/api/cartera/moves/{$movement->id}", $payload);
 
         $response->assertStatus(201)
                  ->assertJson([
