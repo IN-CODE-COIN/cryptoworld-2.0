@@ -23,11 +23,11 @@ class HomeController extends Controller
             return [
                 'uuid' => $coin['uuid'],
                 'name' => $coin['name'],
-                'symbol' => $coin['symbol'], // <-- Añadido
+                'symbol' => $coin['symbol'],
                 'iconUrl' => $coin['iconUrl'],
                 'price' => $coin['price'],
                 'change' => $coin['change'],
-                'marketCap' => $coin['marketCap'], // <-- Añadido
+                'marketCap' => $coin['marketCap'],
             ];
         }, $apiCoins);
 
@@ -36,7 +36,7 @@ class HomeController extends Controller
             : [];
 
         return response()->json([
-            'topCryptos' => $topCryptos, // Usamos la variable mapeada
+            'topCryptos' => $topCryptos,
             'watchlistUuids' => $watchlistUuids,
         ]);
     }
