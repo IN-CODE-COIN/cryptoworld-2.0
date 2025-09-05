@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\AuthController;
 
 
 use App\Http\Controllers\Api\HomeController;
@@ -20,6 +20,7 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::get('/me', [AuthController::class, 'me']);
     //* Rutas de watchlist *//
     Route::get('/watchlist', [WatchlistController::class, 'index']);
     Route::post('/watchlist', [WatchlistController::class, 'store']);
@@ -29,11 +30,11 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/cartera/create', [WalletController::class, 'create']);
     Route::post('/cartera', [WalletController::class, 'store']);
     Route::get('/cartera/moves', [WalletController::class, 'show']);
+    //* Rutas para editar movimientos *//
+    Route::put('/cartera/moves/{id}', [WalletController::class, 'update']);
     //* Rutas de operaciones *//
     Route::get('/cartera/transaction/create', [CryptoTransactionController::class, 'create']);
     Route::post('/cartera/transaction', [CryptoTransactionController::class, 'store']);
-    //* Rutas para editar movimientos *//
-    Route::put('/cartera/moves/{id}', [WalletController::class, 'update']);
     //* Rutas del Pricing *//
     Route::get('/pricing', [PricingController::class, 'show']);
     Route::post('/start-trial', [PricingController::class, 'startTrial']);

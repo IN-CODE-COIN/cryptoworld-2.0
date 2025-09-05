@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CryptoPosition;
 use App\Models\CryptoTransaction;
 use App\Models\FundMovement;
-use App\Models\User;
 
 class CryptoTransactionController extends Controller
 {
