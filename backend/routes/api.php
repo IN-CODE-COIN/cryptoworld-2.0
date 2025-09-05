@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\AuthController;
 
 
 use App\Http\Controllers\Api\HomeController;
@@ -20,6 +20,7 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::get('/me', [AuthController::class, 'me']);
     //* Rutas de watchlist *//
     Route::get('/watchlist', [WatchlistController::class, 'index']);
     Route::post('/watchlist', [WatchlistController::class, 'store']);
