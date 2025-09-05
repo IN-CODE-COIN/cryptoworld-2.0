@@ -28,7 +28,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -74,7 +79,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/{id}": {
@@ -116,7 +126,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -176,7 +191,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -216,7 +236,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -338,12 +363,25 @@
                 },
                 "type": "object"
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "description": "Introduce tu JWT en el formato: Bearer {token}",
+                "name": "Authorization",
+                "in": "header"
+            }
         }
     },
     "tags": [
         {
             "name": "Usuarios",
             "description": "Usuarios"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
         }
     ]
 }

@@ -18,6 +18,7 @@ class UserController extends Controller
      *     path="/api/users",
      *     tags={"Usuarios"},
      *     summary="Listar usuarios",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de usuarios",
@@ -40,6 +41,7 @@ class UserController extends Controller
      *     path="/api/users",
      *     tags={"Usuarios"},
      *     summary="Crear usuario",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/UserInput")
@@ -70,6 +72,7 @@ class UserController extends Controller
      *     path="/api/users/{id}",
      *     tags={"Usuarios"},
      *     summary="Obtener usuario por ID",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id", in="path", required=true, @OA\Schema(type="integer")
      *     ),
@@ -92,6 +95,7 @@ class UserController extends Controller
      *     path="/api/users/{id}",
      *     tags={"Usuarios"},
      *     summary="Actualizar usuario",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/UserInput")),
      *     @OA\Response(response=200, description="Usuario actualizado", @OA\JsonContent(ref="#/components/schemas/User")),
@@ -125,6 +129,7 @@ class UserController extends Controller
      *     path="/api/users/{id}",
      *     tags={"Usuarios"},
      *     summary="Eliminar usuario",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Usuario eliminado", @OA\JsonContent(ref="#/components/schemas/Success")),
      *     @OA\Response(response=404, description="No encontrado", @OA\JsonContent(ref="#/components/schemas/NotFound")),
