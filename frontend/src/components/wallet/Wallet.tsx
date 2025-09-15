@@ -190,7 +190,6 @@ export const Wallet: React.FC = () => {
             currency: "USD",
             minimumFractionDigits: 2,
           })}
-          ;
         </p>
         <Link
           title="Ingresar / Retirar"
