@@ -14,13 +14,14 @@ type ContactFormValues = {
 export const FormContact: React.FC = () => {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm(); //instancia del formulario
 
   const onFinish = (values: ContactFormValues) => {
     setLoading(true);
 
-    const service_id = "service_i3vng1m"; // tu service ID
-    const template_id = "template_cepy6gg"; // tu template ID
-    const public_id = "gbtOYXQ6SZQAOaHko"; // tu public key
+    const service_id = import.meta.env.VITE_SERVICE_ID;
+    const template_id = import.meta.env.VITE_TEMPLATE_ID;
+    const public_id = import.meta.env.VITE_PUBLIC_ID;
 
     const templateParams = {
       from_name: values.user.name,
@@ -30,20 +31,29 @@ export const FormContact: React.FC = () => {
 
     emailjs
       .send(service_id, template_id, templateParams, public_id)
-      .then((response) => {
-        console.log("Email sent successfully:", response);
+      .then(() => {
         message.success("¡Correo enviado correctamente!");
+        form.resetFields();
       })
-      .catch((error) => {
-        console.error("Error sending email:", error);
+      .catch(() => {
         message.error("Error al enviar el correo. Intenta nuevamente.");
       })
       .finally(() => setLoading(false));
   };
 
+  const values = Form.useWatch("user", form);
+
+  const hasErrors = () => {
+    return form.getFieldsError().some(({ errors }) => errors.length > 0);
+  };
+
+  const isEmpty =
+    !values?.name?.trim() || !values?.email?.trim() || !values?.message?.trim();
+
   return (
     <div className="w-full flex justify-start">
       <Form
+        form={form}
         layout="vertical"
         name="contact-form"
         onFinish={onFinish}
@@ -112,7 +122,14 @@ export const FormContact: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block loading={loading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            className="flex max-w-max"
+            loading={loading}
+            disabled={loading || hasErrors() || isEmpty}
+          >
             Enviar
           </Button>
         </Form.Item>
