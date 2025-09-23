@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
+use OpenApi\Annotations as OA;
 
 class AuthController extends Controller
 {
@@ -21,14 +21,7 @@ class AuthController extends Controller
      *     summary="Registrar usuario",
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name","email","password"},
-     *             @OA\Property(property="name", type="string", example="Juan Perez"),
-     *             @OA\Property(property="email", type="string", format="email", example="juan@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="secret123"),
-     *             @OA\Property(property="rol", type="string", example="normal"),
-     *             @OA\Property(property="balance", type="number", example=0)
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/RegisterInput")
      *     ),
      *     @OA\Response(
      *         response=201,
@@ -44,8 +37,6 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        Log::info('Register method called', ['request' => $request->all()]);
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -53,8 +44,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Log::error('Validation failed', ['errors' => $validator->errors()]);
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $user = User::create([
@@ -66,10 +56,7 @@ class AuthController extends Controller
             'trial_ends_at' => null,
         ]);
 
-        Log::info('User created successfully', ['user' => $user]);
-
         $token = JWTAuth::fromUser($user);
-        Log::info('Token created successfully', ['token' => $token]);
 
         return response()->json([
             'user' => $user,
@@ -86,11 +73,7 @@ class AuthController extends Controller
      *     summary="Login de usuario",
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"email","password"},
-     *             @OA\Property(property="email", type="string", format="email", example="sergio.lopezr.88@gmail.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="123456789")
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/LoginInput")
      *     ),
      *     @OA\Response(
      *         response=200,

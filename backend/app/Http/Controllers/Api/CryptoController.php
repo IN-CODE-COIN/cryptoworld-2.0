@@ -26,8 +26,16 @@ class CryptoController extends Controller
      *         description="Texto a buscar (nombre o símbolo de la criptomoneda)",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response=200, description="Criptomoneda encontrada", @OA\JsonContent(type="object")),
-     *     @OA\Response(response=404, description="No encontrada")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Criptomoneda encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/CoinSearchResult")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFound")
+     *     )
      * )
      */
     public function search(Request $request)
@@ -61,8 +69,16 @@ class CryptoController extends Controller
      *         description="UUID de la criptomoneda",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response=200, description="Detalle de la criptomoneda", @OA\JsonContent(type="object")),
-     *     @OA\Response(response=404, description="Criptomoneda no encontrada")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalle de la criptomoneda",
+     *         @OA\JsonContent(ref="#/components/schemas/CoinDetailResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Criptomoneda no encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFound")
+     *     )
      * )
      */
     public function show($uuid)
@@ -104,8 +120,16 @@ class CryptoController extends Controller
      *         description="Texto parcial del nombre o símbolo de la criptomoneda",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response=200, description="Lista de coincidencias", @OA\JsonContent(type="array", @OA\Items(type="object"))),
-     *     @OA\Response(response=400, description="Parámetro faltante")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de coincidencias",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CoinSearchResult"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Parámetro faltante",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     )
      * )
      */
     public function autocomplete(Request $request)
@@ -159,9 +183,21 @@ class CryptoController extends Controller
      *         description="Timestamp en segundos",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response=200, description="Precio obtenido correctamente", @OA\JsonContent(type="object")),
-     *     @OA\Response(response=400, description="Parámetros faltantes"),
-     *     @OA\Response(response=500, description="Error en Coinranking")
+     *     @OA\Response(
+     *         response=200,
+     *         description="Precio obtenido correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/CoinPriceResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Parámetros faltantes",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en Coinranking",
+     *         @OA\JsonContent(ref="#/components/schemas/ServerError")
+     *     )
      * )
      */
     public function getPrice(Request $request)

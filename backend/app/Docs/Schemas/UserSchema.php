@@ -1,7 +1,6 @@
 <?php
 namespace App\Docs\Schemas;
 
-//**Schema UserController */
 /**
  * @OA\Schema(
  *     schema="User",
@@ -11,10 +10,10 @@ namespace App\Docs\Schemas;
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Luis"),
  *     @OA\Property(property="email", type="string", example="luis@crypto.com"),
- *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="normal"),
+ *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="normal")
  * )
  */
-class UserSchema { }
+class UserSchema {}
 
 /**
  * @OA\Schema(
@@ -24,10 +23,10 @@ class UserSchema { }
  *     @OA\Property(property="name", type="string", example="Luis"),
  *     @OA\Property(property="email", type="string", example="luis@crypto.com"),
  *     @OA\Property(property="password", type="integer", example=1234),
- *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="pro"),
+ *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="pro")
  * )
  */
-class UserInputSchema { }
+class UserInputSchema {}
 
 /**
  * @OA\Schema(
@@ -79,116 +78,21 @@ class NotFoundSchema {}
  */
 class SuccessSchema {}
 
-//**Schema AuthController */
 /**
  * @OA\Schema(
- *     schema="AuthResponse",
+ *     schema="ServerError",
  *     type="object",
- *     title="Respuesta de Autenticación",
- *     required={"user","token"},
- *     @OA\Property(property="user", ref="#/components/schemas/User"),
+ *     title="Server Error",
  *     @OA\Property(
- *         property="token",
+ *         property="status",
  *         type="string",
- *         description="JWT token de acceso",
- *         example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
- *     )
- * )
- */
-class AuthResponseSchema {}
-
-/**
- * @OA\Schema(
- *     schema="AuthError",
- *     type="object",
- *     title="Error de autenticación",
- *     @OA\Property(
- *         property="error",
- *         type="string",
- *         example="Credenciales inválidas"
- *     )
- * )
- */
-class AuthErrorSchema {}
-
-/**
- * @OA\Schema(
- *     schema="Unauthorized",
- *     type="object",
- *     title="No autorizado",
+ *         example="error"
+ *     ),
  *     @OA\Property(
  *         property="message",
  *         type="string",
- *         example="No autorizado"
+ *         example="Error interno del servidor"
  *     )
  * )
  */
-class UnauthorizedSchema {}
-
-//**Schema CryptoController */
-/**
- * @OA\Schema(
- *     schema="Coin",
- *     type="object",
- *     title="Criptomoneda",
- *     required={"uuid", "name", "symbol", "price"},
- *     @OA\Property(property="uuid", type="string", example="Qwsogvtv82FCd"),
- *     @OA\Property(property="name", type="string", example="Bitcoin"),
- *     @OA\Property(property="symbol", type="string", example="BTC"),
- *     @OA\Property(property="iconUrl", type="string", format="uri", example="https://cdn.coinranking.com/btc.svg"),
- *     @OA\Property(property="price", type="string", example="27000.50"),
- *     @OA\Property(property="marketCap", type="string", example="520000000000"),
- *     @OA\Property(property="change", type="string", example="-0.25")
- * )
- */
-class CoinSchema {}
-
-/**
- * @OA\Schema(
- *     schema="CoinSearchResult",
- *     type="object",
- *     title="Resultado búsqueda de criptomoneda",
- *     required={"uuid","name","symbol","iconUrl"},
- *     @OA\Property(property="uuid", type="string", example="razxDUgYGNAdQ"),
- *     @OA\Property(property="name", type="string", example="Ethereum"),
- *     @OA\Property(property="symbol", type="string", example="ETH"),
- *     @OA\Property(property="iconUrl", type="string", format="uri", example="https://cdn.coinranking.com/eth.svg")
- * )
- */
-class CoinSearchResultSchema {}
-
-/**
- * @OA\Schema(
- *     schema="CoinDetailResponse",
- *     type="object",
- *     title="Detalle Criptomoneda",
- *     @OA\Property(property="coin", ref="#/components/schemas/Coin"),
- *     @OA\Property(
- *         property="watchlistUuids",
- *         type="array",
- *         @OA\Items(type="string"),
- *         example={"Qwsogvtv82FCd", "razxDUgYGNAdQ"}
- *     )
- * )
- */
-class CoinDetailResponseSchema {}
-
-/**
- * @OA\Schema(
- *     schema="CoinPriceResponse",
- *     type="object",
- *     title="Precio histórico de criptomoneda",
- *     required={"status","data"},
- *     @OA\Property(property="status", type="string", example="success"),
- *     @OA\Property(
- *         property="data",
- *         type="object",
- *         @OA\Property(property="price", type="string", example="26543.21"),
- *         @OA\Property(property="timestamp", type="integer", example=1695158400)
- *     )
- * )
- */
-class CoinPriceResponseSchema {}
-
-
-
+class ServerErrorSchema {}

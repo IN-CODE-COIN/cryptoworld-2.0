@@ -19,36 +19,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Juan Perez"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "juan@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "secret123"
-                                    },
-                                    "rol": {
-                                        "type": "string",
-                                        "example": "normal"
-                                    },
-                                    "balance": {
-                                        "type": "number",
-                                        "example": 0
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/RegisterInput"
                             }
                         }
                     }
@@ -59,22 +30,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "user": {
-                                            "$ref": "#/components/schemas/User"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/AuthResponse"
                                 }
                             }
                         }
                     },
                     "422": {
-                        "description": "Error de validación"
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -92,23 +61,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "sergio.lopezr.88@gmail.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "123456789"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/LoginInput"
                             }
                         }
                     }
@@ -119,22 +72,20 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "user": {
-                                            "$ref": "#/components/schemas/User"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/AuthResponse"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Credenciales inválidas"
+                        "description": "Credenciales inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthError"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -159,7 +110,228 @@
                         }
                     },
                     "401": {
-                        "description": "No autorizado"
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthorized"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/crypto/search": {
+            "get": {
+                "tags": [
+                    "Criptomonedas"
+                ],
+                "summary": "Buscar criptomoneda",
+                "description": "Buscar criptomoneda por nombre o símbolo",
+                "operationId": "3ead6ce2b430155f90e85626e633109b",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Texto a buscar (nombre o símbolo de la criptomoneda)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Criptomoneda encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoinSearchResult"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFound"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/crypto/{uuid}": {
+            "get": {
+                "tags": [
+                    "Criptomonedas"
+                ],
+                "summary": "Detalle de criptomoneda",
+                "description": "Obtener detalles de una criptomoneda por UUID",
+                "operationId": "c9066cdb2893f2866b9cb171e7218cf1",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID de la criptomoneda",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle de la criptomoneda",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoinDetailResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Criptomoneda no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFound"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/crypto/autocomplete": {
+            "get": {
+                "tags": [
+                    "Criptomonedas"
+                ],
+                "summary": "Autocompletar búsqueda",
+                "description": "Autocompletar búsqueda de criptomonedas",
+                "operationId": "3b7e0911a4c45953c18f67913d13007f",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Texto parcial del nombre o símbolo de la criptomoneda",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de coincidencias",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CoinSearchResult"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parámetro faltante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/crypto/price": {
+            "get": {
+                "tags": [
+                    "Criptomonedas"
+                ],
+                "summary": "Precio de criptomoneda por timestamp",
+                "description": "Obtener precio histórico de una criptomoneda",
+                "operationId": "19f1a8d596a79eb3adfdfc9ed6d6b03c",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "description": "UUID de la criptomoneda",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "timestamp",
+                        "in": "query",
+                        "description": "Timestamp en segundos",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Precio obtenido correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CoinPriceResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parámetros faltantes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error en Coinranking",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ServerError"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -410,6 +582,211 @@
     },
     "components": {
         "schemas": {
+            "AuthError": {
+                "title": "Error de autenticación",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Credenciales inválidas"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Respuesta de Autenticación",
+                "required": [
+                    "user",
+                    "token"
+                ],
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                        "description": "JWT token de acceso",
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                    }
+                },
+                "type": "object"
+            },
+            "Coin": {
+                "title": "Criptomoneda",
+                "required": [
+                    "uuid",
+                    "name",
+                    "symbol",
+                    "price"
+                ],
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "example": "Qwsogvtv82FCd"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Bitcoin"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "example": "BTC"
+                    },
+                    "iconUrl": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://cdn.coinranking.com/btc.svg"
+                    },
+                    "price": {
+                        "type": "string",
+                        "example": "27000.50"
+                    },
+                    "marketCap": {
+                        "type": "string",
+                        "example": "520000000000"
+                    },
+                    "change": {
+                        "type": "string",
+                        "example": "-0.25"
+                    }
+                },
+                "type": "object"
+            },
+            "CoinSearchResult": {
+                "title": "Resultado búsqueda de criptomoneda",
+                "required": [
+                    "uuid",
+                    "name",
+                    "symbol",
+                    "iconUrl"
+                ],
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "example": "razxDUgYGNAdQ"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Ethereum"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "example": "ETH"
+                    },
+                    "iconUrl": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://cdn.coinranking.com/eth.svg"
+                    }
+                },
+                "type": "object"
+            },
+            "CoinDetailResponse": {
+                "title": "Detalle Criptomoneda",
+                "properties": {
+                    "coin": {
+                        "$ref": "#/components/schemas/Coin"
+                    },
+                    "watchlistUuids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Qwsogvtv82FCd",
+                            "razxDUgYGNAdQ"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "CoinPriceResponse": {
+                "title": "Precio histórico de criptomoneda",
+                "required": [
+                    "status",
+                    "data"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "data": {
+                        "properties": {
+                            "price": {
+                                "type": "string",
+                                "example": "26543.21"
+                            },
+                            "timestamp": {
+                                "type": "integer",
+                                "example": 1695158400
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginInput": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterInput": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Juan Perez"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    },
+                    "rol": {
+                        "type": "string",
+                        "example": "normal"
+                    },
+                    "balance": {
+                        "type": "number",
+                        "example": 0
+                    }
+                },
+                "type": "object"
+            },
+            "Unauthorized": {
+                "title": "No autorizado",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No autorizado"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "Usuario",
                 "required": [
@@ -525,6 +902,20 @@
                     }
                 },
                 "type": "object"
+            },
+            "ServerError": {
+                "title": "Server Error",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "error"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Error interno del servidor"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -540,6 +931,10 @@
         {
             "name": "Autenticación",
             "description": "Autenticación"
+        },
+        {
+            "name": "Criptomonedas",
+            "description": "Criptomonedas"
         },
         {
             "name": "Usuarios",
