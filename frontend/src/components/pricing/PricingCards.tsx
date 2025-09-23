@@ -50,7 +50,7 @@ const plans: Plan[] = [
     ],
     isRecommended: false,
     isEnterprise: false,
-    buttonText: "Actualizar",
+    buttonText: "Comenzar",
   },
   {
     name: "Profesional",
@@ -138,6 +138,10 @@ export const PricingCards = () => {
   const getButtonText = (plan: Plan, isActive: boolean) => {
     if (plan.isEnterprise) return plan.buttonText;
     if (isActive) return "Activo";
+    if (isAuthenticated && !isActive && plan.name === "Gratuito")
+      return "Cambiar";
+    if (isAuthenticated && !isActive && plan.name === "Profesional")
+      return "Mejorar";
     return plan.buttonText;
   };
 
