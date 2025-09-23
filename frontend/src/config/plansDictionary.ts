@@ -23,7 +23,7 @@ export const plans: Plan[] = [
     name: "Gratuito",
     price: "€0",
     buttonText: "Empezar",
-    buttonLink: "/settings",
+    buttonLink: "/pricing",
     isStarter: false,
     isFree: true,
   },

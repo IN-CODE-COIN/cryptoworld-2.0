@@ -169,6 +169,7 @@ export const PricingCards = () => {
 
           return (
             <div
+              id="pricing-cards"
               key={idx}
               className={getCardClass(
                 isAuthenticated,
@@ -258,7 +259,9 @@ export const PricingCards = () => {
                 </div>
                 <button
                   onClick={() => handleClick(plan)}
-                  disabled={isActivePlan || plan.isEnterprise}
+                  disabled={
+                    (isActivePlan && !plan.isRecommended) || plan.isEnterprise
+                  }
                   className={getButtonClass(isActivePlan, plan.isEnterprise)}
                 >
                   {getButtonText(plan, isActivePlan)}

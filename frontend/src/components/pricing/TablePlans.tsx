@@ -185,6 +185,9 @@ export const TablePlans: React.FC<TablePlansProps> = ({
                       buttonLabel = "Activo";
                       disabled = true;
                       buttonType = "primary";
+                    } else if (plan.name === "Gratuito" && !isActivePlan) {
+                      buttonLabel = "Cambiar";
+                      buttonType = "primary";
                     } else if (
                       activePlanName === "Gratuito" &&
                       plan.name === "Profesional"
@@ -201,7 +204,12 @@ export const TablePlans: React.FC<TablePlansProps> = ({
                     if (!isAuthenticated) {
                       setModalOpen(true);
                     } else if (!isActivePlan) {
-                      navigate(plan.buttonLink);
+                      if (plan.name === "Empresa") navigate(plan.buttonLink);
+
+                      const element = document.getElementById("pricing-cards");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
                     }
                   };
 
