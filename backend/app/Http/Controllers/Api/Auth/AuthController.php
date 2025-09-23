@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-
     /**
      * Registrar un nuevo usuario
      *
@@ -34,12 +33,13 @@ class AuthController extends Controller
      *     @OA\Response(
      *         response=201,
      *         description="Usuario creado con éxito",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="user", ref="#/components/schemas/User"),
-     *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...")
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/AuthResponse")
      *     ),
-     *     @OA\Response(response=422, description="Error de validación")
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     )
      * )
      */
     public function register(Request $request)
@@ -95,12 +95,13 @@ class AuthController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Login exitoso",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="user", ref="#/components/schemas/User"),
-     *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...")
-     *         )
+     *         @OA\JsonContent(ref="#/components/schemas/AuthResponse")
      *     ),
-     *     @OA\Response(response=401, description="Credenciales inválidas")
+     *     @OA\Response(
+     *         response=401,
+     *         description="Credenciales inválidas",
+     *         @OA\JsonContent(ref="#/components/schemas/AuthError")
+     *     )
      * )
      */
     public function login(Request $request)
@@ -130,7 +131,11 @@ class AuthController extends Controller
      *         description="Información del usuario",
      *         @OA\JsonContent(ref="#/components/schemas/User")
      *     ),
-     *     @OA\Response(response=401, description="No autorizado")
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado",
+     *         @OA\JsonContent(ref="#/components/schemas/Unauthorized")
+     *     )
      * )
      */
     public function me()
@@ -138,5 +143,3 @@ class AuthController extends Controller
         return response()->json(JWTAuth::user(), 200);
     }
 }
-
-

@@ -7,8 +7,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 
+use OpenApi\Annotations as OA;
+
 class CryptoController extends Controller
 {
+    /**
+     * Buscar criptomoneda por nombre o símbolo
+     *
+     * @OA\Get(
+     *     path="/api/crypto/search",
+     *     tags={"Criptomonedas"},
+     *     summary="Buscar criptomoneda",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         description="Texto a buscar (nombre o símbolo de la criptomoneda)",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=200, description="Criptomoneda encontrada", @OA\JsonContent(type="object")),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
+     */
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -25,6 +46,25 @@ class CryptoController extends Controller
         return response()->json($coin);
     }
 
+    /**
+     * Obtener detalles de una criptomoneda por UUID
+     *
+     * @OA\Get(
+     *     path="/api/crypto/{uuid}",
+     *     tags={"Criptomonedas"},
+     *     summary="Detalle de criptomoneda",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         required=true,
+     *         description="UUID de la criptomoneda",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=200, description="Detalle de la criptomoneda", @OA\JsonContent(type="object")),
+     *     @OA\Response(response=404, description="Criptomoneda no encontrada")
+     * )
+     */
     public function show($uuid)
     {
         $response = Http::withHeaders([
@@ -49,7 +89,25 @@ class CryptoController extends Controller
         ]);
     }
 
-
+    /**
+     * Autocompletar búsqueda de criptomonedas
+     *
+     * @OA\Get(
+     *     path="/api/crypto/autocomplete",
+     *     tags={"Criptomonedas"},
+     *     summary="Autocompletar búsqueda",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         description="Texto parcial del nombre o símbolo de la criptomoneda",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response=200, description="Lista de coincidencias", @OA\JsonContent(type="array", @OA\Items(type="object"))),
+     *     @OA\Response(response=400, description="Parámetro faltante")
+     * )
+     */
     public function autocomplete(Request $request)
     {
         $query = $request->input('query');
@@ -79,6 +137,33 @@ class CryptoController extends Controller
         return response()->json($results);
     }
 
+    /**
+     * Obtener precio histórico de una criptomoneda
+     *
+     * @OA\Get(
+     *     path="/api/crypto/price",
+     *     tags={"Criptomonedas"},
+     *     summary="Precio de criptomoneda por timestamp",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="query",
+     *         required=true,
+     *         description="UUID de la criptomoneda",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="timestamp",
+     *         in="query",
+     *         required=true,
+     *         description="Timestamp en segundos",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Precio obtenido correctamente", @OA\JsonContent(type="object")),
+     *     @OA\Response(response=400, description="Parámetros faltantes"),
+     *     @OA\Response(response=500, description="Error en Coinranking")
+     * )
+     */
     public function getPrice(Request $request)
     {
         $uuid = $request->query('uuid');
@@ -118,5 +203,4 @@ class CryptoController extends Controller
 
         return $response->json();
     }
-
 }
