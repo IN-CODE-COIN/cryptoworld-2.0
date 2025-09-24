@@ -341,6 +341,44 @@
                 ]
             }
         },
+        "/api/home": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Top 10 criptomonedas y watchlist del usuario",
+                "description": "Obtener las 10 criptomonedas principales y la watchlist del usuario autenticado",
+                "operationId": "d65ef76cbb32ae304c5a24c525b95adb",
+                "responses": {
+                    "200": {
+                        "description": "Lista de criptomonedas principales y watchlist del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HomeResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error en la consulta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al obtener las criptomonedas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/pricing": {
             "get": {
                 "tags": [
@@ -1188,6 +1226,61 @@
                 },
                 "type": "object"
             },
+            "HomeCrypto": {
+                "title": "Criptomoneda en Home",
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "example": "Qwsogvtv82FCd"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Bitcoin"
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "example": "BTC"
+                    },
+                    "iconUrl": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://cdn.coinranking.com/btc.svg"
+                    },
+                    "price": {
+                        "type": "string",
+                        "example": "27345.50"
+                    },
+                    "change": {
+                        "type": "string",
+                        "example": "-0.52"
+                    },
+                    "marketCap": {
+                        "type": "string",
+                        "example": "530000000000"
+                    }
+                },
+                "type": "object"
+            },
+            "HomeResponse": {
+                "title": "Respuesta Home",
+                "properties": {
+                    "topCryptos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HomeCrypto"
+                        }
+                    },
+                    "watchlistUuids": {
+                        "description": "UUIDs de las criptomonedas en la lista del usuario",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "Qwsogvtv82FCd"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "LoginInput": {
                 "required": [
                     "email",
@@ -1765,6 +1858,10 @@
         {
             "name": "Criptomonedas",
             "description": "Criptomonedas"
+        },
+        {
+            "name": "Home",
+            "description": "Home"
         },
         {
             "name": "Usuarios",

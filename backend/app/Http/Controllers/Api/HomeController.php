@@ -5,9 +5,32 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations as OA;
 
 class HomeController extends Controller
 {
+    /**
+     * Obtener las 10 criptomonedas principales y la watchlist del usuario autenticado
+     *
+     * @OA\Get(
+     *     path="/api/home",
+     *     tags={"Home"},
+     *     summary="Top 10 criptomonedas y watchlist del usuario",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de criptomonedas principales y watchlist del usuario",
+     *         @OA\JsonContent(ref="#/components/schemas/HomeResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error en la consulta",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Error al obtener las criptomonedas")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $response = Http::withHeaders([
@@ -18,7 +41,6 @@ class HomeController extends Controller
 
         $apiCoins = $response->json()['data']['coins'] ?? [];
 
-        // Mapeamos los datos para asegurar que tenemos todo lo que necesitamos
         $topCryptos = array_map(function ($coin) {
             return [
                 'uuid' => $coin['uuid'],
