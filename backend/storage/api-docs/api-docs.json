@@ -341,6 +341,103 @@
                 ]
             }
         },
+        "/api/pricing": {
+            "get": {
+                "tags": [
+                    "Pricing"
+                ],
+                "summary": "Obtener el estado actual del plan del usuario",
+                "operationId": "7e7b0e9290b958cf995ddc2ecb9e1da9",
+                "responses": {
+                    "200": {
+                        "description": "Información del plan del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PricingStatusSchema"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/pricing/trial": {
+            "post": {
+                "tags": [
+                    "Pricing"
+                ],
+                "summary": "Iniciar periodo de prueba gratuita",
+                "operationId": "7385a5f0b624ef3f8f685dc76ca9e4d9",
+                "responses": {
+                    "200": {
+                        "description": "Prueba iniciada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrialResponseSchema"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ya se usó la prueba gratuita o ya es usuario Pro"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/pricing/change-plan": {
+            "post": {
+                "tags": [
+                    "Pricing"
+                ],
+                "summary": "Cambiar plan de suscripción",
+                "operationId": "331ce47a5bd68e6ce2a2b8dc59e97ede",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePlanInputSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plan cambiado con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ChangePlanResponseSchema"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error en los parámetros de entrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -1110,6 +1207,103 @@
                 },
                 "type": "object"
             },
+            "ChangePlanInputSchema": {
+                "required": [
+                    "rol"
+                ],
+                "properties": {
+                    "rol": {
+                        "type": "string",
+                        "enum": [
+                            "normal",
+                            "pro"
+                        ],
+                        "example": "pro"
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "enum": [
+                            "mensual",
+                            "anual"
+                        ],
+                        "example": "mensual",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ChangePlanResponseSchema": {
+                "title": "Respuesta al cambiar plan",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Tu plan ha sido cambiado a pro."
+                    },
+                    "user": {
+                        "description": "Información del usuario",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "rol": {
+                                "type": "string",
+                                "example": "pro"
+                            },
+                            "frequency": {
+                                "type": "string",
+                                "example": "mensual"
+                            },
+                            "trial_ends_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                            },
+                            "pro_started_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "PricingStatusSchema": {
+                "title": "Estado del plan del usuario",
+                "properties": {
+                    "rol": {
+                        "type": "string",
+                        "example": "normal"
+                    },
+                    "onTrial": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "trialEndsAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-01T00:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "TrialResponseSchema": {
+                "title": "Respuesta al iniciar prueba gratuita",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Tu prueba gratuita ha comenzado y durará 7 días."
+                    },
+                    "trialEndsAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-01T00:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
             "RegisterInput": {
                 "required": [
                     "name",
@@ -1560,6 +1754,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Pricing",
+            "description": "Gestión de planes, pruebas gratuitas y suscripciones"
+        },
         {
             "name": "Autenticación",
             "description": "Autenticación"
