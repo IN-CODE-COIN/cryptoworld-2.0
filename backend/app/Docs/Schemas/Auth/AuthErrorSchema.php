@@ -1,5 +1,5 @@
 <?php
-namespace App\Docs\Schemas;
+namespace App\Docs\Schemas\Auth;
 
 /**
  * @OA\Schema(
