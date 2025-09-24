@@ -44,8 +44,9 @@ El objetivo es ofrecer una herramienta **facil de usar y apta para todos los dip
 
 ### Testing
 
-- **PHP Unit** -
-- **Jest** -
+- **PHP Unit**
+- **Vitest**
+- **React-Testing-Library**
 
 ---
 
