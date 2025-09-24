@@ -1,69 +1,102 @@
-# React + TypeScript + Vite
+# Frontend – Cryptoworld 2.0
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 📖 Descripción
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este repositorio contiene el **frontend** de la plataforma de seguimiento de criptomonedas **Cryptoworld 2.0**, desarrollado con **React + Vite + TypeScript**.
 
-## Expanding the ESLint configuration
+El frontend se encarga de la **interfaz de usuario** y de la comunicación con el backend (API en Laravel), ofreciendo funcionalidades como:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔍 Búsqueda y visualización de información de criptomonedas.
+- 📋 Gestión de listas de seguimiento.
+- 📊 Monitoreo de carteras y posiciones de usuario.
+- 🎨 Interfaz moderna, responsiva y optimizada para todos los dispositivos.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tecnologías utilizadas
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **React 18** – Construcción de la interfaz.
+- **TypeScript** – Tipado estático para mayor robustez.
+- **Vite** – Entorno de desarrollo y build rápido.
+- **Tailwind CSS + Flowbite + Ant Design** – Estilos y componentes de UI.
+- **Axios** – Cliente HTTP para consumir la API.
+- **React Router DOM** – Gestión de rutas.
+- **React Icons + Remixicon** – Librerías de iconos.
+- **EmailJS** – Integración con formulario de contacto para envio de emails.
+- **Vitest + Testing Library** – Testing de componentes y lógica.
+
+---
+
+## 🚀 Instalación y ejecución
+
+1. Clonar el repositorio y entrar en el directorio del frontend:
+
+   ```bash
+   git clone https://github.com/IN-CODE-COIN/cryptoworld-2.0.git
+   cd cryptoworld-2.0/frontend
+   ```
+
+2. Instalar dependencias:
+
+   ```bash
+   npm install
+   ```
+
+3. Iniciar el servidor de desarrollo:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Abrir el navegador:
+
+   ```arduino
+   http://localhost:5173
+   ```
+
+## 📂 Estructura del proyecto
+
+```
+frontend/
+├── public/ # Archivos estáticos
+├── src/
+│ ├── components/ # Componentes reutilizables
+| ├── config/ # Componentes de configuración para el front-end
+│ ├── context/ # Componentes providers
+│ ├── hooks/ # Custom hooks
+│ ├── lib/ # Componente Axios
+│ ├── pages/ # Vistas principales
+│ ├── App.tsx # Punto de entrada de la aplicación
+│ └── main.tsx # Renderizado principal
+├── .env
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧪 Testing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+El frontend cuenta con pruebas configuradas mediante Vitest y React Testing Library.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Ejecutar pruebas:
+
+  ```bash
+  npm run test
+  ```
+
+- Ejecutar con interfaz visual:
+
+  ```bash
+  npm run test:ui
+  ```
+
+- Generar reporte de cobertura:
+
+  ```bash
+  npm run test:coverage
+  ```
