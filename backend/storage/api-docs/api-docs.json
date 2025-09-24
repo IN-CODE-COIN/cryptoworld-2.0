@@ -341,6 +341,80 @@
                 ]
             }
         },
+        "/api/crypto-transactions/create": {
+            "get": {
+                "tags": [
+                    "CryptoTransactions"
+                ],
+                "summary": "Obtener criptos en wallet",
+                "description": "Obtener las criptomonedas que el usuario tiene en su wallet",
+                "operationId": "47e9605957452c78cb0351686ebed530",
+                "responses": {
+                    "200": {
+                        "description": "Lista de criptomonedas en la wallet del usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CryptoWalletResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/crypto-transactions": {
+            "post": {
+                "tags": [
+                    "CryptoTransactions"
+                ],
+                "summary": "Registrar transacción de criptomoneda",
+                "description": "Registrar una transacción de compra/venta de criptomonedas",
+                "operationId": "11f0bf5c5a7be8cf0d08c8a1972acb4f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CryptoTransactionInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transacción registrada correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CryptoTransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación o saldo insuficiente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No tienes saldo suficiente para esta compra."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/home": {
             "get": {
                 "tags": [
@@ -1097,6 +1171,67 @@
                 },
                 "type": "object"
             },
+            "LoginInput": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterInput": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Juan Perez"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "juan@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    },
+                    "rol": {
+                        "type": "string",
+                        "example": "normal"
+                    },
+                    "balance": {
+                        "type": "number",
+                        "example": 0
+                    }
+                },
+                "type": "object"
+            },
+            "Unauthorized": {
+                "title": "No autorizado",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "No autorizado"
+                    }
+                },
+                "type": "object"
+            },
             "Coin": {
                 "title": "Criptomoneda",
                 "required": [
@@ -1213,19 +1348,6 @@
                 },
                 "type": "object"
             },
-            "ErrorResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "Error con la operación solicitada"
-                    }
-                },
-                "type": "object"
-            },
             "HomeCrypto": {
                 "title": "Criptomoneda en Home",
                 "properties": {
@@ -1277,25 +1399,6 @@
                             "type": "string",
                             "example": "Qwsogvtv82FCd"
                         }
-                    }
-                },
-                "type": "object"
-            },
-            "LoginInput": {
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "juan@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "format": "password",
-                        "example": "secret123"
                     }
                 },
                 "type": "object"
@@ -1397,57 +1500,105 @@
                 },
                 "type": "object"
             },
-            "RegisterInput": {
+            "CryptoTransactionInput": {
                 "required": [
-                    "name",
-                    "email",
-                    "password"
+                    "crypto_id",
+                    "crypto_name",
+                    "type",
+                    "date",
+                    "amount_usd",
+                    "price_usd",
+                    "quantity"
                 ],
                 "properties": {
-                    "name": {
+                    "crypto_id": {
                         "type": "string",
-                        "example": "Juan Perez"
+                        "example": "Qwsogvtv82FCd"
                     },
-                    "email": {
+                    "crypto_name": {
                         "type": "string",
-                        "format": "email",
-                        "example": "juan@example.com"
+                        "example": "Bitcoin"
                     },
-                    "password": {
+                    "type": {
                         "type": "string",
-                        "format": "password",
-                        "example": "secret123"
+                        "enum": [
+                            "buy",
+                            "sell"
+                        ],
+                        "example": "buy"
                     },
-                    "rol": {
+                    "date": {
                         "type": "string",
-                        "example": "normal"
+                        "format": "date",
+                        "example": "2025-09-24"
+                    },
+                    "amount_usd": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "price_usd": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 27345.5
+                    },
+                    "quantity": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.018
+                    },
+                    "fees": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "CryptoTransactionResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Transacción registrada correctamente."
+                    },
+                    "transaction": {
+                        "type": "object"
+                    },
+                    "position": {
+                        "type": "object"
                     },
                     "balance": {
                         "type": "number",
-                        "example": 0
+                        "example": 1000.5
                     }
                 },
                 "type": "object"
             },
-            "SuccessResponse": {
+            "CryptoWalletResponse": {
                 "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": true
+                    "status": {
+                        "type": "string",
+                        "example": "success"
                     },
-                    "message": {
-                        "type": "string",
-                        "example": "Operación realizada con éxito"
-                    }
-                },
-                "type": "object"
-            },
-            "Unauthorized": {
-                "title": "No autorizado",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "No autorizado"
+                    "cryptos": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "crypto_id": {
+                                    "type": "string",
+                                    "example": "Qwsogvtv82FCd"
+                                },
+                                "crypto_name": {
+                                    "type": "string",
+                                    "example": "Bitcoin"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
@@ -1745,6 +1896,32 @@
                 },
                 "type": "object"
             },
+            "ErrorResponse": {
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Error con la operación solicitada"
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Operación realizada con éxito"
+                    }
+                },
+                "type": "object"
+            },
             "WatchlistInput": {
                 "required": [
                     "uuid",
@@ -1858,6 +2035,10 @@
         {
             "name": "Criptomonedas",
             "description": "Criptomonedas"
+        },
+        {
+            "name": "CryptoTransactions",
+            "description": "CryptoTransactions"
         },
         {
             "name": "Home",

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Docs\Schemas\Auth;
+namespace App\Docs\Schemas\Watchlist;
 
 use OpenApi\Annotations as OA;
 

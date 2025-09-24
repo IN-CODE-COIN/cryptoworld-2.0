@@ -11,6 +11,20 @@ use App\Models\FundMovement;
 
 class CryptoTransactionController extends Controller
 {
+    /**
+     * Obtener las criptomonedas que el usuario tiene en su wallet
+     *
+     * @OA\Get(
+     *     path="/api/crypto-transactions/create",
+     *     tags={"CryptoTransactions"},
+     *     summary="Obtener criptos en wallet",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de criptomonedas en la wallet del usuario",
+     *         @OA\JsonContent(ref="#/components/schemas/CryptoWalletResponse")
+     *     )
+     * )
+     */
     public function create()
     {
         $user = Auth::user();
@@ -26,7 +40,33 @@ class CryptoTransactionController extends Controller
         ]);
     }
 
-
+    /**
+     * Registrar una transacción de compra/venta de criptomonedas
+     *
+     * @OA\Post(
+     *     path="/api/crypto-transactions",
+     *     tags={"CryptoTransactions"},
+     *     summary="Registrar transacción de criptomoneda",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/CryptoTransactionInput")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Transacción registrada correctamente",
+     *         @OA\JsonContent(ref="#/components/schemas/CryptoTransactionResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validación o saldo insuficiente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="No tienes saldo suficiente para esta compra.")
+     *         )
+     *     )
+     * )
+     */
    public function store(Request $request)
     {
         $data = $request->validate([
@@ -152,6 +192,4 @@ class CryptoTransactionController extends Controller
             'balance'     => $user->balance,
         ], 201);
     }
-
-
 }
