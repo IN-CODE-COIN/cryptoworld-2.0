@@ -1,5 +1,5 @@
 <?php
-namespace App\Docs\Schemas;
+namespace App\Docs\Schemas\User;
 
 /**
  * @OA\Schema(
@@ -10,10 +10,10 @@ namespace App\Docs\Schemas;
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="name", type="string", example="Luis"),
  *     @OA\Property(property="email", type="string", example="luis@crypto.com"),
- *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="normal"),
+ *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="normal")
  * )
  */
-class UserSchema { }
+class UserSchema {}
 
 /**
  * @OA\Schema(
@@ -23,10 +23,10 @@ class UserSchema { }
  *     @OA\Property(property="name", type="string", example="Luis"),
  *     @OA\Property(property="email", type="string", example="luis@crypto.com"),
  *     @OA\Property(property="password", type="integer", example=1234),
- *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="pro"),
+ *     @OA\Property(property="rol", type="string", enum={"pro","normal"}, example="pro")
  * )
  */
-class UserInputSchema { }
+class UserInputSchema {}
 
 /**
  * @OA\Schema(
@@ -78,4 +78,21 @@ class NotFoundSchema {}
  */
 class SuccessSchema {}
 
-
+/**
+ * @OA\Schema(
+ *     schema="ServerError",
+ *     type="object",
+ *     title="Server Error",
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         example="error"
+ *     ),
+ *     @OA\Property(
+ *         property="message",
+ *         type="string",
+ *         example="Error interno del servidor"
+ *     )
+ * )
+ */
+class ServerErrorSchema {}

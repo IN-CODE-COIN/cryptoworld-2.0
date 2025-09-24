@@ -6,9 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Tag(
+ *     name="Pricing",
+ *     description="Gestión de planes, pruebas gratuitas y suscripciones"
+ * )
+ */
 class PricingController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/pricing",
+     *     summary="Obtener el estado actual del plan del usuario",
+     *     tags={"Pricing"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Información del plan del usuario",
+     *         @OA\JsonContent(ref="#/components/schemas/PricingStatusSchema")
+     *     ),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function show()
     {
         $user = Auth::user();
@@ -20,6 +41,20 @@ class PricingController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/pricing/trial",
+     *     summary="Iniciar periodo de prueba gratuita",
+     *     tags={"Pricing"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Prueba iniciada",
+     *         @OA\JsonContent(ref="#/components/schemas/TrialResponseSchema")
+     *     ),
+     *     @OA\Response(response=400, description="Ya se usó la prueba gratuita o ya es usuario Pro")
+     * )
+     */
     public function startTrial()
     {
         $user = Auth::user();
@@ -40,6 +75,24 @@ class PricingController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/pricing/change-plan",
+     *     summary="Cambiar plan de suscripción",
+     *     tags={"Pricing"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ChangePlanInputSchema")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Plan cambiado con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/ChangePlanResponseSchema")
+     *     ),
+     *     @OA\Response(response=400, description="Error en los parámetros de entrada")
+     * )
+     */
     public function changePlan(Request $request)
     {
         $user = Auth::user();
