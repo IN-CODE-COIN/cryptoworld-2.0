@@ -16,15 +16,16 @@ En la parte del backend, incluimos una API hecha con Laravel, desde donde vamos 
 
 La aplicación contiene:
 
--   Un sistema de registro y autenticación visual accesible desde `/register` y `/login`.
 -   Un dashboard accesible tras iniciar sesión en `/home`donde podras ver un listado de las principales cryptomonedas ordenadas por capitalización de mercado.
--   Un listado personalizado en `/watchlist` donde podras agregar hasta 5 cryptomonedas o bien sin límite para los usuarios 'pro'
--   Un apartado solo para usuarios 'pro' alojado en `/wallet` donde podrás crear tu propia cartera de cryptomonedas y hacer el seguimiento de la rentabilidad en tiempo real, tanto de cada cryptomoneda como de toda la cartera.
+-   Un listado personalizado en `/watchlist` donde podras agregar hasta 5 cryptomonedas o bien sin límite para los usuarios 'profesiones'
+-   Un apartado solo para usuarios 'profesionales' alojado en `/wallet` donde podrás crear tu propia cartera de cryptomonedas y hacer el seguimiento de la rentabilidad en tiempo real, tanto de cada cryptomoneda como de toda la cartera.
 
     Para realizar esta creación deberás agregar(retirar) saldo a(de) tu cuenta en `/wallet/create` y realizar la compra(venta) de cryptomonedas en `/wallet/transaction/create`.
 
 -   Todos los movimientos estarán disponibles en `/wallet/moves`
--   En `/pricing` se muestran los diferentes planes de la plataforma (gratuito/pro o free trial de 7 días)
+-   En `/pricing` se muestran los diferentes planes de la plataforma (gratuito/profesional o free trial de 7 días).
+-   En `/settings` se muestran las herramientas de configuración e información para el usuario (tema, plan, facturación).
+-   Buscador integrado para conocer los detalles de las cryptomonedas.
 
 ---
 
