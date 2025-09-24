@@ -37,7 +37,7 @@ Contiene los archivos de rutas del proyecto.
 
 -   `api.php` – Rutas para la API REST.
 
-#### `app/Http/Controllers/Api`
+### `app/Http/Controllers/Api`
 
 Contiene todos los controladores necesarios para el funcionamiento de la aplicación.
 
@@ -49,21 +49,19 @@ Contiene todos los controladores necesarios para el funcionamiento de la aplicac
 -   `WalletController.php` – Cartera.
 -   `WatchlistController.php` – Lista de seguimiento.
 
----
-
-#### `app/Docs/Schemas`
+### `app/Docs/Schemas`
 
 Contiene todos los ficheros para la gestión de las respuestas de los end points en Swagger (Schemas).
 
-#### `app/Models`
+### `app/Models`
 
 Contiene todos los modelos de la aplicación.
 
-#### `database/migrations`
+### `database/migrations`
 
 Contiene todos las migraciones realizadas.
 
-#### `storage/api-docs/api-docs.json`
+### `storage/api-docs/api-docs.json`
 
 Contiene el documento json generado por Swagger para obtener la documentación de la API.
 
