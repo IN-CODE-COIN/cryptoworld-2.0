@@ -89,6 +89,12 @@ El frontend cuenta con pruebas configuradas mediante Vitest y React Testing Libr
   npm run test
   ```
 
+- Ejecutar test específico:
+
+  ```bash
+  npm run test -- src/pages/Login/Login.test.tsx
+  ```
+
 - Ejecutar con interfaz visual:
 
   ```bash
