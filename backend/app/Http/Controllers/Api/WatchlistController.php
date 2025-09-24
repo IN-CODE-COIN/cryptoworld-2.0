@@ -1,18 +1,38 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use App\Models\Watchlist;
 
+use App\Models\Watchlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations as OA;
 
 class WatchlistController extends Controller
 {
-
     use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+    /**
+     * Listar criptomonedas en la watchlist del usuario autenticado
+     *
+     * @OA\Get(
+     *     path="/api/watchlist",
+     *     tags={"Watchlist"},
+     *     summary="Obtener lista de criptomonedas en la watchlist",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de criptomonedas obtenida con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/WatchlistResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado",
+     *         @OA\JsonContent(ref="#/components/schemas/Unauthorized")
+     *     )
+     * )
+     */
     public function index()
     {
         $coins = Auth::user()->watchlist;
@@ -41,6 +61,40 @@ class WatchlistController extends Controller
         ]);
     }
 
+    /**
+     * Agregar una criptomoneda a la watchlist
+     *
+     * @OA\Post(
+     *     path="/api/watchlist",
+     *     tags={"Watchlist"},
+     *     summary="Agregar criptomoneda a la watchlist",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/WatchlistInput")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Criptomoneda añadida con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/WatchlistItem")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Límite de monedas alcanzado",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Moneda duplicada en la lista",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado",
+     *         @OA\JsonContent(ref="#/components/schemas/Unauthorized")
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -62,12 +116,11 @@ class WatchlistController extends Controller
             ], 409);
         }
 
-        // Validar el límite de 5 criptomonedas para usuarios no premium
         $count = $user->watchlist()->count();
         if ($count >= 5 && !$user->isPro() && !$user->onTrial()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Has alcanzado el límite de 5 criptomonedas en tu lista de seguimiento. Actualiza tu cuenta a profesional para aumentar tu límite.'
+                'message' => 'Has alcanzado el límite de 5 criptomonedas en tu lista de seguimiento.'
             ], 403);
         }
 
@@ -88,7 +141,33 @@ class WatchlistController extends Controller
         ], 201);
     }
 
-
+    /**
+     * Eliminar criptomoneda de la watchlist
+     *
+     * @OA\Delete(
+     *     path="/api/watchlist/{id}",
+     *     tags={"Watchlist"},
+     *     summary="Eliminar criptomoneda de la watchlist",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de la moneda en la watchlist",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cripto eliminada con éxito",
+     *         @OA\JsonContent(ref="#/components/schemas/SuccessResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autorizado",
+     *         @OA\JsonContent(ref="#/components/schemas/Unauthorized")
+     *     )
+     * )
+     */
     public function destroy(Watchlist $watchlist)
     {
         $this->authorize('delete', $watchlist);
@@ -99,6 +178,4 @@ class WatchlistController extends Controller
             'message' => 'Cripto eliminada de la lista de seguimiento.'
         ]);
     }
-
 }
-

@@ -6,9 +6,26 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations as OA;
 
 class WalletController extends Controller
 {
+     /**
+     * Obtener resumen de la wallet del usuario
+     *
+     * @OA\Get(
+     *     path="/api/wallet",
+     *     tags={"Wallet"},
+     *     summary="Resumen de la wallet (balance, movimientos recientes y posiciones)",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resumen de la wallet",
+     *         @OA\JsonContent(ref="#/components/schemas/WalletSummary")
+     *     ),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function index()
     {
         $user = Auth::user();
@@ -62,12 +79,51 @@ class WalletController extends Controller
         ]);
     }
 
+    /**
+     * Obtener balance actual del usuario
+     *
+     * @OA\Get(
+     *     path="/api/wallet/create",
+     *     tags={"Wallet"},
+     *     summary="Balance disponible del usuario",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Balance actual",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="balance", type="number", example=1500.75)
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function create()
     {
         $user = Auth::user();
         return response()->json(['balance' => $user->balance]);
     }
 
+    /**
+     * Registrar un movimiento (depósito o retirada)
+     *
+     * @OA\Post(
+     *     path="/api/wallet",
+     *     tags={"Wallet"},
+     *     summary="Registrar depósito o retirada",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/WalletMovementInput")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Movimiento registrado",
+     *         @OA\JsonContent(ref="#/components/schemas/WalletMovementResponse")
+     *     ),
+     *     @OA\Response(response=400, description="Saldo insuficiente"),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -111,6 +167,22 @@ class WalletController extends Controller
         ], 201);
     }
 
+    /**
+     * Listar todos los movimientos del usuario
+     *
+     * @OA\Get(
+     *     path="/api/wallet/movements",
+     *     tags={"Wallet"},
+     *     summary="Obtener todos los movimientos",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de movimientos",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/WalletMovement"))
+     *     ),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function show()
     {
         $user = Auth::user();
@@ -118,6 +190,37 @@ class WalletController extends Controller
         return response()->json($movements);
     }
 
+    /**
+     * Actualizar descripción de un movimiento
+     *
+     * @OA\Put(
+     *     path="/api/wallet/{id}",
+     *     tags={"Wallet"},
+     *     summary="Actualizar descripción de un movimiento",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID del movimiento",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="description", type="string", example="Actualización de descripción")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Descripción actualizada",
+     *         @OA\JsonContent(ref="#/components/schemas/WalletMovementResponse")
+     *     ),
+     *     @OA\Response(response=404, description="Movimiento no encontrado"),
+     *     @OA\Response(response=401, description="No autorizado")
+     * )
+     */
     public function update(Request $request, $id)
     {
         $data = $request->validate([
