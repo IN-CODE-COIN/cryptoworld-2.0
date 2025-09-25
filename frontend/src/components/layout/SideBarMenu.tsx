@@ -83,7 +83,7 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
         onBreakpoint={(broken) => setIsMobile(broken)}
         width={isMobile ? "100vw" : 200}
         style={{
-          height: "100vh",
+          height: "100dvh",
           position: isMobile ? "fixed" : "sticky",
           top: 0,
           left: 0,
