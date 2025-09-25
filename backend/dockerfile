@@ -1,0 +1,22 @@
+FROM php:8.2-fpm
+
+# Dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    libpng-dev libonig-dev libxml2-dev zip unzip git curl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+WORKDIR /var/www
+
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copiar composer.json y composer.lock primero
+COPY composer.json composer.lock ./
+RUN composer install --no-scripts --no-autoloader
+
+# Copiar todo el código
+COPY . .
+
+RUN composer dump-autoload --optimize
+
+CMD ["php-fpm"]
