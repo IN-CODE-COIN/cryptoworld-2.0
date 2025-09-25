@@ -1,13 +1,22 @@
 # Etapa 1: build con Node
 FROM node:18-alpine AS builder
 WORKDIR /app
+
+# Copiar dependencias primero
 COPY package*.json ./
 RUN npm install
+
+# Copiar todo el código
 COPY . .
+
+# Variables de entorno si necesitas
+# ENV VITE_API_URL=https://api.tuapp.com
+
+# Build de Vite
 RUN npm run build
 
 # Etapa 2: servir con Nginx
 FROM nginx:alpine
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
