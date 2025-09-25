@@ -1,38 +1,29 @@
-# Etapa 1: Composer install
-FROM composer:2 AS build
-WORKDIR /app
+FROM php:8.2-cli
 
-# Copiar dependencias
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
-
-# Copiar todo el código del backend
-COPY . .
-RUN composer dump-autoload --optimize
-
-# Etapa 2: PHP + Nginx
-FROM php:8.2-fpm-bullseye
-
-# Instalar extensiones necesarias
-RUN apt-get update && apt-get install -y \
-    nginx supervisor \
-    libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libzip-dev unzip git curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql gd zip mbstring exif pcntl bcmath \
+# Instalar dependencias del sistema necesarias
+RUN apt-get update \
+    && apt-get install -y unzip git curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer manualmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
 
-# Copiar el backend desde la etapa de build
-COPY --from=build /app ./
+# Copiar dependencias de Laravel
+COPY composer.json composer.lock ./
 
-# Copiar configs de nginx y supervisord
-COPY docker/nginx.conf /etc/nginx/sites-available/default
-COPY docker/supervisord.conf /etc/supervisord.conf
+# Instalar dependencias de PHP
+RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
 
-# Permisos para storage y cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Copiar el resto del backend
+COPY . .
 
-EXPOSE 80
+# Instalar extensión PDO MySQL para Laravel
+RUN docker-php-ext-install pdo_mysql
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Exponer puerto
+EXPOSE 8000
+
+# Ejecutar Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
