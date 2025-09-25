@@ -1,29 +1,43 @@
-FROM php:8.2-cli
+# Etapa 1: instalar dependencias con Composer
+FROM composer:2 AS builder
 
-# Instalar dependencias del sistema necesarias
-RUN apt-get update \
-    && apt-get install -y unzip git curl \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Instalar Composer manualmente
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Copiar archivos de dependencias
+COPY composer.json composer.lock ./
+
+# Forzar PHP 8.2 para Composer (evita errores con lcobucci)
+RUN composer config platform.php 8.2
+
+# Instalar dependencias sin dev
+RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
+
+# Copiar todo el código del backend
+COPY . .
+
+# Etapa 2: PHP-FPM para servir Laravel
+FROM php:8.2-fpm-bullseye
 
 WORKDIR /var/www/html
 
-# Copiar dependencias de Laravel
-COPY composer.json composer.lock ./
+# Instalar extensiones necesarias de PHP
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Instalar dependencias de PHP
-RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
+# Copiar la aplicación desde la etapa builder
+COPY --from=builder /app /var/www/html
 
-# Copiar el resto del backend
-COPY . .
+# Establecer permisos
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Instalar extensión PDO MySQL para Laravel
-RUN docker-php-ext-install pdo_mysql
-
-# Exponer puerto
 EXPOSE 8000
 
-# Ejecutar Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php-fpm"]
