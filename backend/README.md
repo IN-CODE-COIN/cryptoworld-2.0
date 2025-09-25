@@ -37,6 +37,20 @@ Contiene los archivos de rutas del proyecto.
 
 -   `api.php` – Rutas para la API REST.
 
+#### Rutas Públicas:
+
+-   `/home`
+-   `/pricing`
+-   `/contact`
+-   `/legal`
+-   `/crypto`
+
+#### Rutas Privadas:
+
+-   `/watchlist`
+-   `/cartera`
+-   `/settings`
+
 ### `app/Http/Controllers/Api`
 
 Contiene todos los controladores necesarios para el funcionamiento de la aplicación.
