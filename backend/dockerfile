@@ -1,25 +1,38 @@
-# Dockerfile para Laravel Backend
-FROM php:8.2-fpm
+# Etapa 1: Composer install
+FROM composer:2 AS build
+WORKDIR /app
 
-# Instalar dependencias necesarias
-RUN apt-get update && apt-get install -y \
-    libpng-dev libonig-dev libxml2-dev zip unzip git curl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-WORKDIR /var/www
-
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Copiar dependencias primero (optimiza cache)
+# Copiar dependencias
 COPY composer.json composer.lock ./
-RUN composer install --no-scripts --no-autoloader
+RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
 
-# Copiar todo el código
+# Copiar todo el código del backend
 COPY . .
-
-# Optimizar autoload
 RUN composer dump-autoload --optimize
 
-# Ejecutar PHP-FPM
-CMD ["php-fpm"]
+# Etapa 2: PHP + Nginx
+FROM php:8.2-fpm-bullseye
+
+# Instalar extensiones necesarias
+RUN apt-get update && apt-get install -y \
+    nginx supervisor \
+    libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libzip-dev unzip git curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql gd zip mbstring exif pcntl bcmath \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+
+# Copiar el backend desde la etapa de build
+COPY --from=build /app ./
+
+# Copiar configs de nginx y supervisord
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisord.conf
+
+# Permisos para storage y cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
