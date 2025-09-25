@@ -71,7 +71,7 @@ describe("PricingCards", () => {
     expect(screen.getByText("/año")).toBeInTheDocument();
   });
 
-  it("abre el AuthModal si el usuario no está autenticado y selecciona un plan", () => {
+  it("abre el AuthModal si el usuario no está autenticado y selecciona el plan Gratuito", () => {
     (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       isAuthenticated: false,
       user: null,
@@ -80,23 +80,25 @@ describe("PricingCards", () => {
 
     render(<PricingCards />);
 
-    const startButton = screen.getByRole("button", { name: "Comenzar" });
-    fireEvent.click(startButton);
+    // El primer botón "Comenzar" pertenece al plan Gratuito
+    const startButtons = screen.getAllByRole("button", { name: "Comenzar" });
+    fireEvent.click(startButtons[0]);
 
     expect(screen.getByText("AuthModal abierto")).toBeInTheDocument();
   });
 
-  it("abre el PlanSelectorForm si el usuario está autenticado y selecciona un plan", () => {
+  it("abre el PlanSelectorForm si el usuario está autenticado (rol pro) y selecciona el plan Gratuito", () => {
     (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       isAuthenticated: true,
-      user: { id: "1", rol: "normal", has_used_trial: false },
+      user: { id: "1", rol: "pro", has_used_trial: false },
       login: vi.fn(),
     });
 
     render(<PricingCards />);
 
-    const startButton = screen.getByRole("button", { name: "Comenzar" });
-    fireEvent.click(startButton);
+    // En este caso, el botón de Gratuito debería ser "Cambiar"
+    const changeButton = screen.getByRole("button", { name: "Cambiar" });
+    fireEvent.click(changeButton);
 
     expect(screen.getByText("PlanSelectorForm abierto")).toBeInTheDocument();
   });
