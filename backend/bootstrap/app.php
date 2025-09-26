@@ -4,10 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Cache\RateLimiting\Limit;
-use Tymon\JWTAuth\Http\Middleware\Authenticate as JwtAuthenticate;
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -23,10 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         ]);
 
         $middleware->group('api', [
+            \App\Http\Middleware\TrustProxies::class,
             \Illuminate\Http\Middleware\HandleCors::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
