@@ -1,12 +1,19 @@
-# Etapa 1: instalar dependencias con Composer
-FROM composer:2 AS builder
+# Etapa 1: instalar dependencias con Composer en PHP 8.2
+FROM php:8.2-cli-bullseye AS builder
 
 WORKDIR /app
+
+# Instalar dependencias necesarias para Composer
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copiar archivos de dependencias
 COPY composer.json composer.lock ./
 
-# Forzar PHP 8.2 para Composer (evita errores con lcobucci)
+# Forzar PHP 8.2 para Composer
 RUN composer config platform.php 8.2
 
 # Instalar dependencias sin dev
