@@ -1,50 +1,31 @@
-# Etapa 1: instalar dependencias con Composer en PHP 8.2
+# Etapa 1: Composer
 FROM php:8.2-cli-bullseye AS builder
 
 WORKDIR /app
 
-# Instalar dependencias necesarias para Composer
-RUN apt-get update && apt-get install -y \
-    unzip \
-    git \
-    curl \
+RUN apt-get update && apt-get install -y unzip git curl \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copiar archivos de dependencias
 COPY composer.json composer.lock ./
-
-# Forzar PHP 8.2 para Composer
-RUN composer config platform.php 8.2
-
-# Instalar dependencias sin dev
 RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
 
-# Copiar todo el código del backend
 COPY . .
 
-# Etapa 2: PHP-FPM para servir Laravel
+# Etapa 2: PHP-FPM
 FROM php:8.2-fpm-bullseye
 
 WORKDIR /var/www/html
 
-# Instalar extensiones necesarias de PHP
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    git \
-    curl \
+    libpng-dev libonig-dev libxml2-dev zip unzip git curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Copiar la aplicación desde la etapa builder
 COPY --from=builder /app /var/www/html
 
-# Establecer permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-EXPOSE 8000
+# PHP-FPM escucha en el puerto 9000
+EXPOSE 9000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php-fpm"]
