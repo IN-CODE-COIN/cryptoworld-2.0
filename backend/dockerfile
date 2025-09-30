@@ -1,22 +1,20 @@
-# Backend: PHP-FPM para producción
+# Etapa 1: instalar dependencias
 FROM php:8.2-fpm-bullseye
 
 WORKDIR /var/www/html
 
-# Instalar extensiones necesarias
+COPY . .
+
 RUN apt-get update && apt-get install -y \
     libpng-dev libonig-dev libxml2-dev zip unzip git curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Copiar el código
-COPY . .
-
-# Establecer permisos
+# Permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
 # Exponer puerto PHP-FPM
 EXPOSE 9000
 
-# Arrancar PHP-FPM
+# Solo PHP-FPM, sin artisan serve
 CMD ["php-fpm"]

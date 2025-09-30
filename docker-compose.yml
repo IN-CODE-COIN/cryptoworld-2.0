@@ -36,9 +36,7 @@ services:
 
   # ─── LARAVEL - NGINX ───────────────────────────────
   laravel-nginx:
-    build:
-      context: ./backend/docker/nginx
-      dockerfile: Dockerfile # si tienes Dockerfile específico para Nginx
+    image: nginx:stable-alpine
     container_name: laravel-nginx
     volumes:
       - ./backend:/var/www/html
