@@ -12,7 +12,7 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`cryptoworld-frontend-xxxx.traefik.me`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
-  # ─── LARAVEL - PHP (FPM) ─────────────────────────────
+  # ─── LARAVEL - PHP-FPM ─────────────────────────────
   laravel-php:
     build:
       context: ./backend
@@ -34,12 +34,11 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: secret
 
-  # ─── LARAVEL - NGINX ─────────────────────────────────
+  # ─── LARAVEL - NGINX ───────────────────────────────
   laravel-nginx:
     build:
       context: ./backend/docker/nginx
-      dockerfile: Dockerfile
-    image: nginx:stable-alpine
+      dockerfile: Dockerfile # si tienes Dockerfile específico para Nginx
     container_name: laravel-nginx
     volumes:
       - ./backend:/var/www/html
