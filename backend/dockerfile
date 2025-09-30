@@ -12,12 +12,15 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
-# Copiar archivos de Composer y dependencias
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
-
-# Copiar el resto del código
+# ───────── Copiar todo el código primero ─────────
 COPY . .
+
+# ───────── Instalar dependencias ─────────
+# Desactivar scripts de Laravel durante la instalación
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Ejecutar scripts después
+RUN php artisan package:discover
 
 # Permisos
 RUN chown -R www-data:www-data /var/www/html \
