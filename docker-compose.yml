@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  # ─── FRONTEND ───────────────────────────────
+  # ─── FRONTEND (React) ───────────────────────────────
   frontend:
     build: ./frontend
     container_name: frontend
@@ -12,7 +12,7 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`cryptoworld-frontend-xxxx.traefik.me`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
-  # ─── LARAVEL - PHP (FPM) ────────────────────
+  # ─── LARAVEL - PHP (FPM) ─────────────────────────────
   laravel-php:
     build:
       context: ./backend
@@ -34,7 +34,7 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: secret
 
-  # ─── LARAVEL - NGINX ────────────────────────
+  # ─── LARAVEL - NGINX ─────────────────────────────────
   laravel-nginx:
     image: nginx:stable-alpine
     container_name: laravel-nginx
@@ -50,15 +50,13 @@ services:
       - "traefik.http.routers.backend.rule=Host(`cryptoworld-backend-xxxx.traefik.me`)"
       - "traefik.http.services.backend.loadbalancer.server.port=80"
 
-  # ─── MYSQL ─────────────────────────────────
+  # ─── MYSQL ─────────────────────────────────────────
   db:
     image: mysql:8
     container_name: db
     environment:
       MYSQL_DATABASE: cryptoworld
       MYSQL_ROOT_PASSWORD: secret
-    ports:
-      - "3306:3306" # opcional, solo si quieres acceder desde local
     volumes:
       - db_data:/var/lib/mysql
     networks:

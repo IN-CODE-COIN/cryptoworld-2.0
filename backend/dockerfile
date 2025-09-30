@@ -1,31 +1,22 @@
-# Etapa 1: Composer
-FROM php:8.2-cli-bullseye AS builder
-
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y unzip git curl \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-progress --prefer-dist
-
-COPY . .
-
-# Etapa 2: PHP-FPM
+# Backend: PHP-FPM para producción
 FROM php:8.2-fpm-bullseye
 
 WORKDIR /var/www/html
 
+# Instalar extensiones necesarias
 RUN apt-get update && apt-get install -y \
     libpng-dev libonig-dev libxml2-dev zip unzip git curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-COPY --from=builder /app /var/www/html
+# Copiar el código
+COPY . .
 
+# Establecer permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# PHP-FPM escucha en el puerto 9000
+# Exponer puerto PHP-FPM
 EXPOSE 9000
 
+# Arrancar PHP-FPM
 CMD ["php-fpm"]
