@@ -41,6 +41,7 @@ Route::middleware('auth.jwt')->group(function () {
     Route::post('/change-plan', [PricingController::class, 'changePlan']);
 });
 
+//*Ruta de prueba*//
 Route::get('/ping', fn() => response()->json(['pong' => true]));
 
 //* Login - Register *//
