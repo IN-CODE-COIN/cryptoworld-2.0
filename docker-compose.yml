@@ -1,13 +1,9 @@
-version: '3.8'
-
 services:
   frontend:
     build: ./frontend
     container_name: cryptoworld-frontend
     ports:
       - "3000:80"
-    depends_on:
-      - backend
 
   backend:
     build: ./backend
@@ -35,6 +31,6 @@ services:
       REDIS_PASSWORD: null
       REDIS_PORT: 6379
     depends_on:
-      - frontend
+      - db
     ports:
       - "9000:9000"
