@@ -6,7 +6,7 @@ return [
     'allowed_methods' => ['*'],
     
     'allowed_origins' => [
-        'https://cryptoworld-frontend-xxxx.traefik.me',
+        'http://cryptoworld-frontend-accoao-b09413-72-60-186-210.traefik.me',
         'http://localhost:5173',
     ],
     
