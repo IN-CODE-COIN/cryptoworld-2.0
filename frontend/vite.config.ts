@@ -14,12 +14,18 @@ export default defineConfig({
   },
   base: "/",
   server: {
-    proxy: {
-      "/api": {
-        target: "https://api-ui-neon.vercel.app",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+    port: 5173,
+  },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          antd: ["antd"],
+          axios: ["axios"],
+        },
       },
     },
   },
