@@ -62,6 +62,24 @@ services:
     networks:
       - appnet
 
+  # ─── PHMYADMIN ────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2.1
+    container_name: cryptoworld-phpmyadmin
+    environment:
+      PMA_HOST: cryptoworld-db
+      PMA_USER: root
+      PMA_PASSWORD: kjl33bzk3z5uoq1
+      PMA_ARBITRARY: 1
+    depends_on:
+      - db
+    networks:
+      - appnet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.cryptoworld.traefik.me`)"
+      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+
 volumes:
   db_data:
 
