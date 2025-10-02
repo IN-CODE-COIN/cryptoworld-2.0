@@ -6,7 +6,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL:-https://api.cryptoworld.cloud/api}
     ports:
-      - "3600:80"
+      - "3601:80"
     restart: unless-stopped
     environment:
       - VITE_API_URL=https://api.cryptoworld.cloud/api
