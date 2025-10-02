@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 
 export type Props = {
   collapsed: boolean;
@@ -19,7 +19,7 @@ export const ButtonCollapseSider: React.FC<Props> = ({
   style,
   className,
 }) => {
-  const icon = collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
+  const icon = collapsed ? <MenuOutlined /> : <CloseOutlined />;
 
   return (
     <Button
