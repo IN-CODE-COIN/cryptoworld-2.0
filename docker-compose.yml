@@ -4,6 +4,8 @@ services:
     container_name: cryptoworld-frontend
     ports:
       - "3001:80"
+    environment:
+      - VITE_API_URL=https://api.cryptoworld.cloud/api
 
   backend:
     build: ./backend
@@ -11,12 +13,15 @@ services:
     volumes:
       - ./backend:/var/www
     environment:
-      # Variables para Laravel
+      # Aplicación
       APP_NAME: CryptoWorld
       APP_ENV: production
       APP_KEY: base64:3cgFE4bPHNf9ba45jDD6LI/vwHE5BeXEdWANQ9nkEfM=
       APP_DEBUG: false
-      APP_URL: https://midominio.com
+      APP_URL: https://api.cryptoworld.cloud
+
+      # Frontend
+      FRONTEND_URL: https://cryptoworld.cloud
 
       # Base de datos
       DB_CONNECTION: mysql
@@ -26,9 +31,21 @@ services:
       DB_USERNAME: laravel
       DB_PASSWORD: bfvhe9iiyj7jjzla
 
-      # Redis (si usaras)
+      # Session
+      SESSION_DRIVER: cookie
+      SESSION_DOMAIN: .cryptoworld.cloud
+      SESSION_SECURE_COOKIE: true
+      SESSION_LIFETIME: 120
+
+      # Sanctum
+      SANCTUM_STATEFUL_DOMAINS: cryptoworld.cloud,www.cryptoworld.cloud
+
+      # Redis
       REDIS_HOST: dokploy-redis.1.cp1qtw9zq2gg4rs74ezip8a0o
       REDIS_PASSWORD: null
       REDIS_PORT: 6379
+
+      # API Keys
+      COINRANKING_API_KEY: coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
     ports:
       - "9000:9000"

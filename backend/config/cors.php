@@ -6,7 +6,15 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://cryptoworld-frontend-accoao-b09413-72-60-186-210.traefik.me'],
+    'allowed_origins' => [
+        'https://cryptoworld.cloud',
+        'https://www.cryptoworld.cloud',
+        'http://localhost:5173',
+    ],
+
+    'allowed_origins_patterns' => [
+        '/^https:\/\/.*\.cryptoworld\.cloud$/',
+    ],
 
     'allowed_headers' => ['*'],
 
