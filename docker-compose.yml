@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL:-https://api.cryptoworld.cloud/api}
-    container_name: cryptoworld-frontend
     ports:
       - "3001:80"
     restart: unless-stopped
@@ -16,7 +15,6 @@ services:
 
   backend:
     build: ./backend
-    container_name: cryptoworld-backend
     volumes:
       - ./backend:/var/www
     environment:
