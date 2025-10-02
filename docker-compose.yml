@@ -23,8 +23,6 @@ services:
     build: ./backend
     volumes:
       - ./backend:/var/www
-    depends_on:
-      - db
     environment:
       # Aplicación
       APP_NAME: CryptoWorld
