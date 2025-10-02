@@ -53,7 +53,7 @@ services:
       # API Keys
       COINRANKING_API_KEY: coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
     ports:
-      - "9001:9000"
+      - "9002:9000"
 
 networks:
   cryptoworld-network:
