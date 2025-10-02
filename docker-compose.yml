@@ -3,8 +3,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL:-https://api.cryptoworld.cloud/api}
+    container_name: cryptoworld-frontend
     ports:
       - "80"
     healthcheck:
@@ -13,9 +12,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 5s
-    restart: unless-stopped
-    environment:
-      - VITE_API_URL=https://api.cryptoworld.cloud/api
+    restart: always
     networks:
       - cryptoworld-network
 
@@ -36,7 +33,7 @@ services:
 
       # Base de datos
       DB_CONNECTION: mysql
-      DB_HOST: cryptoworld-db-uc2ae5
+      DB_HOST: db
       DB_PORT: 3306
       DB_DATABASE: cryptoworld
       DB_USERNAME: laravel
@@ -52,7 +49,7 @@ services:
       SANCTUM_STATEFUL_DOMAINS: cryptoworld.cloud,www.cryptoworld.cloud
 
       # Redis
-      REDIS_HOST: dokploy-redis.1.cp1qtw9zq2gg4rs74ezip8a0o
+      REDIS_HOST: redis
       REDIS_PASSWORD: null
       REDIS_PORT: 6379
 
@@ -60,6 +57,26 @@ services:
       COINRANKING_API_KEY: coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
     ports:
       - "9000"
+  db:
+    image: mysql:8
+    container_name: cryptoworld-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mc6fjp4szjwir6uu
+      - MYSQL_DATABASE=cryptoworld
+      - MYSQL_USER=laravel
+      - MYSQL_PASSWORD=bfvhe9iiyj7jjzla
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7
+    container_name: cryptoworld-redis
+    restart: always
+    ports:
+      - "6379:6379"
 
 networks:
   cryptoworld-network:
