@@ -22,6 +22,8 @@ services:
     build: ./backend
     volumes:
       - ./backend:/var/www
+    networks:
+      - cryptoworld-network
     environment:
       # Aplicación
       APP_NAME: CryptoWorld
