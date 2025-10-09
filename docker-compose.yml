@@ -1,29 +1,12 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: cryptoworld-frontend
-    ports:
-      - "80:80"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    restart: always
-    networks:
-      - cryptoworld-network
-    volumes:
-      - ./backend/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-
   backend:
-    build: ./backend
-    volumes:
-      - ./backend:/var/www
-    networks:
-      - cryptoworld-network
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cryptoworld-backend
+    restart: always
+    depends_on:
+      - db
     environment:
       # Aplicación
       APP_NAME: CryptoWorld
@@ -52,35 +35,39 @@ services:
       # Sanctum
       SANCTUM_STATEFUL_DOMAINS: cryptoworld.cloud,www.cryptoworld.cloud
 
-      # Redis
+      # Redis (solo si lo usas)
       REDIS_HOST: redis
-      REDIS_PASSWORD: null
       REDIS_PORT: 6379
 
       # API Keys
       COINRANKING_API_KEY: coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
+    networks:
+      - cryptoworld-network
     ports:
-      - "9000"
+      - "9000:9000"
+    volumes:
+      - ./backend:/var/www
+
   db:
     image: mysql:8
     container_name: cryptoworld-db
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=mc6fjp4szjwir6uu
-      - MYSQL_DATABASE=cryptoworld
-      - MYSQL_USER=laravel
-      - MYSQL_PASSWORD=bfvhe9iiyj7jjzla
+      MYSQL_ROOT_PASSWORD: mc6fjp4szjwir6uu
+      MYSQL_DATABASE: cryptoworld
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: bfvhe9iiyj7jjzla
     volumes:
       - db_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+    networks:
+      - cryptoworld-network
 
   redis:
     image: redis:7
     container_name: cryptoworld-redis
     restart: always
-    ports:
-      - "6379:6379"
+    networks:
+      - cryptoworld-network
 
 networks:
   cryptoworld-network:
