@@ -20,6 +20,7 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::get('/me', [AuthController::class, 'me']);
     //* Rutas de watchlist *//
     Route::get('/watchlist', [WatchlistController::class, 'index']);
