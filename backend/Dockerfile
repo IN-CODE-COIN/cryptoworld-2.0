@@ -15,7 +15,7 @@ RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-di
 # ==============================
 # 2️⃣ Etapa final (Runtime)
 # ==============================
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # Instalar extensiones requeridas por Laravel
 RUN apt-get update && apt-get install -y \
