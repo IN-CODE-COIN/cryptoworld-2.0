@@ -19,6 +19,12 @@
    - **Password:** `genera_password_seguro` (guárdalo)
 3. Una vez creado, anota el **host interno** (ej: `mysql-service.dokploi.internal`)
 
+### phpMyAdmin (Opcional):
+
+Si despliegas con docker-compose local:
+- Accede a phpMyAdmin en: `http://localhost:8080`
+- Usuario: `laravel` / Password: el que configuraste en DB_PASSWORD
+
 ---
 
 ## 2️⃣ Despliegue del Backend (Laravel) en Dokploi

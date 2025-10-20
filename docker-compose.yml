@@ -69,6 +69,23 @@ services:
     networks:
       - cryptoworld-network
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: cryptoworld-phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: laravel
+      PMA_PASSWORD: [REDACTED:password]
+      UPLOAD_LIMIT: 50M
+    ports:
+      - "8080:80"
+    networks:
+      - cryptoworld-network
+
 networks:
   cryptoworld-network:
     driver: bridge
