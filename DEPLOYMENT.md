@@ -38,7 +38,8 @@ Si despliegas con docker-compose local:
    - **Root directory:** `backend`
    - **Build Type:** `Dockerfile`
    - **Dockerfile Path:** `Dockerfile`
-   - **Port:** `80`
+   - **Internal Port:** `80` (puerto donde escucha nginx dentro del contenedor)
+   - **Start Command:** Déjalo VACÍO (usa el CMD del Dockerfile con supervisord)
 
 ### B. Variables de entorno:
 
@@ -56,15 +57,18 @@ JWT_SECRET=                 # Genera con: php artisan jwt:secret --show
 COINRANKING_API_KEY=        # Tu API key de CoinRanking
 ```
 
-### C. Configurar Build Command y Start Command:
+### C. Verificar configuración de Dokploi:
 
-**⚠️ IMPORTANTE:** Con el Dockerfile actual, NO necesitas configurar Build Command ni Start Command manualmente. El Dockerfile se encarga de todo.
+**⚠️ IMPORTANTE - NO uses `php artisan serve` en producción:**
 
-Si Dokploi lo requiere, usa:
-
-**Build Command:** (dejar vacío, el Dockerfile lo maneja)
-
-**Start Command:** (dejar vacío, usa el CMD del Dockerfile)
+- **Build Command:** Vacío (el Dockerfile lo maneja)
+- **Start Command:** Vacío (usa el CMD del Dockerfile: supervisord con nginx + php-fpm)
+- **Internal Port:** 80
+- Si el deploy falla, verifica dentro del contenedor:
+  ```bash
+  ps aux | egrep "nginx|php-fpm"
+  ss -lntp | grep ":80"
+  ```
 
 ### D. Dominio y SSL:
 

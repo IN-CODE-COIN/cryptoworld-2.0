@@ -9,7 +9,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 
 # Instalamos dependencias sin las de desarrollo
-RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --ignore-platform-reqs
+RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts --ignore-platform-reqs
 
 
 # ==============================
@@ -48,6 +48,10 @@ COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Exponer puerto HTTP
 EXPOSE 80
+
+# Healthcheck para nginx
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+    CMD curl -fsS http://localhost/ || exit 1
 
 # Comando por defecto
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
