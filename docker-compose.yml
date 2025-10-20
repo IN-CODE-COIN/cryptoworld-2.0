@@ -44,7 +44,7 @@ services:
     networks:
       - cryptoworld-network
     ports:
-      - "9000:9000"
+      - "80:80"
     volumes:
       - ./backend:/var/www
 
