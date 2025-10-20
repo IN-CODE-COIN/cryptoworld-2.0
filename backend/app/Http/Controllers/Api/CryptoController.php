@@ -42,12 +42,18 @@ class CryptoController extends Controller
     {
         $query = $request->input('query');
 
-        $response = Http::withHeaders([
-            'x-access-token' => env('COINRANKING_API_KEY')])
-            ->get('https://api.coinranking.com/v2/coins', [
-                'search' => $query,
-                'limit' => 1
-            ]);
+        $http = Http::withHeaders([
+            'x-access-token' => env('COINRANKING_API_KEY')
+        ]);
+
+        if (app()->environment('local')) {
+            $http = $http->withOptions(['verify' => false]);
+        }
+
+        $response = $http->get('https://api.coinranking.com/v2/coins', [
+            'search' => $query,
+            'limit' => 1
+        ]);
 
         $coin = collect($response->json()['data']['coins'])->first();
 
@@ -83,9 +89,15 @@ class CryptoController extends Controller
      */
     public function show($uuid)
     {
-        $response = Http::withHeaders([
+        $http = Http::withHeaders([
             'x-access-token' => env('COINRANKING_API_KEY')
-        ])->get("https://api.coinranking.com/v2/coin/{$uuid}");
+        ]);
+
+        if (app()->environment('local')) {
+            $http = $http->withOptions(['verify' => false]);
+        }
+
+        $response = $http->get("https://api.coinranking.com/v2/coin/{$uuid}");
 
         if (!$response->successful()) {
             return response()->json([
@@ -140,9 +152,15 @@ class CryptoController extends Controller
             return response()->json([]);
         }
 
-        $response = Http::withHeaders([
+        $http = Http::withHeaders([
             'x-access-token' => env('COINRANKING_API_KEY'),
-        ])->get('https://api.coinranking.com/v2/coins', [
+        ]);
+
+        if (app()->environment('local')) {
+            $http = $http->withOptions(['verify' => false]);
+        }
+
+        $response = $http->get('https://api.coinranking.com/v2/coins', [
             'search' => $query,
             'limit' => 5,
         ]);

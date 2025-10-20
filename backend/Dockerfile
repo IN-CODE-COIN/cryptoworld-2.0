@@ -36,12 +36,10 @@ COPY --from=vendor /app/vendor ./vendor
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Caches de Laravel para optimizar rendimiento
-RUN php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear \
-    && php artisan config:cache \
-    && php artisan route:cache
+# Caches de Laravel para optimizar rendimiento (solo si no hay env)
+RUN php artisan config:clear || true \
+    && php artisan route:clear || true \
+    && php artisan view:clear || true
 
 # Exponer puerto FPM
 EXPOSE 9000

@@ -33,9 +33,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $response = Http::withHeaders([
+        $http = Http::withHeaders([
             'x-access-token' => env('COINRANKING_API_KEY'),
-        ])->get('https://api.coinranking.com/v2/coins', [
+        ]);
+
+        // Deshabilitar verificación SSL solo en desarrollo local
+        if (app()->environment('local')) {
+            $http = $http->withOptions(['verify' => false]);
+        }
+
+        $response = $http->get('https://api.coinranking.com/v2/coins', [
             'limit' => 10,
         ]);
 

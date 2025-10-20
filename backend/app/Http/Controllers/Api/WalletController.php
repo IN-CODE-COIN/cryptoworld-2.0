@@ -39,9 +39,15 @@ class WalletController extends Controller
                 $coinUuid = $pos->crypto_id;
                 $cryptoName = $pos->crypto_name;
 
-                $response = Http::withHeaders([
+                $http = Http::withHeaders([
                     'x-access-token' => env('COINRANKING_API_KEY')
-                ])->get("https://api.coinranking.com/v2/coin/{$coinUuid}");
+                ]);
+
+                if (app()->environment('local')) {
+                    $http = $http->withOptions(['verify' => false]);
+                }
+
+                $response = $http->get("https://api.coinranking.com/v2/coin/{$coinUuid}");
 
                 $data = $response->json();
 

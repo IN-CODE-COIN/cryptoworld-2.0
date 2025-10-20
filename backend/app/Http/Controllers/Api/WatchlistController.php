@@ -38,9 +38,15 @@ class WatchlistController extends Controller
         $coins = Auth::user()->watchlist;
 
         $watchlist = $coins->map(function ($coin) {
-            $response = Http::withHeaders([
+            $http = Http::withHeaders([
                 'x-access-token' => env('COINRANKING_API_KEY')
-            ])->get("https://api.coinranking.com/v2/coin/{$coin->coin_uuid}");
+            ]);
+
+            if (app()->environment('local')) {
+                $http = $http->withOptions(['verify' => false]);
+            }
+
+            $response = $http->get("https://api.coinranking.com/v2/coin/{$coin->coin_uuid}");
 
             $data = $response->json();
 
