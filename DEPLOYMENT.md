@@ -26,12 +26,13 @@
 ### A. Configurar el servicio Backend:
 
 1. Crea un nuevo servicio en Dokploi
-2. Conecta tu repositorio GitHub
+2. Conecta tu repositorio GitHub: `https://github.com/IN-CODE-COIN/cryptoworld-2.0`
 3. Configura:
    - **Branch:** `main` (o la que uses)
-   - **Root directory:** `/backend`
-   - **Dockerfile:** `Dockerfile`
-   - **Port:** `9000`
+   - **Root directory:** `backend`
+   - **Build Type:** `Dockerfile`
+   - **Dockerfile Path:** `Dockerfile`
+   - **Port:** `80`
 
 ### B. Variables de entorno:
 
@@ -51,15 +52,13 @@ COINRANKING_API_KEY=        # Tu API key de CoinRanking
 
 ### C. Configurar Build Command y Start Command:
 
-**Build Command:**
-```bash
-composer install --no-dev --optimize-autoloader
-```
+**⚠️ IMPORTANTE:** Con el Dockerfile actual, NO necesitas configurar Build Command ni Start Command manualmente. El Dockerfile se encarga de todo.
 
-**Start Command:**
-```bash
-chmod +x start.sh && ./start.sh
-```
+Si Dokploi lo requiere, usa:
+
+**Build Command:** (dejar vacío, el Dockerfile lo maneja)
+
+**Start Command:** (dejar vacío, usa el CMD del Dockerfile)
 
 ### D. Dominio y SSL:
 
