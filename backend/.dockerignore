@@ -1,0 +1,47 @@
+# Ignorar archivos de desarrollo
+.env
+.env.local
+.env.*.local
+.env.testing
+
+# Ignorar vendor (se instala en el build)
+vendor/
+
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de Git
+.git
+.gitignore
+.gitattributes
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignorar logs y cache
+storage/logs/*
+!storage/logs/.gitignore
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# Ignorar tests
+tests/
+.phpunit.result.cache
+phpunit.xml
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de documentación
+README.md
+*.md
+!AGENTS.md
+
+# Ignorar archivos temporales
+*.log
+*.tmp

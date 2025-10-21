@@ -1,42 +1,116 @@
-# ==============================
-# 1️⃣ Etapa de construcción (Build)
-# ==============================
-FROM composer:2 AS vendor
+# ============================================
+# Dockerfile para Laravel en Dokploi
+# ============================================
 
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts --ignore-platform-reqs
-
-# ==============================
-# 2️⃣ Etapa final (Runtime)
-# ==============================
 FROM php:8.2-fpm
 
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl libpng-dev libonig-dev libxml2-dev \
-    nginx supervisor \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    nginx \
+    supervisor \
     && docker-php-ext-install pdo_mysql zip bcmath exif \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/www/html
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copiar código y dependencias
+# Configurar directorio de trabajo
+WORKDIR /var/www
+
+# Copiar archivos de composer primero (para cache)
+COPY composer.json composer.lock ./
+
+# Instalar dependencias de PHP
+RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts
+
+# Copiar el resto del código
 COPY . .
-COPY --from=vendor /app/vendor ./vendor
 
-# ✅ Crear carpetas necesarias si no existen
-RUN mkdir -p storage bootstrap/cache public \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+# Ejecutar scripts post-install de composer
+RUN composer dump-autoload --optimize
 
-# Configurar Nginx y Supervisor
+# Configurar permisos
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 /var/www/storage \
+    && chmod -R 775 /var/www/bootstrap/cache
+
+# Copiar configuración de Nginx
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default
-COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default \
+    && rm -f /etc/nginx/sites-enabled/default
 
+# Copiar configuración de Nginx directamente
+RUN echo 'server {\n\
+    listen 80;\n\
+    server_name _;\n\
+    root /var/www/public;\n\
+    index index.php index.html;\n\
+    charset utf-8;\n\
+\n\
+    location / {\n\
+        try_files $uri $uri/ /index.php?$query_string;\n\
+    }\n\
+\n\
+    location = /favicon.ico { access_log off; log_not_found off; }\n\
+    location = /robots.txt  { access_log off; log_not_found off; }\n\
+\n\
+    error_page 404 /index.php;\n\
+\n\
+    location ~ \.php$ {\n\
+        fastcgi_pass 127.0.0.1:9000;\n\
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n\
+        fastcgi_param PATH_INFO $fastcgi_path_info;\n\
+        include fastcgi_params;\n\
+    }\n\
+\n\
+    location ~ /\.(?!well-known).* {\n\
+        deny all;\n\
+    }\n\
+}' > /etc/nginx/sites-available/default
+
+# Copiar configuración de Supervisor
+RUN echo '[supervisord]\n\
+nodaemon=true\n\
+user=root\n\
+logfile=/dev/stdout\n\
+logfile_maxbytes=0\n\
+pidfile=/var/run/supervisord.pid\n\
+\n\
+[program:php-fpm]\n\
+command=/usr/local/sbin/php-fpm -F\n\
+autostart=true\n\
+autorestart=true\n\
+priority=5\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+\n\
+[program:nginx]\n\
+command=/usr/sbin/nginx -g "daemon off;"\n\
+autostart=true\n\
+autorestart=true\n\
+priority=10\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
+
+# Exponer puerto
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-    CMD curl -fsS http://localhost/ || exit 1
+# Script de inicio
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Comando de inicio
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
