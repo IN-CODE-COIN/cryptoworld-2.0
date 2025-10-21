@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Configurar el directorio de trabajo
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 # Copiar el código de la aplicación
 COPY . .
