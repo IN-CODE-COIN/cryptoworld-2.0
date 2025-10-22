@@ -4,6 +4,9 @@
 
 FROM php:8.2-fpm
 
+# Configurar directorio de trabajo
+WORKDIR /var/www
+
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -22,9 +25,6 @@ RUN apt-get update && apt-get install -y \
 
 # Instalar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Configurar directorio de trabajo
-WORKDIR /var/www
 
 # Copiar archivos de composer primero (para cache)
 COPY composer.json composer.lock ./
@@ -106,11 +106,7 @@ stderr_logfile=/dev/stderr\n\
 stderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
 
 # Exponer puerto
-EXPOSE 80
-
-# Script de inicio
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+EXPOSE 8000
 
 # Comando de inicio
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD php artisan serve --host=0.0.0.0 --port=8000
