@@ -48,7 +48,7 @@ services:
     volumes:
       - ./backend:/var/www
     command: php artisan serve --host=0.0.0.0 --port=80
-    deploi:
+    deploy:
       replicas: 1
 
   db:
@@ -82,7 +82,7 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_USER: laravel
-      PMA_PASSWORD: [REDACTED:password]
+      PMA_PASSWORD: bfvhe9iiyj7jjzla
       UPLOAD_LIMIT: 50M
     ports:
       - "8080:80"
