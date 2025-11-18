@@ -1,5 +1,5 @@
 # ============================================
-# Dockerfile para Laravel en Dokploi
+# Dockerfile Laravel listo para Coolify
 # ============================================
 
 FROM php:8.2-fpm
@@ -110,4 +110,4 @@ stderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80
 
 # Comando de inicio
-CMD php artisan serve --host=0.0.0.0 --port=80
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
