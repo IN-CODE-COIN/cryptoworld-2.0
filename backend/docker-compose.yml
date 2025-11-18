@@ -1,0 +1,95 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cryptoworld-backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      # Aplicación
+      APP_NAME: CryptoWorld
+      APP_ENV: production
+      APP_KEY: base64:3cgFE4bPHNf9ba45jDD6LI/vwHE5BeXEdWANQ9nkEfM=
+      APP_DEBUG: false
+      APP_URL: https://api.cryptoworld.cloud
+
+      # Frontend
+      FRONTEND_URL: https://cryptoworld.cloud
+
+      # Base de datos
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: cryptoworld
+      DB_USERNAME: laravel
+      DB_PASSWORD: bfvhe9iiyj7jjzla
+
+      # Session
+      SESSION_DRIVER: cookie
+      SESSION_DOMAIN: .cryptoworld.cloud
+      SESSION_SECURE_COOKIE: true
+      SESSION_LIFETIME: 120
+
+      # Sanctum
+      SANCTUM_STATEFUL_DOMAINS: cryptoworld.cloud,www.cryptoworld.cloud
+
+      # Redis (solo si lo usas)
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # API Keys
+      COINRANKING_API_KEY: coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
+    networks:
+      - cryptoworld-network
+    ports:
+      - "80:80"
+    command: php artisan serve --host=0.0.0.0 --port=80
+    deploy:
+      replicas: 1
+
+  db:
+    image: mysql:8
+    container_name: cryptoworld-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mc6fjp4szjwir6uu
+      MYSQL_DATABASE: cryptoworld
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: bfvhe9iiyj7jjzla
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - cryptoworld-network
+
+  redis:
+    image: redis:7
+    container_name: cryptoworld-redis
+    restart: always
+    networks:
+      - cryptoworld-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: cryptoworld-phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: laravel
+      PMA_PASSWORD: bfvhe9iiyj7jjzla
+      UPLOAD_LIMIT: 50M
+    ports:
+      - "8080:80"
+    networks:
+      - cryptoworld-network
+
+networks:
+  cryptoworld-network:
+    driver: bridge
+
+volumes:
+  db_data:
