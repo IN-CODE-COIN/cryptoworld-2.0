@@ -106,7 +106,7 @@ stderr_logfile=/dev/stderr\n\
 stderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
 
 # Exponer puerto
-EXPOSE 8000
+EXPOSE 80
 
 # Comando de inicio
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan serve --host=0.0.0.0 --port=80
