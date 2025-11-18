@@ -9,18 +9,19 @@ WORKDIR /var/www
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    nginx \
-    supervisor \
-    && docker-php-ext-install pdo_mysql zip bcmath exif \
-    && apt-get clean \
+libzip-dev \
+zip \
+unzip \
+git \
+curl \
+wget \
+libpng-dev \
+libonig-dev \
+libxml2-dev \
+nginx \
+supervisor \
+&& docker-php-ext-install pdo_mysql zip bcmath exif \
+&& apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
