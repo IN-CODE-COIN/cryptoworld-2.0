@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: backend
       dockerfile: Dockerfile
     container_name: cryptoworld-backend
     restart: always
@@ -45,8 +45,6 @@ services:
       - cryptoworld-network
     ports:
       - "80:80"
-    volumes:
-      - ./backend:/var/www
     command: php artisan serve --host=0.0.0.0 --port=80
     deploy:
       replicas: 1
