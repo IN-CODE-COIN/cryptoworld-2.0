@@ -1,71 +1,99 @@
-#############################################
-# 1) Composer stage with PHP 8.2
-#############################################
-FROM php:8.2-cli AS composer_stage
+# ============================================
+# Dockerfile Laravel para desarrollo y producción
+# ============================================
 
-RUN apt-get update && apt-get install -y \
-    unzip git curl libzip-dev zip \
-    && docker-php-ext-install zip
-
-# Install composer manually
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
-
-COPY . .
-RUN composer dump-autoload --optimize
-
-
-#############################################
-# 2) Runtime: PHP-FPM + Nginx
-#############################################
 FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
-    nginx libzip-dev zip unzip git curl supervisor \
-    && docker-php-ext-install pdo pdo_mysql zip \
-    && rm -rf /var/lib/apt/lists/*
+# =========================
+# Variables de entorno
+# =========================
+ARG APP_ENV=production
+ENV APP_ENV=${APP_ENV}
 
+# =========================
+# Directorio de trabajo
+# =========================
 WORKDIR /var/www
 
-# Copy app from composer stage
-COPY --from=composer_stage /app ./
+# =========================
+# Instalar dependencias del sistema
+# =========================
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    wget \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    nginx \
+    gettext-base \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql zip bcmath exif gd pcntl opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# =========================
+# Instalar Composer
+# =========================
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-#############################################
-# NGINX CONFIG
-#############################################
-COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+# =========================
+# Copiar composer.json para cache
+# =========================
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts
 
+# =========================
+# Copiar código
+# =========================
+COPY . .
 
-#############################################
-# PERMISSIONS
-#############################################
+# =========================
+# Autoload optimizado
+# =========================
+RUN composer dump-autoload --optimize
+
+# =========================
+# Permisos
+# =========================
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 storage \
-    && chmod -R 775 bootstrap/cache
+    && chmod -R 775 /var/www/storage \
+    && chmod -R 775 /var/www/bootstrap/cache
 
+# =========================
+# Configuración Nginx
+# =========================
+COPY docker/nginx/default.conf /etc/nginx/sites-available/default.template
+RUN PORT=${PORT:-80} \
+    && envsubst '${PORT}' < /etc/nginx/sites-available/default.template > /etc/nginx/sites-available/default \
+    && rm -f /etc/nginx/sites-enabled/default \
+    && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
-#############################################
-# SUPERVISOR
-#############################################
-RUN mkdir -p /etc/supervisor/conf.d
+# =========================
+# Script de inicio
+# =========================
+RUN echo '#!/bin/bash\n\
+if [ "$APP_ENV" = "development" ]; then\n\
+    echo "Modo desarrollo: Iniciando artisan serve..."\n\
+    php artisan serve --host=0.0.0.0 --port=8000\n\
+else\n\
+    echo "Modo producción: Iniciando Nginx + PHP-FPM..."\n\
+    php-fpm -D\n\
+    nginx -g "daemon off;"\n\
+fi\n\
+' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# =========================
+# Exponer puertos
+# =========================
+EXPOSE 80 8000
 
-
-#############################################
-# PORT (required by Coolify)
-#############################################
-ENV PORT=80
-EXPOSE 80
-
-
-#############################################
-# ENTRYPOINT
-#############################################
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# =========================
+# CMD
+# =========================
+CMD ["/usr/local/bin/start.sh"]
