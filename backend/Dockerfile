@@ -1,60 +1,47 @@
 ###########################
-# 1) STAGE: Composer
+# 1) Composer stage (PHP 8.2)
 ###########################
-FROM composer:2 AS composer_stage
+FROM composer:2.2-php8.2 AS composer_stage
 
 WORKDIR /app
 
-# Copiar composer.json para cache eficiente
 COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-# Instalar dependencias sin dev para producción
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Ahora copiamos todo el proyecto
 COPY . .
-
-# Regenerar autoload optimizado
 RUN composer dump-autoload --optimize
 
 
 ###########################
-# 2) Final Image: PHP + Nginx
+# 2) PHP + Nginx final
 ###########################
 FROM php:8.2-fpm
 
-# Instalar dependencias del sistema
+# Instalar extensiones y nginx
 RUN apt-get update && apt-get install -y \
     nginx \
-    supervisor \
-    libzip-dev \
-    zip unzip \
+    libzip-dev zip unzip \
     git curl \
     && docker-php-ext-install pdo pdo_mysql \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
 
-# Copiar aplicación del stage composer
+# Copiar aplicación
 COPY --from=composer_stage /app ./
 
-# Copiar config nginx
+# Copiar nginx config
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Permisos Laravel
+# Permisos
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 storage \
+    && chmod -R 775 bootstrap/cache
 
-# Deshabilitar daemon de php-fpm
-RUN echo "clear_env=no" >> /usr/local/etc/php-fpm.conf
-
-# Nginx port
+# Puerto Coolify
 ENV PORT=80
-
-# Exponer el puerto para plataformas PaaS
 EXPOSE ${PORT}
 
-##################################
-# Comando final del contenedor
-##################################
+RUN echo "clear_env=no" >> /usr/local/etc/php-fpm.conf
+
 CMD service php-fpm start && nginx -g "daemon off;"
