@@ -68,10 +68,8 @@ RUN chown -R www-data:www-data /var/www \
 # =========================
 # Configuración Nginx
 # =========================
-COPY docker/nginx/default.conf /etc/nginx/sites-available/default.template
-RUN PORT=${PORT:-80} \
-    && envsubst '${PORT}' < /etc/nginx/sites-available/default.template > /etc/nginx/sites-available/default \
-    && rm -f /etc/nginx/sites-enabled/default \
+COPY docker/nginx/default.conf /etc/nginx/sites-available/default
+RUN rm -f /etc/nginx/sites-enabled/default \
     && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # =========================
