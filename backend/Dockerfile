@@ -1,121 +1,60 @@
-# ============================================
-# Dockerfile Laravel listo para Coolify (FIXED)
-# ============================================
+###########################
+# 1) STAGE: Composer
+###########################
+FROM composer:2 AS composer_stage
 
-FROM php:8.2-fpm
+WORKDIR /app
 
-# =========================
-# Variables de entorno
-# =========================
-ARG APP_ENV=production
-ENV APP_ENV=${APP_ENV}
-
-# =========================
-# Directorio de trabajo
-# =========================
-WORKDIR /var/www
-
-# =========================
-# Instalar dependencias del sistema
-# =========================
-RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    wget \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    nginx \
-    gettext-base \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql zip bcmath exif gd pcntl opcache \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# =========================
-# Instalar Composer
-# =========================
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# =========================
-# Copiar composer.json para cache
-# =========================
+# Copiar composer.json para cache eficiente
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts
 
-# =========================
-# Copiar código
-# =========================
+# Instalar dependencias sin dev para producción
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Ahora copiamos todo el proyecto
 COPY . .
 
-# =========================
-# Autoload optimizado
-# =========================
+# Regenerar autoload optimizado
 RUN composer dump-autoload --optimize
 
-# =========================
-# Permisos
-# =========================
+
+###########################
+# 2) Final Image: PHP + Nginx
+###########################
+FROM php:8.2-fpm
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    libzip-dev \
+    zip unzip \
+    git curl \
+    && docker-php-ext-install pdo pdo_mysql \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www
+
+# Copiar aplicación del stage composer
+COPY --from=composer_stage /app ./
+
+# Copiar config nginx
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Permisos Laravel
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage \
-    && chmod -R 775 /var/www/bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache
 
-# =========================
-# Configuración Nginx (usando template para PORT dinámico)
-# =========================
-COPY docker/nginx/default.conf /etc/nginx/sites-available/default.template
-RUN PORT=${PORT:-80} \
-    && envsubst '${PORT}' < /etc/nginx/sites-available/default.template > /etc/nginx/sites-available/default \
-    && rm -f /etc/nginx/sites-enabled/default \
-    && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+# Deshabilitar daemon de php-fpm
+RUN echo "clear_env=no" >> /usr/local/etc/php-fpm.conf
 
-# =========================
-# Configuración Supervisor
-# =========================
-RUN echo '[supervisord]\n\
-nodaemon=true\n\
-user=root\n\
-logfile=/dev/stdout\n\
-logfile_maxbytes=0\n\
-\n\
-[program:php-fpm]\n\
-command=/usr/local/sbin/php-fpm -F\n\
-autostart=true\n\
-autorestart=true\n\
-priority=5\n\
-stdout_logfile=/dev/stdout\n\
-stdout_logfile_maxbytes=0\n\
-stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\
-\n\
-[program:nginx]\n\
-command=/usr/sbin/nginx -g "daemon off;"\n\
-autostart=true\n\
-autorestart=true\n\
-priority=10\n\
-stdout_logfile=/dev/stdout\n\
-stdout_logfile_maxbytes=0\n\
-stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\
-' > /etc/supervisor/conf.d/supervisord.conf
+# Nginx port
+ENV PORT=80
 
-# =========================
-# Exponer puertos
-# =========================
-EXPOSE 80 8000
+# Exponer el puerto para plataformas PaaS
+EXPOSE ${PORT}
 
-# =========================
-# CMD según entorno
-# =========================
-# Producción: Nginx + PHP-FPM con Supervisor
-# Desarrollo: php artisan serve en puerto 8000
-CMD if [ "$APP_ENV" = "development" ]; then \
-        php artisan serve --host=0.0.0.0 --port=8000; \
-    else \
-        /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf; \
-    fi
+##################################
+# Comando final del contenedor
+##################################
+CMD service php-fpm start && nginx -g "daemon off;"
