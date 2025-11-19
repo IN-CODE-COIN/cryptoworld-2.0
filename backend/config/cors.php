@@ -12,11 +12,9 @@ return [
         'http://localhost:5173',
     ],
 
-    'allowed_origins_patterns' => [
-        '/^https:\/\/.*\.cryptoworld\.cloud$/',
-    ],
+    'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Authorization', 'Content-Type'],
 
     'exposed_headers' => [],
 
