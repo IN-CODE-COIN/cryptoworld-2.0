@@ -13,14 +13,15 @@ services:
             - "8080:80" # Puerto interno 80 del contenedor mapeado a 8080 en host
         environment:
             - APP_ENV=production
-            - APP_KEY=${APP_KEY}
+            - APP_KEY=base64:MkuLNUBNnYeeM8jBATUoysyF6G04iWHk+ahw+2Vxtcs=
             - DB_CONNECTION=mysql
-            - DB_HOST=${DB_HOST}
-            - DB_PORT=${DB_PORT}
-            - DB_DATABASE=${DB_DATABASE}
-            - DB_USERNAME=${DB_USERNAME}
-            - DB_PASSWORD=${DB_PASSWORD}
-            - JWT_SECRET=${JWT_SECRET}
+            - DB_HOST=DB_HOST=172.17.0.1
+            - DB_PORT=3306
+            - DB_DATABASE=cryptoworld
+            - DB_USERNAME=sergiolo
+            - DB_PASSWORD=a[z7k0oLq2q9
+            - JWT_SECRET=XNaeohf85h5Ph9n4iIVfzNWjjHDDbKu7ofEjOPMwzVGtzPvjR4MtcauCFaBMmuhc
+            - COINRANKING_API_KEY=coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
             # Agrega otras variables de .env aquí
         volumes:
             - ./storage:/var/www/storage # Para logs y archivos
