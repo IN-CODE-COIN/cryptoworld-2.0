@@ -1,31 +1,33 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_ENV: production
-    ports:
-      - "8080:80"  # Puerto interno 80 del contenedor mapeado a 8080 en host
-    environment:
-      - APP_ENV=production
-      - APP_KEY=${APP_KEY}
-      - DB_CONNECTION=mysql
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      # Agrega otras variables de .env aquí
-    volumes:
-      - ./storage:/var/www/storage  # Para logs y archivos
-    restart: unless-stopped
-    networks:
-      - app-network
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                APP_ENV: production
+        env_file:
+            - .env.production
+        ports:
+            - "8080:80" # Puerto interno 80 del contenedor mapeado a 8080 en host
+        environment:
+            - APP_ENV=production
+            - APP_KEY=${APP_KEY}
+            - DB_CONNECTION=mysql
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - JWT_SECRET=${JWT_SECRET}
+            # Agrega otras variables de .env aquí
+        volumes:
+            - ./storage:/var/www/storage # Para logs y archivos
+        restart: unless-stopped
+        networks:
+            - app-network
 
 networks:
-  app-network:
-    driver: bridge
+    app-network:
+        driver: bridge
