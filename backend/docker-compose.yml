@@ -23,7 +23,8 @@ services:
             - JWT_SECRET=XNaeohf85h5Ph9n4iIVfzNWjjHDDbKu7ofEjOPMwzVGtzPvjR4MtcauCFaBMmuhc
             - COINRANKING_API_KEY=coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
             # Agrega otras variables de .env aquí
-        extra_hosts: -"host.docker.internal:172.17.0.1"
+        extra_hosts:
+            -"host.docker.internal:172.17.0.1"
         volumes:
             - ./storage:/var/www/storage # Para logs y archivos
         restart: unless-stopped
