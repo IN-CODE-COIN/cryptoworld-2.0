@@ -15,7 +15,7 @@ services:
             - APP_ENV=production
             - APP_KEY=base64:MkuLNUBNnYeeM8jBATUoysyF6G04iWHk+ahw+2Vxtcs=
             - DB_CONNECTION=mysql
-            - DB_HOST=DB_HOST=172.17.0.1
+            - DB_HOST=host.docker.internal
             - DB_PORT=3306
             - DB_DATABASE=cryptoworld
             - DB_USERNAME=sergiolo
@@ -23,6 +23,7 @@ services:
             - JWT_SECRET=XNaeohf85h5Ph9n4iIVfzNWjjHDDbKu7ofEjOPMwzVGtzPvjR4MtcauCFaBMmuhc
             - COINRANKING_API_KEY=coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
             # Agrega otras variables de .env aquí
+        extra_host: -"host.docker.internal:172.17.0.1"
         volumes:
             - ./storage:/var/www/storage # Para logs y archivos
         restart: unless-stopped
