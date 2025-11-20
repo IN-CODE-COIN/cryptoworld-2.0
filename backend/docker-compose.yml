@@ -10,7 +10,7 @@ services:
         env_file:
             - .env.production
         ports:
-            - "8080:80" # Puerto interno 80 del contenedor mapeado a 8080 en host
+            - "8080:80"
         environment:
             - APP_ENV=production
             - APP_KEY=base64:MkuLNUBNnYeeM8jBATUoysyF6G04iWHk+ahw+2Vxtcs=
@@ -22,11 +22,10 @@ services:
             - DB_PASSWORD=a[z7k0oLq2q9
             - JWT_SECRET=XNaeohf85h5Ph9n4iIVfzNWjjHDDbKu7ofEjOPMwzVGtzPvjR4MtcauCFaBMmuhc
             - COINRANKING_API_KEY=coinranking22b1d5f1ed17ba55bcd4a9c076747c62d4bca3520a85df31
-            # Agrega otras variables de .env aquí
         extra_hosts:
-            -"host.docker.internal:172.17.0.1"
+            - "host.docker.internal:172.17.0.1"
         volumes:
-            - ./storage:/var/www/storage # Para logs y archivos
+            - ./storage:/var/www/storage
         restart: unless-stopped
         networks:
             - app-network
