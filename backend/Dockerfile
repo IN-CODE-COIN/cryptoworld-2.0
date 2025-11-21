@@ -94,4 +94,4 @@ EXPOSE 80 8000
 # =========================
 # CMD
 # =========================
-CMD ["/usr/local/bin/start.sh"]
+CMD php-fpm -D & nginx -g "daemon off;"
