@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     nginx \
+    supervisor \
     gettext-base \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql zip bcmath exif gd pcntl opcache \
@@ -73,18 +74,9 @@ RUN rm -f /etc/nginx/sites-enabled/default \
     && ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # =========================
-# Script de inicio
+# Configuración Supervisor
 # =========================
-RUN echo '#!/bin/bash\n\
-if [ "$APP_ENV" = "development" ]; then\n\
-    echo "Modo desarrollo: Iniciando artisan serve..."\n\
-    php artisan serve --host=0.0.0.0 --port=8000\n\
-else\n\
-    echo "Modo producción: Iniciando Nginx + PHP-FPM..."\n\
-    php-fpm -D\n\
-    nginx -g "daemon off;"\n\
-fi\n\
-' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+RUN echo "[supervisord]\nnodaemon=true\nuser=root\n\n[program:php-fpm]\ncommand=/usr/local/sbin/php-fpm -F\nautostart=true\nautorestart=true\n\n[program:nginx]\ncommand=/usr/sbin/nginx -g 'daemon off;'\nautostart=true\nautorestart=true\n" > /etc/supervisor/conf.d/supervisord.conf
 
 # =========================
 # Exponer puertos
@@ -94,4 +86,4 @@ EXPOSE 80 8000
 # =========================
 # CMD
 # =========================
-CMD php-fpm -D & nginx -g "daemon off;"
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
