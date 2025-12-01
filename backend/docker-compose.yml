@@ -11,7 +11,7 @@ services:
             - DB_HOST=mysql
         volumes:
             - ./storage:/var/www/storage
-            - ./nginx:/etc/nginx/conf.d
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
             - ./certs:/etc/letsencrypt
         depends_on:
             - mysql
