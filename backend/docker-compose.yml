@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "9000:9000"
     environment:
       - DB_HOST=mysql
     volumes:
