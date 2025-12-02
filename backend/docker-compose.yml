@@ -33,9 +33,7 @@ services:
             - ./:/var/www
             - ./nginx/conf.d/:/etc/nginx/conf.d/
               # Añade certificados SSL si usas HTTPS
-            - /etc/letsencrypt/live/api.cryptoworld.cloud:/etc/letsencrypt/live/api.cryptoworld.cloud:ro
-            - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
-            - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+            - /etc/letsencrypt:/etc/letsencrypt:ro
         depends_on:
             - app
         networks:
