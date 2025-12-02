@@ -3,38 +3,50 @@ FROM php:8.2-fpm
 ARG APP_ENV=production
 ENV APP_ENV=${APP_ENV}
 
+# Copy composer.lock and composer.json
+COPY composer.lock composer.json /var/www/
+
+# Set working directory
 WORKDIR /var/www
 
-# Instalar dependencias y PHP extensions
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl wget \
-    libpng-dev libonig-dev libxml2-dev \
-    libfreetype6-dev libjpeg62-turbo-dev \
-    nginx supervisor certbot python3-certbot-nginx \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql zip bcmath exif gd pcntl opcache \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl
 
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copiar composer y dependencias
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist --no-scripts
+# Install extensions
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
+RUN docker-php-ext-install gd
 
-COPY . .
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN composer dump-autoload --optimize
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Permisos
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage \
-    && chmod -R 775 /var/www/bootstrap/cache
+# Copy existing application directory contents
+COPY . /var/www
 
-# Configuración supervisord para correr PHP-FPM + Nginx
-RUN echo "[supervisord]\nnodaemon=true\n\n[program:php-fpm]\ncommand=/usr/local/sbin/php-fpm -F\nautostart=true\nautorestart=true\n\n[program:nginx]\ncommand=/usr/sbin/nginx -g 'daemon off;'\nautostart=true\nautorestart=true\n" \
-    > /etc/supervisor/conf.d/supervisord.conf
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
 
-EXPOSE 80 443
+# Change current user to www
+USER www
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]
