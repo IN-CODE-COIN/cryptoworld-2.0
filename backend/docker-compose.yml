@@ -1,42 +1,71 @@
 version: "3.8"
 
+#PHP SERVICE
 services:
     app:
         build:
             context: .
             dockerfile: Dockerfile
-        ports:
-            - "80:80"
-            - "443:443"
-            - "9000:9000"
+        container_name: app
+        restart: unless-stopped
+        tty: true
         environment:
-            - DB_HOST=mysql
+            - SERVICE_NAME=app
+            - SERVICE_TAGS=dev
+            - DB_HOST=db
+        working_dir: /var/www
         volumes:
-            - ./storage:/var/www/storage
-            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./:/var/www
+            - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - app-network
 
-            # NUEVOS VOLÚMENES: Mapeo directo de las carpetas de Let's Encrypt del VPS
-            # Asegúrese de que estas rutas son correctas en su VPS (host).
+    #NGINX SERVICE
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            -"80:80"
+            -"443:443"
+        volumes:
+            - ./:/var/www
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+              # Añade certificados SSL si usas HTTPS
             - /etc/letsencrypt/live/api.cryptoworld.cloud:/etc/letsencrypt/live/api.cryptoworld.cloud:ro
             - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
             - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
         depends_on:
-            - mysql
+            - app
         networks:
             - app-network
 
-    mysql:
+    #MYSQL SERVICE
+    db:
         image: mysql:8.0
+        container_name: db
+        restart: unless-stopped
+        tty: true
+        ports:
+            -"3306:3306"
         environment:
             MYSQL_DATABASE: cryptoworld
             MYSQL_USER: sergiolo
             MYSQL_PASSWORD: a[z7k0oLq2q9
             MYSQL_ROOT_PASSWORD: root
         volumes:
-            - ./mysql-data:/var/lib/mysql
+            - dbdata:/var/lib/mysql/
+            - ./mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - app-network
 
+#Docker Networks
 networks:
     app-network:
         driver: bridge
+
+#Volumes
+volumes:
+    dbdata:
+        driver: local
