@@ -79,7 +79,7 @@ export const TopCryptos = () => {
       message.loading({ content: "Añadiendo...", key: "add_watchlist" });
 
       const response = await api.post(
-        `${API_BASE_URL}/watchlist`,
+        "/watchlist",
         {
           uuid: coin.uuid,
           name: coin.name,
