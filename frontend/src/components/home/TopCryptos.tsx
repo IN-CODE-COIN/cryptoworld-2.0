@@ -27,7 +27,6 @@ const contentStyle: React.CSSProperties = {
 };
 
 const content = <div style={contentStyle} />;
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const TopCryptos = () => {
   const [data, setData] = useState<ApiResponse | null>(null);
