@@ -1,11 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\Auth\AuthController;
-
-
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\WatchlistController;
 use App\Http\Controllers\Api\CryptoController;
