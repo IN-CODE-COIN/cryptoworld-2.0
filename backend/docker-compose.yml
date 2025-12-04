@@ -31,8 +31,7 @@ services:
             - "443:443"
         volumes:
             - ./:/var/www
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-              # Añade certificados SSL si usas HTTPS
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
             - /etc/letsencrypt:/etc/letsencrypt:ro
         depends_on:
             - backend_app
