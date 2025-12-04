@@ -60,9 +60,9 @@ class HomeController extends Controller
             ];
         }, $apiCoins);
 
-        $watchlistUuids = Auth::check()
-            ? Auth::user()->watchlist()->pluck('coin_uuid')->toArray()
-            : [];
+        $user = Auth::guard('api')->user();
+        /** @var \App\Models\User $user */
+        $watchlistUuids = $user ? $user->watchlist()->pluck('coin_uuid')->toArray() : [];
 
         return response()->json([
             'topCryptos' => $topCryptos,
