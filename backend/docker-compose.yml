@@ -5,30 +5,47 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: backend_api_currencies
+        container_name: backend_cryptoworld
         restart: unless-stopped
+        tty: true
         environment:
+            - SERVICE_NAME=cryptoworld
+            - SERVICE_TAGS=dev
             - DB_HOST=db
         working_dir: /var/www
         volumes:
             - ./:/var/www
             - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-        ports:
-            - "127.0.0.1:9001:9000" # 👈 CLAVE
         networks:
             - internal
 
+    webserver:
+        image: nginx:alpine
+        container_name: nginx_cryptoworld
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+            - /etc/letsencrypt:/etc/letsencrypt:ro
+        depends_on:
+            - backend_app
+        networks:
+            - internal
+            - proxy
+
     db:
         image: mysql:8.0
-        container_name: db_api_currencies
+        container_name: db_cryptoworld
         restart: unless-stopped
+        tty: true
         environment:
-            MYSQL_DATABASE: api-currencies
+            MYSQL_DATABASE: cryptoworld
             MYSQL_USER: sergiolo
             MYSQL_PASSWORD: a[z7k0oLq2q9
             MYSQL_ROOT_PASSWORD: root
         volumes:
-            - dbdata:/var/lib/mysql
+            - dbdata:/var/lib/mysql/
             - ./mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - internal
@@ -36,6 +53,9 @@ services:
 networks:
     internal:
         driver: bridge
+    proxy:
+        external: true
 
 volumes:
     dbdata:
+        driver: local
