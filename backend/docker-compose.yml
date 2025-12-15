@@ -1,65 +1,41 @@
 version: "3.8"
 
-#PHP SERVICE
 services:
     backend_app:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: backend_app
+        container_name: backend_api_currencies
         restart: unless-stopped
-        tty: true
         environment:
-            - SERVICE_NAME=app
-            - SERVICE_TAGS=dev
             - DB_HOST=db
         working_dir: /var/www
         volumes:
             - ./:/var/www
             - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-        networks:
-            - app-network
-
-    #NGINX SERVICE
-    webserver:
-        image: nginx:alpine
-        container_name: webserver
-        restart: unless-stopped
-        tty: true
-        volumes:
-            - ./:/var/www
-            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-        depends_on:
-            - backend_app
+        ports:
+            - "127.0.0.1:9001:9000" # 👈 CLAVE
         networks:
             - internal
-            - proxy
 
-    #MYSQL SERVICE
     db:
         image: mysql:8.0
-        container_name: db
+        container_name: db_api_currencies
         restart: unless-stopped
-        tty: true
         environment:
-            MYSQL_DATABASE: cryptoworld
+            MYSQL_DATABASE: api-currencies
             MYSQL_USER: sergiolo
             MYSQL_PASSWORD: a[z7k0oLq2q9
             MYSQL_ROOT_PASSWORD: root
         volumes:
-            - dbdata:/var/lib/mysql/
+            - dbdata:/var/lib/mysql
             - ./mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - internal
 
-#Docker Networks
 networks:
     internal:
         driver: bridge
-    proxy:
-        external: true
 
-#Volumes
 volumes:
     dbdata:
-        driver: local
