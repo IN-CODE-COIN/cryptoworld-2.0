@@ -1,37 +1,34 @@
 version: "3.8"
 
 services:
-    backend_app:
+    backend_cryptoworld:
         build:
             context: .
             dockerfile: Dockerfile
         container_name: backend_cryptoworld
         restart: unless-stopped
-        tty: true
-        environment:
-            - SERVICE_NAME=cryptoworld
-            - SERVICE_TAGS=dev
-            - DB_HOST=db
-            - DB_DATABASE=cryptoworld
-            - DB_USERNAME=sergiolo
-            - DB_PASSWORD=a[z7k0oLq2q9
         working_dir: /var/www
+        environment:
+            DB_HOST: db
+            DB_DATABASE: cryptoworld
+            DB_USERNAME: sergiolo
+            DB_PASSWORD: a[z7k0oLq2q9
         volumes:
             - ./:/var/www
             - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - internal
+            - proxy
 
-    webserver:
+    nginx_cryptoworld:
         image: nginx:alpine
         container_name: nginx_cryptoworld
         restart: unless-stopped
-        tty: true
         volumes:
             - ./:/var/www
-            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d
         depends_on:
-            - backend_app
+            - backend_cryptoworld
         networks:
             - internal
             - proxy
@@ -40,15 +37,13 @@ services:
         image: mysql:8.0
         container_name: db_cryptoworld
         restart: unless-stopped
-        tty: true
         environment:
             MYSQL_DATABASE: cryptoworld
             MYSQL_USER: sergiolo
             MYSQL_PASSWORD: a[z7k0oLq2q9
             MYSQL_ROOT_PASSWORD: root
         volumes:
-            - dbdata:/var/lib/mysql/
-            - ./mysql/my.cnf:/etc/mysql/my.cnf
+            - dbdata_cryptoworld:/var/lib/mysql
         networks:
             - internal
 
@@ -59,5 +54,4 @@ networks:
         external: true
 
 volumes:
-    dbdata:
-        driver: local
+    dbdata_cryptoworld:
