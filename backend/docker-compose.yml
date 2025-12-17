@@ -12,6 +12,9 @@ services:
             - SERVICE_NAME=cryptoworld
             - SERVICE_TAGS=dev
             - DB_HOST=db
+            - DB_DATABASE=cryptoworld
+            - DB_USERNAME=sergiolo
+            - DB_PASSWORD=a[z7k0oLq2q9
         working_dir: /var/www
         volumes:
             - ./:/var/www
@@ -27,7 +30,6 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-            - /etc/letsencrypt:/etc/letsencrypt:ro
         depends_on:
             - backend_app
         networks:
