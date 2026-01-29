@@ -6,11 +6,9 @@ services:
         working_dir: /var/www
         environment:
             DB_HOST: db
-            DB_DATABASE: cryptoworld
-            DB_USERNAME: sergiolo
-            DB_PASSWORD: "a[z7k0oLq2q9"
         volumes:
             - ./:/var/www
+            - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - internal
 
@@ -21,6 +19,7 @@ services:
         ports:
             - "127.0.0.1:8080:80"
         volumes:
+            - ./:/var/www
             - ./docker/nginx/conf.d:/etc/nginx/conf.d
         depends_on:
             - backend
@@ -43,6 +42,7 @@ services:
 
 networks:
     internal:
+        driver: bridge
 
 volumes:
-    dbdata_cryptoworld:
+    dbdata:
