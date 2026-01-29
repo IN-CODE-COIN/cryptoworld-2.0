@@ -8,8 +8,6 @@ import { navItems } from "../../config/navigationConfig";
 import type { NavItem } from "../../config/navigationConfig";
 import { useAuth } from "../../hooks/useAuth";
 import { AuthButton } from "../global/AuthButton";
-import iconLogo from "/icon_logo.svg";
-import iconLogoDark from "/icon_logo_white.svg";
 import { SearchCrypto } from "../global/SearchCrypto";
 
 const { Sider } = Layout;
@@ -24,7 +22,7 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
   const location = useLocation();
   const { theme } = useTheme();
   const [isMobile, setIsMobile] = useState(false);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   const findKeyByPath = (path: string): string | undefined => {
