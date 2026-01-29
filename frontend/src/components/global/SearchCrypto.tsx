@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Modal, Input, message } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Modal, Input, message, Spin } from "antd";
+import { SearchOutlined, CloseOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../hooks/useTheme";
 
 type Coin = {
   uuid: string;
@@ -26,17 +27,21 @@ export const SearchCrypto = ({
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState<Coin[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const fetchSuggestions = async (query: string) => {
     if (query.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
+      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await api.get(
         `/crypto/autocomplete?query=${encodeURIComponent(query)}`
@@ -47,6 +52,8 @@ export const SearchCrypto = ({
       console.error("Error al buscar sugerencias:", error);
       setSuggestions([]);
       setShowSuggestions(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,60 +114,125 @@ export const SearchCrypto = ({
 
   return (
     <Modal
-      title="Buscar Criptomoneda"
       open={searchModalVisible}
       onCancel={() => setSearchModalVisible(false)}
       footer={null}
       centered
+      width={500}
+      styles={{
+        content: {
+          padding: 0,
+          borderRadius: "12px",
+        },
+      }}
+      closeIcon={<CloseOutlined />}
     >
-      <div className="relative">
-        <Input.Search
-          ref={inputRef}
-          placeholder="Introduce el nombre o símbolo de la criptomoneda"
-          enterButton={<SearchOutlined />}
-          size="large"
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            fetchSuggestions(e.target.value);
-          }}
-          onSearch={handleSearch}
-          onFocus={() => {
-            if (searchValue.length >= 2) {
-              setShowSuggestions(true);
-            }
-          }}
-          autoFocus
-        />
-        {showSuggestions && suggestions.length > 0 && (
-          <div
-            ref={suggestionsRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700"
-          >
-            <ul className="py-1 overflow-auto text-gray-700 dark:text-gray-200 max-h-60">
-              {suggestions.map((coin) => (
-                <li
-                  key={coin.uuid}
-                  className="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2 dark:hover:bg-gray-700"
-                  onClick={() => handleSuggestionClick(coin)}
-                >
-                  <img
-                    src={coin.iconUrl}
-                    alt={coin.name}
-                    className="w-5 h-5 object-contain"
-                  />
-                  <span>
-                    {coin.name} (
-                    <span className="text-gray-500 dark:text-gray-400">
-                      {coin.symbol}
-                    </span>
-                    )
-                  </span>
-                </li>
-              ))}
-            </ul>
+      <div
+        className={`rounded-xl overflow-hidden ${
+          theme === "dark" ? "bg-gray-800" : "bg-white"
+        }`}
+      >
+        <div
+          className={`px-6 py-6 border-b ${
+            theme === "dark"
+              ? "bg-gray-900 border-gray-700"
+              : "bg-gray-50 border-gray-200"
+          }`}
+        >
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Buscar Criptomoneda
+          </h2>
+          <div className="relative">
+            <Input.Search
+              ref={inputRef}
+              placeholder="Bitcoin, Ethereum, Solana..."
+              enterButton={<SearchOutlined />}
+              size="large"
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+                fetchSuggestions(e.target.value);
+              }}
+              onSearch={handleSearch}
+              onFocus={() => {
+                if (searchValue.length >= 2) {
+                  setShowSuggestions(true);
+                }
+              }}
+              autoFocus
+              className="search-input"
+            />
           </div>
-        )}
+        </div>
+
+        <div className="px-6 py-4">
+          {loading ? (
+            <Spin tip="Buscando..." size="small" />
+          ) : showSuggestions && suggestions.length > 0 ? (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {suggestions.map((coin) => (
+                <button
+                  key={coin.uuid}
+                  onClick={() => handleSuggestionClick(coin)}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center justify-between group ${
+                    theme === "dark"
+                      ? "hover:bg-gray-700 bg-gray-800"
+                      : "hover:bg-blue-50 bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={coin.iconUrl}
+                      alt={coin.name}
+                      className="w-6 h-6 object-contain rounded-full"
+                    />
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {coin.name}
+                      </p>
+                      <p
+                        className={`text-xs ${
+                          theme === "dark"
+                            ? "text-gray-400"
+                            : "text-gray-600"
+                        }`}
+                      >
+                        {coin.symbol.toUpperCase()}
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRightOutlined
+                    className={`text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity`}
+                  />
+                </button>
+              ))}
+            </div>
+          ) : searchValue.length >= 2 && !loading ? (
+            <div
+              className={`text-center py-8 rounded-lg ${
+                theme === "dark"
+                  ? "bg-gray-700/50"
+                  : "bg-gray-100"
+              }`}
+            >
+              <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
+                No se encontraron criptomonedas
+              </p>
+            </div>
+          ) : (
+            <div
+              className={`text-center py-8 rounded-lg ${
+                theme === "dark"
+                  ? "bg-gray-700/50"
+                  : "bg-gray-100"
+              }`}
+            >
+              <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
+                Escribe al menos 2 caracteres para buscar
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   );

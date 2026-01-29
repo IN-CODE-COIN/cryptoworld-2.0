@@ -31,43 +31,45 @@ export const HeaderBar = ({ collapsed, toggleCollapsed }: Props) => {
       style={{
         backgroundColor: theme === "dark" ? "#001529" : "#fff",
         margin: 0,
-        padding: isMobile ? 2 : 0,
+        padding: isMobile ? "6px 8px" : 0,
         position: isMobile ? "sticky" : "relative",
         top: isMobile ? 0 : undefined,
         zIndex: isMobile ? 100 : undefined,
+        height: isMobile ? "48px" : "64px",
+        minHeight: isMobile ? "48px" : undefined,
       }}
-      className={`flex justify-between items-center ${isMobileBoxShadow} sm:border-l border-gray-200 dark:border-gray-700`}
+      className={`flex justify-between items-center gap-1 ${isMobileBoxShadow} sm:border-l border-gray-200 dark:border-gray-700`}
     >
       <ButtonCollapseSider
         collapsed={collapsed}
         toggleCollapsed={toggleCollapsed}
         theme={theme}
         iconSize={20}
-        style={{ display: isMobile ? "flex" : "none" }}
+        style={{ display: isMobile ? "flex" : "none", flexShrink: 0 }}
       />
 
-      <BreadcrumbComponent
-        style={{
-          display: isMobile ? "block" : "none",
-          cursor: "default",
-          color: theme === "dark" ? "#fff" : "#001529",
-          fontSize: "1rem",
-        }}
-        separator
-      />
+      {isMobile && (
+        <div className="flex-1 flex justify-center">
+          <BreadcrumbComponent
+            style={{
+              display: isMobile ? "block" : "none",
+              cursor: "default",
+              color: theme === "dark" ? "#fff" : "#001529",
+            }}
+            separator
+          />
+        </div>
+      )}
 
-      <div
-        data-testid="auth-button-wrapper"
-        className={`${
-          isMobile
-            ? "flex me-1"
-            : isAuthenticated
-            ? "hidden"
-            : "absolute right-2"
-        }`}
-      >
-        <AuthButton />
-      </div>
+      {/* AuthButton solo en mobile */}
+      {isMobile && (
+        <div
+          data-testid="auth-button-wrapper"
+          className="flex flex-shrink-0"
+        >
+          <AuthButton />
+        </div>
+      )}
     </Header>
   );
 };

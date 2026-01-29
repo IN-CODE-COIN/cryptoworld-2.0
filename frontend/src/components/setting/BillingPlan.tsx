@@ -1,11 +1,13 @@
 import React from "react";
-import { Tabs, Divider } from "antd";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useTheme } from "../../hooks/useTheme";
 import dayjs from "dayjs";
 
 export const BillingPlan: React.FC = () => {
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const navigate = useNavigate();
 
   let plan = "Gratuito";
   let frequency = "Ilimitado";
@@ -35,72 +37,117 @@ export const BillingPlan: React.FC = () => {
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+    <div
+      className={`rounded-xl border p-6 ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
+          : "bg-gradient-to-br from-white to-gray-50 border-gray-200"
+      }`}
+    >
+      <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">
         Facturación
-      </h2>
-      <p className="mt-1 text-gray-500 dark:text-gray-400">
-        Actualiza tu información de pago o cambia de planes de acuerdo a tus
-        necesidades.
+      </h3>
+      <p
+        className={`text-sm mb-6 ${
+          theme === "dark" ? "text-gray-400" : "text-gray-600"
+        }`}
+      >
+        Actualiza tu información de pago o cambia de planes.
       </p>
-      <Tabs className="mt-6">
-        <div className="mt-8 sm:mx-auto sm:max-w-7xl">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Plan
-          </h3>
-          <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <div>
-              <p
-                data-testid="plan-name"
-                className="flex items-center space-x-2"
-              >
-                <span className="font-medium text-gray-900 dark:text-gray-400">
-                  {plan}
-                </span>
-                <span
-                  data-testid="plan-frequency"
-                  className="inline-flex items-center self-center rounded bg-gray-100 px-2 py-0.5 font-medium text-gray-500"
-                >
-                  {frequency}
-                </span>
-              </p>
-              <p
-                data-testid="plan-info"
-                className="mt-2 font-semibold text-gray-900 dark:text-gray-400"
-              >
-                {amount} {amountTime}{" "}
-                <span className="font-normal">(incl. IVA)</span>
-              </p>
-              <Link
-                to="/pricing"
-                className="mt-6 inline-flex rounded border border-gray-200 bg-white px-2.5 py-1.5 font-medium text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-900"
-              >
-                Gestionar planes
-              </Link>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-400 mt-1">
-                Periodo de Facturación
-              </p>
-              <p
-                data-testid="billing-period"
-                className="mt-2 font-semibold text-gray-900 dark:text-gray-400"
-              >
-                {frequency} <span className="font-normal">({nextPayment})</span>
-              </p>
-              {plan === "Profesional" && (
-                <Link
-                  to="/pricing"
-                  className="mt-6 inline-flex rounded border border-gray-200 bg-white px-2.5 py-1.5 font-medium text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-900"
-                >
-                  Cambiar facturación
-                </Link>
-              )}
-            </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Plan Card */}
+        <div
+          className={`rounded-lg border p-4 ${
+            theme === "dark"
+              ? "bg-gray-700/50 border-gray-600"
+              : "bg-white border-gray-200"
+          }`}
+        >
+          <p
+            className={`text-xs font-medium uppercase tracking-wider ${
+              theme === "dark" ? "text-gray-400" : "text-gray-500"
+            } mb-2`}
+          >
+            Plan Actual
+          </p>
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="text-2xl font-bold dark:text-white text-gray-900">
+              {plan}
+            </span>
+            <span
+              className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                plan === "Profesional"
+                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                  : "bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {frequency}
+            </span>
           </div>
+          <p
+            data-testid="plan-info"
+            className={`text-lg font-semibold ${
+              theme === "dark" ? "text-gray-100" : "text-gray-900"
+            } mb-4`}
+          >
+            {amount} {amountTime}{" "}
+            <span
+              className={`text-sm font-normal ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              (incl. IVA)
+            </span>
+          </p>
+          <button
+            onClick={() => navigate("/pricing")}
+            className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg font-semibold hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200 active:scale-95"
+          >
+            Gestionar planes
+          </button>
         </div>
-      </Tabs>
-      <Divider />
+
+        {/* Billing Period Card */}
+        <div
+          className={`rounded-lg border p-4 ${
+            theme === "dark"
+              ? "bg-gray-700/50 border-gray-600"
+              : "bg-white border-gray-200"
+          }`}
+        >
+          <p
+            className={`text-xs font-medium uppercase tracking-wider ${
+              theme === "dark" ? "text-gray-400" : "text-gray-500"
+            } mb-2`}
+          >
+            Período de Facturación
+          </p>
+          <p
+            data-testid="billing-period"
+            className={`text-lg font-semibold ${
+              theme === "dark" ? "text-gray-100" : "text-gray-900"
+            } mb-1`}
+          >
+            {frequency}
+          </p>
+          <p
+            className={`text-sm ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            } mb-4`}
+          >
+            {nextPayment}
+          </p>
+          {plan === "Profesional" && (
+            <button
+              onClick={() => navigate("/pricing")}
+              className="w-full px-6 py-3 border-2 border-blue-500 text-blue-600 dark:text-blue-400 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:shadow-lg transition-all duration-200"
+            >
+              Cambiar facturación
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

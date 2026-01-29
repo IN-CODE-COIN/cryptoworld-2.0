@@ -23,7 +23,7 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   {
     key: "1",
-    path: "/",
+    path: "/home",
     label: "Home",
     icon: <HomeOutlined />,
     i18nKey: "Inicio",
