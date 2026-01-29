@@ -1,6 +1,4 @@
 import React from "react";
-import { Breadcrumb } from "antd";
-import type { BreadcrumbProps } from "antd";
 import {
   HomeOutlined,
   SettingOutlined,
@@ -30,7 +28,10 @@ const routeMap: Record<
   "/crypto": { i18nKey: "Crypto", icon: <SearchOutlined /> },
 };
 
-type BreadcrumbItem = { title: React.ReactNode };
+type BreadcrumbProps = {
+  style?: React.CSSProperties;
+  separator?: boolean;
+};
 
 export const BreadcrumbComponent: React.FC<BreadcrumbProps> = ({ style }) => {
   const location = useLocation();
@@ -45,25 +46,24 @@ export const BreadcrumbComponent: React.FC<BreadcrumbProps> = ({ style }) => {
         });
 
   const items = breadcrumbPaths
-    .map((path): BreadcrumbItem | null => {
+    .map((path) => {
       const route = routeMap[path];
       if (!route) return null;
-
-      return {
-        title: (
-          <span className="flex items-center gap-1 dark:text-gray-100 text-gray-600">
-            {route.icon} {route.i18nKey}
-          </span>
-        ),
-      };
+      return { path, route };
     })
-    .filter((item): item is BreadcrumbItem => item !== null);
+    .filter((item) => item !== null);
 
-  const customSeparator = (
-    <span className="text-gray-600 dark:text-gray-100 font-semibold">
-      {">"}
-    </span>
+  if (items.length === 0) {
+    return null;
+  }
+
+  const currentItem = items[items.length - 1];
+
+  return (
+    <div style={style} className="flex justify-center">
+      <span className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-semibold">
+        {currentItem?.route.i18nKey}
+      </span>
+    </div>
   );
-
-  return <Breadcrumb items={items} style={style} separator={customSeparator} />;
 };

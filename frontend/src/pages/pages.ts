@@ -6,3 +6,5 @@ export { Contact } from "./Contact";
 export { Account } from "./Account";
 export { Legal } from "./Legal";
 export { Crypto } from "./Crypto";
+export { Landing } from "./Landing";
+export { Home as DashboardHome } from "./Home";

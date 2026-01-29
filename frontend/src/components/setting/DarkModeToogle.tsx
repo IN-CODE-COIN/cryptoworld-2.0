@@ -1,21 +1,20 @@
 import { SunFilled, MoonFilled } from "@ant-design/icons";
 import { useTheme } from "../../hooks/useTheme";
-import { Card } from "antd";
 
 const themeOptions = [
   {
     code: "light",
-    label: "Light",
-    icon: <SunFilled className="text-yellow-500" />,
+    label: "Claro",
+    icon: <SunFilled className="text-yellow-500 text-2xl" />,
     description:
-      "Cambia a modo claro para una mejor visibilidad en entornos con luminosidad alta.",
+      "Modo claro para mejor visibilidad en entornos iluminados.",
   },
   {
     code: "dark",
-    label: "Dark",
-    icon: <MoonFilled className="text-gray-900" />,
+    label: "Oscuro",
+    icon: <MoonFilled className="text-blue-400 text-2xl" />,
     description:
-      "Cambia a modo oscuro para una mejor visibilidad en entornos con luminosidad baja.",
+      "Modo oscuro para mejor visibilidad en entornos con poca luz.",
   },
 ];
 
@@ -28,53 +27,53 @@ export const DarkModeToggle = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-        Modos
-      </h2>
-      <p className="mt-1 text-gray-500 dark:text-gray-400">
+      <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">
+        Tema
+      </h3>
+      <p className={`text-sm mb-4 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
         Elige entre claro y oscuro para adaptarte a tus preferencias.
       </p>
 
-      <div className="mt-6 flex flex-col sm:flex-row flex-wrap justify-start items-stretch gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {themeOptions.map(({ code, label, icon, description }) => {
           const isSelected = theme === code;
           return (
-            <Card
+            <button
               key={code}
               onClick={() => handleChange(code)}
-              style={{
-                borderColor: isSelected ? "indigo" : "",
-              }}
-              className={`cursor-pointer transition-all ${
+              className={`rounded-lg border p-4 text-left transition-all duration-300 ${
                 isSelected
-                  ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-900"
-                  : "border-gray-200 hover:border-indigo-500"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                  : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
               }`}
             >
-              <div className="flex items-center gap-4">
-                <div className="text-2xl">{icon}</div>
-                <div>
-                  <h3
-                    className={`text-lg font-medium ${
+              <div className="flex items-start gap-3">
+                <div className="mt-1">{icon}</div>
+                <div className="flex-1">
+                  <h4
+                    className={`font-semibold mb-1 ${
                       isSelected
-                        ? "text-indigo-800 dark:text-indigo-200"
+                        ? "text-blue-700 dark:text-blue-300"
                         : "text-gray-900 dark:text-white"
                     }`}
                   >
                     {label}
-                  </h3>
+                  </h4>
                   <p
-                    className={`mt-1 ${
+                    className={`text-sm ${
                       isSelected
-                        ? "text-indigo-600 dark:text-indigo-300"
-                        : "text-gray-500 dark:text-gray-400"
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-600 dark:text-gray-400"
                     }`}
                   >
                     {description}
                   </p>
                 </div>
+                {isSelected && (
+                  <div className="text-blue-500 text-lg">✓</div>
+                )}
               </div>
-            </Card>
+            </button>
           );
         })}
       </div>

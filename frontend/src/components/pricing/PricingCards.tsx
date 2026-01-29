@@ -85,6 +85,13 @@ export const PricingCards = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
+  const handleScrollToContact = () => {
+    const element = document.querySelector("#contact");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   //* Actualizo la información del usuario *//
   const refreshUserFromApi = async () => {
     if (!user) return;
@@ -99,7 +106,10 @@ export const PricingCards = () => {
     : "";
 
   const handleClick = (plan: Plan) => {
-    if (plan.isEnterprise) return;
+    if (plan.isEnterprise) {
+      handleScrollToContact();
+      return;
+    }
     setSelectedPlan(plan.name === "Gratuito" ? "normal" : "pro");
     if (!isAuthenticated) setAuthModalOpen(true);
     else setPaymentModalOpen(true);
@@ -129,14 +139,14 @@ export const PricingCards = () => {
 
   const getButtonClass = (isActive: boolean, isEnterprise: boolean) => {
     if (isEnterprise)
-      return "mt-6 w-full rounded-md bg-gray-300 text-gray-500 cursor-not-allowed px-4 py-2 font-medium";
+      return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
     if (isActive)
       return "mt-6 w-full rounded-md bg-green-500 border border-green-500 text-white px-4 py-2 font-medium";
-    return "mt-6 w-full rounded-md bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 px-4 py-2 font-medium";
+    return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
   };
 
   const getButtonText = (plan: Plan, isActive: boolean) => {
-    if (plan.isEnterprise) return plan.buttonText;
+    if (plan.isEnterprise) return "Contactar";
     if (isActive) return "Activo";
     if (isAuthenticated && !isActive && plan.name === "Gratuito")
       return "Cambiar";
@@ -158,8 +168,19 @@ export const PricingCards = () => {
   };
 
   return (
-    <section className="container mt-4 w-full mx-auto">
-      <div className="flex flex-wrap justify-center md:justify-start items-stretch gap-4">
+    <section className="w-full">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+            Planes de Precios
+          </span>
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Elige el plan perfecto para ti y comienza a gestionar tu portafolio cripto
+        </p>
+      </div>
+
+      <div className="flex flex-wrap justify-center items-stretch gap-6">
         {plans.map((plan, idx) => {
           const isActivePlan = plan.name === activePlanName;
           const priceToShow =
@@ -171,30 +192,29 @@ export const PricingCards = () => {
             <div
               id="pricing-cards"
               key={idx}
-              className={getCardClass(
-                isAuthenticated,
-                isActivePlan,
-                plan.isRecommended
-              )}
+              className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 max-w-[350px] w-full ${
+                isAuthenticated && isActivePlan
+                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                  : !isAuthenticated && plan.isRecommended
+                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                  : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+              }`}
             >
-              <div className="flex items-center justify-between gap-x-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {plan.isRecommended && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-300 dark:border-blue-600 bg-blue-100 dark:bg-blue-900/40 px-4 py-1.5 text-xs text-blue-800 dark:text-blue-200 font-semibold">
+                    ★ Recomendado
+                  </span>
+                </div>
+              )}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {plan.name}
                 </h3>
-                {plan.isRecommended && (
-                  <span className="inline-flex items-center rounded-md border border-gray-300 bg-indigo-50 px-2 py-1 text-xs text-gray-800 dark:border-gray-600 dark:bg-indigo-600/10 dark:text-indigo-400 font-medium">
-                    Recomendado
-                  </span>
-                )}
-                {plan.isEnterprise && (
-                  <span className="inline-flex items-center rounded-md border border-gray-300 bg-indigo-50 px-2 py-1 text-xs text-gray-800 dark:border-gray-600 dark:bg-indigo-600/10 dark:text-indigo-400 font-medium">
-                    No disponible
-                  </span>
-                )}
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                  {plan.description}
+                </p>
               </div>
-              <p className="mt-1 text-gray-600 dark:text-gray-300 text-left text-md">
-                {plan.description}
-              </p>
               <p className="mt-6 flex items-baseline gap-x-1 text-gray-900 dark:text-white font-semibold text-2xl">
                 {priceToShow}
                 {plan.name === "Profesional" && (
@@ -259,9 +279,7 @@ export const PricingCards = () => {
                 </div>
                 <button
                   onClick={() => handleClick(plan)}
-                  disabled={
-                    (isActivePlan && !plan.isRecommended) || plan.isEnterprise
-                  }
+                  disabled={isActivePlan && !plan.isRecommended && !plan.isEnterprise}
                   className={getButtonClass(isActivePlan, plan.isEnterprise)}
                 >
                   {getButtonText(plan, isActivePlan)}

@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import { Button, message } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button, message, Spin } from "antd";
+import { ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import api from "../../lib/axios";
 import axios, { AxiosError } from "axios";
+import { useTheme } from "../../hooks/useTheme";
 
 type Coin = {
   uuid: string;
@@ -36,16 +38,22 @@ const formatNumber = (
 
 export const CryptoDetail: React.FC = () => {
   const { uuid } = useParams();
+  const navigate = useNavigate();
   const [coin, setCoin] = useState<Coin | null>(null);
   const [watchlist, setWatchlist] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchCoin = async () => {
+      setLoading(true);
       try {
         const response = await api.get(`/crypto/${uuid}`);
         setCoin(response.data.coin);
       } catch (error) {
         console.error("Error al obtener detalles:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCoin();
@@ -120,100 +128,166 @@ export const CryptoDetail: React.FC = () => {
     }
   }, [coin]);
 
-  if (!coin) return <p className="text-center mt-10">Cargando...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-96">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!coin)
+    return (
+      <p className={`text-center mt-10 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+        No se encontró la criptomoneda
+      </p>
+    );
+
   const isInWatchlist = watchlist.includes(coin.uuid);
+  const isPositive = coin.change >= 0;
 
   return (
-    <div className="max-w-xl lg:max-w-6xl mx-auto p-6 bg-white shadow rounded-xl dark:bg-gray-800">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="font-semibold text-3xl flex items-center gap-4 dark:text-white">
-          <img
-            src={coin.iconUrl}
-            alt={coin.name}
-            className="w-10 h-10 md:w-14 md:h-14 object-contain"
-          />
-          {coin.name} ({coin.symbol})
-        </h2>
-        <Button
-          size="small"
-          title={
-            isInWatchlist
-              ? "Ya en tú lista de seguimiento"
-              : "Añadir a tu lista de seguimiento"
-          }
-          type={isInWatchlist ? "default" : "primary"}
-          disabled={isInWatchlist}
-          onClick={!isInWatchlist ? handleAddToWatchlist : undefined}
-        >
-          {isInWatchlist ? "✓ En tu lista" : "Añadir"}
-        </Button>
+    <div className="w-full space-y-8">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/home")}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors font-medium"
+      >
+        <ArrowLeftOutlined /> Volver al Dashboard
+      </button>
+
+      {/* Header */}
+      <div
+        className={`rounded-xl border p-8 ${
+          theme === "dark"
+            ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
+            : "bg-gradient-to-br from-white to-gray-50 border-gray-200"
+        }`}
+      >
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <img
+              src={coin.iconUrl}
+              alt={coin.name}
+              className="w-16 h-16 md:w-20 md:h-20 rounded-full"
+            />
+            <div>
+              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+                {coin.name}
+              </h1>
+              <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                {coin.symbol.toUpperCase()} · Ranking #{coin.rank}
+              </p>
+            </div>
+          </div>
+          <Button
+            size="large"
+            title={
+              isInWatchlist
+                ? "Ya en tu lista de seguimiento"
+                : "Añadir a tu lista de seguimiento"
+            }
+            type={isInWatchlist ? "default" : "primary"}
+            disabled={isInWatchlist}
+            onClick={!isInWatchlist ? handleAddToWatchlist : undefined}
+            className="bg-gradient-to-r from-blue-600 to-blue-400 border-0 text-white"
+          >
+            {isInWatchlist ? "✓ En tu lista" : "Añadir a Watchlist"}
+          </Button>
+        </div>
+
+        {/* Price Section */}
+        <div className="space-y-3">
+          <div>
+            <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              Precio Actual
+            </p>
+            <p className="text-5xl font-bold dark:text-white">
+              ${formatNumber(coin.price, { minimumFractionDigits: 2 })}
+            </p>
+          </div>
+          <div
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${
+              isPositive
+                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+            }`}
+          >
+            {isPositive ? (
+              <ArrowUpOutlined className="text-lg" />
+            ) : (
+              <ArrowDownOutlined className="text-lg" />
+            )}
+            <span className="font-semibold">
+              {isPositive ? "+" : ""}{formatNumber(coin.change)}% últimas 24h
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div className="text-center my-8">
-        <p className="text-4xl font-bold dark:text-white">
-          ${formatNumber(coin.price, { minimumFractionDigits: 2 })}
-        </p>
-        <p
-          className={`text-lg ${
-            coin.change >= 0 ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {coin.change >= 0 ? "▲" : "▼"} {formatNumber(coin.change)}% en las
-          últimas 24h
-        </p>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { label: "Capitalización de Mercado", value: `$${formatNumber(coin.marketCap)}` },
+          { label: "Volumen 24h", value: `$${formatNumber(coin["24hVolume"])}` },
+          { label: "Máximo Histórico", value: `$${formatNumber(coin.allTimeHigh.price, { minimumFractionDigits: 2 })}` },
+          { label: "Suministro Circulante", value: formatNumber(coin.supply.circulating) },
+          { label: "Suministro Total", value: formatNumber(coin.supply.total) },
+        ].map((stat, idx) => (
+          <div
+            key={idx}
+            className={`rounded-lg border p-4 ${
+              theme === "dark"
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
+            }`}
+          >
+            <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              {stat.label}
+            </p>
+            <p className="text-xl font-bold dark:text-white mt-2">{stat.value}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-800 text-sm dark:text-white">
-        <p>
-          <strong>Cap. de mercado:</strong> ${formatNumber(coin.marketCap)}
-        </p>
-        <p>
-          <strong>Volumen 24h:</strong> ${formatNumber(coin["24hVolume"])}
-        </p>
-        <p>
-          <strong>Máximo histórico:</strong> $
-          {formatNumber(coin.allTimeHigh.price, { minimumFractionDigits: 2 })}
-        </p>
-        <p>
-          <strong>Ranking:</strong> #{formatNumber(coin.rank)}
-        </p>
-        <p>
-          <strong>Circulación:</strong> {formatNumber(coin.supply.circulating)}
-        </p>
-        <p>
-          <strong>Suministro total:</strong> {formatNumber(coin.supply.total)}
-        </p>
-      </div>
+      {/* Links */}
+      <div className="space-y-4">
+        {coin.websiteUrl && (
+          <a
+            href={coin.websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg font-medium hover:shadow-lg transition-all"
+          >
+            🌐 Sitio web oficial
+          </a>
+        )}
 
-      {coin.websiteUrl && (
-        <a
-          href={coin.websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block mt-6 text-blue-600 hover:underline font-medium"
-        >
-          🌐 Sitio web oficial
-        </a>
-      )}
-
-      {coin.links && coin.links.length > 0 && (
-        <div className="mt-10">
-          <h4 className="text-lg font-semibold mb-2">Redes y enlaces</h4>
-          <ul className="flex flex-wrap gap-4 text-sm">
-            {coin.links.map((link, i) => (
-              <li key={i}>
+        {coin.links && coin.links.length > 0 && (
+          <div className={`rounded-lg border p-6 ${
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
+          }`}>
+            <h3 className="text-lg font-semibold dark:text-white mb-4">
+              Redes y Enlaces
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {coin.links.map((link, i) => (
                 <a
+                  key={i}
                   href={link.url}
                   target="_blank"
-                  className="text-blue-500 hover:underline"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                 >
                   🔗 {link.type}
                 </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

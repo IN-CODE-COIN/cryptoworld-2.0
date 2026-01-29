@@ -93,16 +93,16 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
         }}
       >
         <div className="demo-logo-vertical p-4 flex justify-between items-center">
-          <img
-            src={theme === "dark" ? iconLogoDark : iconLogo}
-            alt="Logo CryptoWorld"
+          <div
+            className={`text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent ${
+              collapsed ? "text-center w-full" : ""
+            }`}
             style={{
               marginInline: collapsed ? "auto" : 3,
-              width: "6rem",
-              height: "auto",
             }}
-            className="dark:fill-white dark:stroke-white"
-          />
+          >
+            {collapsed ? "CW" : "CryptoWorld"}
+          </div>
           <ButtonCollapseSider
             collapsed={collapsed}
             toggleCollapsed={() => onCollapse(!collapsed)}
@@ -125,20 +125,13 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
             !isAuthenticated
               ? "hidden"
               : isMobile
-              ? "hidden"
-              : collapsed && isAuthenticated
-              ? "absolute bottom-16 left-5"
-              : "absolute bottom-16 left-5"
+                ? "hidden"
+                : collapsed && isAuthenticated
+                  ? "absolute bottom-16 left-5"
+                  : "absolute bottom-16 left-5"
           }`}
         >
-          <AuthButton />
-          <span
-            className={`dark:text-white mx-1 ${
-              collapsed ? "hidden" : "inline"
-            }`}
-          >
-            {user?.name}
-          </span>
+          <AuthButton collapsed={collapsed} />
         </div>
       </Sider>
       <SearchCrypto

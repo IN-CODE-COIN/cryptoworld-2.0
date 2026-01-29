@@ -39,43 +39,49 @@ export const Faqs: React.FC = () => {
   ];
 
   return (
-    <section className="mt-20 flex flex-col xl:flex-row justify-between lg:gap-4 gap-8 mx-auto">
-      <div className="w-full xl:w-1/2 lg:pr-10">
-        <h2 className="tracking-tight text-2xl font-semibold text-gray-900 dark:text-white">
-          Preguntas frecuentes
+    <section className="w-full flex flex-col items-center">
+      <div className="mb-12 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+          Preguntas Frecuentes
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          ¿No encuentras la respuesta que buscas? No dudes en ponerte en
-          contacto con nuestro{" "}
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          ¿No encuentras la respuesta? Contacta con nuestro{" "}
           <Link
-            to="/contact"
-            className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400"
+            to="#contact"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
           >
             equipo de soporte
           </Link>
           .
         </p>
       </div>
-      <div className="w-full xl:w-1/2">
+
+      <div className="space-y-4 max-w-3xl w-full">
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className="border-b border-gray-200 dark:border-gray-700"
+            className={`rounded-lg border transition-all duration-300 p-6 cursor-pointer ${
+              openIndex === index
+                ? "border-blue-600 bg-blue-50 dark:bg-blue-900/30"
+                : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800"
+            }`}
+            onClick={() => toggleItem(index)}
           >
-            <button
-              className="flex justify-between items-center w-full py-4 text-left font-medium text-gray-900 dark:text-white"
-              onClick={() => toggleItem(index)}
-            >
-              <span className="flex items-center">{faq.question}</span>
+            <button className="flex justify-between items-center w-full text-left">
+              <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
+                {faq.question}
+              </h3>
               <DownOutlined
-                className={`transition-transform duration-300 ${
+                className={`ml-4 flex-shrink-0 transition-transform duration-300 text-blue-600 dark:text-blue-400 ${
                   openIndex === index ? "rotate-180" : ""
                 }`}
               />
             </button>
             {openIndex === index && (
-              <div className="pb-4">
-                <p className="text-gray-600 dark:text-gray-400">{faq.answer}</p>
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {faq.answer}
+                </p>
               </div>
             )}
           </div>

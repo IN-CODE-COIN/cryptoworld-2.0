@@ -9,7 +9,6 @@ import {
   Account,
   Cartera,
   Watchlist,
-  Crypto,
 } from "../../pages/pages";
 import { useTheme } from "../../hooks/useTheme.ts";
 import { ProtectedRoute } from "../auth/ProtectedRoute.tsx";
@@ -48,7 +47,7 @@ export const MainContent: React.FC = () => {
           }}
         >
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route
               path="/cartera"
               element={
@@ -100,7 +99,6 @@ export const MainContent: React.FC = () => {
             />
             <Route path="/contact" element={<Contact />} />
             <Route path="/legal" element={<Legal />} />
-            <Route path="/crypto/:uuid" element={<Crypto />} />
           </Routes>
         </div>
       </Content>
