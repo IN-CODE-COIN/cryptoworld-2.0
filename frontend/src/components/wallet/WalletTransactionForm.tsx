@@ -71,7 +71,7 @@ export const WalletTransactionForm: React.FC = () => {
     try {
       setLoading(true);
       const res = await api.get(
-        `/crypto/autocomplete?query=${encodeURIComponent(query)}`
+        `/crypto/autocomplete?query=${encodeURIComponent(query)}`,
       );
       setCryptoOptions(res.data);
       setShowSuggestions(true);
@@ -141,7 +141,14 @@ export const WalletTransactionForm: React.FC = () => {
   const updateQuantity = () => {
     const amount = form.getFieldValue("amount_usd");
     const price = form.getFieldValue("price_usd");
-    if (amount && price && !isNaN(amount) && amount > 0 && !isNaN(price) && price > 0) {
+    if (
+      amount &&
+      price &&
+      !isNaN(amount) &&
+      amount > 0 &&
+      !isNaN(price) &&
+      price > 0
+    ) {
       form.setFieldsValue({
         quantity: parseFloat((amount / price).toFixed(8)),
       });
@@ -191,10 +198,12 @@ export const WalletTransactionForm: React.FC = () => {
       {/* Header with Back Button */}
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-purple-600 mb-2">
             Registrar Transacción
           </h1>
-          <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+          <p
+            className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+          >
             Compra o venta de criptomonedas
           </p>
         </div>
@@ -208,11 +217,13 @@ export const WalletTransactionForm: React.FC = () => {
       </div>
 
       {/* Form */}
-      <div className={`rounded-xl border p-6 lg:p-8 ${
-        theme === "dark"
-          ? "bg-gray-800/50 border-gray-700"
-          : "bg-white border-gray-200"
-      }`}>
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <Form
           form={form}
           layout="vertical"
@@ -256,7 +267,7 @@ export const WalletTransactionForm: React.FC = () => {
                     onSearch={fetchCryptoSuggestions}
                     onSelect={(value) => {
                       const selected = cryptoOptions.find(
-                        (c) => `${c.name} (${c.symbol})` === value
+                        (c) => `${c.name} (${c.symbol})` === value,
                       );
                       if (selected) {
                         setSelectedCrypto(selected);
@@ -268,7 +279,7 @@ export const WalletTransactionForm: React.FC = () => {
                         if (date)
                           fetchPriceAtDate(
                             selected.uuid,
-                            date.format("YYYY-MM-DD")
+                            date.format("YYYY-MM-DD"),
                           );
                       }
                       setShowSuggestions(false);
@@ -285,7 +296,7 @@ export const WalletTransactionForm: React.FC = () => {
                   placeholder="Selecciona una criptomoneda de tu cartera"
                   onChange={(uuid) => {
                     const selected = cryptosInWallet.find(
-                      (c) => c.uuid === uuid
+                      (c) => c.uuid === uuid,
                     );
                     if (selected) {
                       setSelectedCrypto(selected);
@@ -297,7 +308,7 @@ export const WalletTransactionForm: React.FC = () => {
                       if (date)
                         fetchPriceAtDate(
                           selected.uuid,
-                          date.format("YYYY-MM-DD")
+                          date.format("YYYY-MM-DD"),
                         );
                     }
                   }}
@@ -327,7 +338,7 @@ export const WalletTransactionForm: React.FC = () => {
                   if (selectedCrypto && date)
                     fetchPriceAtDate(
                       selectedCrypto.uuid,
-                      date.format("YYYY-MM-DD")
+                      date.format("YYYY-MM-DD"),
                     );
                 }}
               />
@@ -376,26 +387,26 @@ export const WalletTransactionForm: React.FC = () => {
                 placeholder="0.00000000"
               />
             </Form.Item>
-            </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item label="Comisiones (USD)" name="fees">
-            <InputNumber
-              min={0}
-              step={0.01}
-              style={{ width: "100%" }}
-              placeholder="0.00"
+              <InputNumber
+                min={0}
+                step={0.01}
+                style={{ width: "100%" }}
+                placeholder="0.00"
               />
-              </Form.Item>
-              </div>
+            </Form.Item>
+          </div>
 
-              <Form.Item>
+          <Form.Item>
             <div className="flex gap-3">
               <Button
                 type="primary"
                 size="large"
                 htmlType="submit"
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 border-none h-10"
+                className="flex-1 bg-linear-to-r from-blue-600 to-purple-600 border-none h-10"
               >
                 Guardar transacción
               </Button>
@@ -408,8 +419,8 @@ export const WalletTransactionForm: React.FC = () => {
               </Button>
             </div>
           </Form.Item>
-          </Form>
-          </div>
-          </section>
-          );
-          };
+        </Form>
+      </div>
+    </section>
+  );
+};

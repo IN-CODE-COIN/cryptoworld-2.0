@@ -128,10 +128,10 @@ export const PricingCards = () => {
 
   const getButtonClass = (isActive: boolean, isEnterprise: boolean) => {
     if (isEnterprise)
-      return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
+      return "mt-6 w-full rounded-md bg-linear-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
     if (isActive)
       return "mt-6 w-full rounded-md bg-green-500 border border-green-500 text-white px-4 py-2 font-medium";
-    return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
+    return "mt-6 w-full rounded-md bg-linear-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
   };
 
   const getButtonText = (plan: Plan, isActive: boolean) => {
@@ -183,35 +183,36 @@ export const PricingCards = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12"
         >
-          Elige el plan perfecto para ti y comienza a gestionar tu portafolio cripto
+          Elige el plan perfecto para ti y comienza a gestionar tu portafolio
+          cripto
         </motion.p>
       </motion.div>
 
       <div className="flex flex-wrap justify-center items-stretch gap-6">
         {plans.map((plan, idx) => {
-           const isActivePlan = plan.name === activePlanName;
-           const priceToShow =
-             plan.name === "Profesional" && typeof plan.price !== "string"
-               ? plan.price[frequency.value]
-               : (plan.price as string);
+          const isActivePlan = plan.name === activePlanName;
+          const priceToShow =
+            plan.name === "Profesional" && typeof plan.price !== "string"
+              ? plan.price[frequency.value]
+              : (plan.price as string);
 
-           return (
-             <motion.div
-               id="pricing-cards"
-               key={idx}
-               initial={{ opacity: 0, y: 30 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, margin: "-100px" }}
-               transition={{ duration: 0.5, delay: idx * 0.15 }}
-               whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
-               className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 max-w-87.5 w-full ${
-                 isAuthenticated && isActivePlan
+          return (
+            <motion.div
+              id="pricing-cards"
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+              className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 max-w-87.5 w-full ${
+                isAuthenticated && isActivePlan
+                  ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                  : !isAuthenticated && plan.isRecommended
                     ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
-                    : !isAuthenticated && plan.isRecommended
-                    ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
-                   : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-               }`}
-             >
+                    : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+              }`}
+            >
               {plan.isRecommended && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-300 dark:border-blue-600 bg-blue-100 dark:bg-blue-900/40 px-4 py-1.5 text-xs text-blue-800 dark:text-blue-200 font-semibold">
@@ -251,7 +252,7 @@ export const PricingCards = () => {
                           f.value === frequency.value
                             ? "bg-indigo-600 text-white"
                             : "text-gray-700 dark:text-gray-300",
-                          "cursor-pointer rounded-full px-3 py-1"
+                          "cursor-pointer rounded-full px-3 py-1",
                         )}
                       >
                         <input
@@ -273,35 +274,37 @@ export const PricingCards = () => {
               )}
               <div className="flex flex-col grow justify-between mt-2">
                 <div className="flex flex-col grow">
-                    <p className="font-medium text-gray-700 dark:text-gray-200 text-left">
-                      Incluido:
-                    </p>
-                    <ul className="mt-2 space-y-2 text-gray-700 dark:text-gray-300 flex flex-col">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-center space-x-2">
-                          <RiCheckLine
-                            className="h-5 w-5 text-indigo-600 dark:text-indigo-400"
-                            aria-hidden="true"
-                          />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="grow" />
+                  <p className="font-medium text-gray-700 dark:text-gray-200 text-left">
+                    Incluido:
+                  </p>
+                  <ul className="mt-2 space-y-2 text-gray-700 dark:text-gray-300 flex flex-col">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center space-x-2">
+                        <RiCheckLine
+                          className="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                          aria-hidden="true"
+                        />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="grow" />
                 </div>
                 <button
                   onClick={() => handleClick(plan)}
-                  disabled={isActivePlan && !plan.isRecommended && !plan.isEnterprise}
+                  disabled={
+                    isActivePlan && !plan.isRecommended && !plan.isEnterprise
+                  }
                   className={getButtonClass(isActivePlan, plan.isEnterprise)}
                 >
                   {getButtonText(plan, isActivePlan)}
                 </button>
               </div>
             </motion.div>
-            );
-            })}
+          );
+        })}
 
-            {selectedPlan && (
+        {selectedPlan && (
           <PlanSelectorForm
             open={paymentModalOpen}
             onClose={() => setPaymentModalOpen(false)}

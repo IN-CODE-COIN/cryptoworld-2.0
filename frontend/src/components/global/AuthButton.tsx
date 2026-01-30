@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Button, Grid, Dropdown, Avatar } from "antd";
-import { UserOutlined, LogoutOutlined, SettingOutlined, CreditCardOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  CreditCardOutlined,
+} from "@ant-design/icons";
 import { AuthModal } from "../auth/AuthModal";
 import { useTheme } from "../../hooks/useTheme";
 import { useAuth } from "../../hooks/useAuth";
@@ -32,11 +37,13 @@ export const AuthButton = ({ collapsed = false }: AuthButtonProps) => {
             {user?.email}
           </p>
           <p className="text-xs mt-1">
-            <span className={`inline-block px-2 py-0.5 rounded-full text-white font-semibold ${
-              user?.rol === "pro" 
-                ? "bg-gradient-to-r from-emerald-600 to-emerald-500" 
-                : "bg-gradient-to-r from-blue-600 to-blue-500"
-            }`}>
+            <span
+              className={`inline-block px-2 py-0.5 rounded-full text-white font-semibold ${
+                user?.rol === "pro"
+                  ? "bg-linear-to-r from-emerald-600 to-emerald-500"
+                  : "bg-linear-to-r from-blue-600 to-blue-500"
+              }`}
+            >
               {user?.rol === "pro" ? "Plan Profesional" : "Plan Gratuito"}
             </span>
           </p>
@@ -70,11 +77,7 @@ export const AuthButton = ({ collapsed = false }: AuthButtonProps) => {
   if (isAuthenticated) {
     return (
       <>
-        <Dropdown
-          menu={{ items }}
-          placement="bottomRight"
-          trigger={["click"]}
-        >
+        <Dropdown menu={{ items }} placement="bottomRight" trigger={["click"]}>
           <div className="cursor-pointer">
             <div
               className={`flex items-center justify-center rounded-lg transition-all ${
@@ -85,16 +88,24 @@ export const AuthButton = ({ collapsed = false }: AuthButtonProps) => {
                   : "hover:bg-gray-100 bg-white border border-gray-200"
               }`}
             >
-              <div className={`flex items-center ${!isMobile && !collapsed && "gap-2"}`}>
-                <div className={`rounded-full bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center ${
-                  isMobile ? "w-6 h-6" : "w-8 h-8"
-                }`}>
-                  <UserOutlined className={`text-white ${isMobile ? "text-xs" : "text-sm"}`} />
+              <div
+                className={`flex items-center ${!isMobile && !collapsed && "gap-2"}`}
+              >
+                <div
+                  className={`rounded-full bg-linear-to-r from-blue-600 to-blue-400 flex items-center justify-center ${
+                    isMobile ? "w-6 h-6" : "w-8 h-8"
+                  }`}
+                >
+                  <UserOutlined
+                    className={`text-white ${isMobile ? "text-xs" : "text-sm"}`}
+                  />
                 </div>
                 {!isMobile && !collapsed && (
-                  <span className={`text-sm font-medium truncate max-w-32 ${
-                    theme === "dark" ? "text-gray-200" : "text-gray-900"
-                  }`}>
+                  <span
+                    className={`text-sm font-medium truncate max-w-32 ${
+                      theme === "dark" ? "text-gray-200" : "text-gray-900"
+                    }`}
+                  >
                     {user?.name}
                   </span>
                 )}
@@ -112,7 +123,7 @@ export const AuthButton = ({ collapsed = false }: AuthButtonProps) => {
       <Button
         type="primary"
         size={isMobile ? "small" : "middle"}
-        className="bg-gradient-to-r from-blue-600 to-blue-500 border-0 font-semibold shadow-lg hover:shadow-xl transition-all"
+        className="bg-linear-to-r from-blue-600 to-blue-500 border-0 font-semibold shadow-lg hover:shadow-xl transition-all"
         icon={<UserOutlined />}
         onClick={() => setOpen(true)}
       >

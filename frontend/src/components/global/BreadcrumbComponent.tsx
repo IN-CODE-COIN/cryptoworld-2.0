@@ -61,7 +61,7 @@ export const BreadcrumbComponent: React.FC<BreadcrumbProps> = ({ style }) => {
 
   return (
     <div style={style} className="flex justify-center">
-      <span className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-semibold">
+      <span className="inline-block px-3 py-1 rounded-full bg-linear-to-r from-blue-600 to-blue-500 text-white text-xs font-semibold">
         {currentItem?.route.i18nKey}
       </span>
     </div>

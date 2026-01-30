@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  InputNumber,
-  Select,
-  Input,
-  Button,
-  message,
-  Spin,
-} from "antd";
+import { Form, InputNumber, Select, Input, Button, message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import api from "../../lib/axios";
@@ -44,7 +36,7 @@ export const WalletMovementForm: React.FC = () => {
     try {
       const res = await api.post("/cartera", values);
       message.success(
-        res.data.message || "Movimiento registrado correctamente"
+        res.data.message || "Movimiento registrado correctamente",
       );
       navigate("/cartera");
     } catch (error) {
@@ -62,10 +54,12 @@ export const WalletMovementForm: React.FC = () => {
       {/* Header with Back Button */}
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-green-600 to-emerald-600 mb-2">
             Ingresar / Retirar
           </h1>
-          <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+          <p
+            className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+          >
             Gestiona tus movimientos de efectivo
           </p>
         </div>
@@ -79,17 +73,21 @@ export const WalletMovementForm: React.FC = () => {
       </div>
 
       {/* Balance Card */}
-      <div className={`rounded-xl border p-6 lg:p-8 ${
-        theme === "dark"
-          ? "bg-gradient-to-r from-green-900/20 to-emerald-900/20 border-green-700/50"
-          : "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200"
-      }`}>
-        <p className={`text-sm font-medium mb-2 ${
-          theme === "dark" ? "text-green-300" : "text-green-700"
-        }`}>
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-linear-to-r from-green-900/20 to-emerald-900/20 border-green-700/50"
+            : "bg-linear-to-r from-green-50 to-emerald-50 border-green-200"
+        }`}
+      >
+        <p
+          className={`text-sm font-medium mb-2 ${
+            theme === "dark" ? "text-green-300" : "text-green-700"
+          }`}
+        >
           Saldo disponible
         </p>
-        <h3 className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600">
+        <h3 className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-green-600 to-emerald-600">
           $
           {balance.toLocaleString("en-US", {
             minimumFractionDigits: 2,
@@ -99,19 +97,20 @@ export const WalletMovementForm: React.FC = () => {
       </div>
 
       {/* Form */}
-      <div className={`rounded-xl border p-6 lg:p-8 ${
-        theme === "dark"
-          ? "bg-gray-800/50 border-gray-700"
-          : "bg-white border-gray-200"
-      }`}>
-
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <Form
-           form={form}
-           layout="vertical"
-           onFinish={onFinish}
-           initialValues={{ type: "deposito", method: "transfer" }}
-         >
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{ type: "deposito", method: "transfer" }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item label="Tipo" name="type" rules={[{ required: true }]}>
               <Select>
                 <Select.Option value="deposito">Ingreso</Select.Option>
@@ -134,7 +133,11 @@ export const WalletMovementForm: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Form.Item label="Método" name="method" rules={[{ required: true }]}>
+            <Form.Item
+              label="Método"
+              name="method"
+              rules={[{ required: true }]}
+            >
               <Select>
                 <Select.Option value="transfer">Transferencia</Select.Option>
                 <Select.Option value="card">Tarjeta</Select.Option>
@@ -156,7 +159,7 @@ export const WalletMovementForm: React.FC = () => {
                 type="primary"
                 size="large"
                 htmlType="submit"
-                className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 border-none h-10"
+                className="flex-1 bg-linear-to-r from-green-600 to-emerald-600 border-none h-10"
               >
                 Guardar movimiento
               </Button>
@@ -169,8 +172,8 @@ export const WalletMovementForm: React.FC = () => {
               </Button>
             </div>
           </Form.Item>
-          </Form>
-          </div>
-          </section>
-          );
-          };
+        </Form>
+      </div>
+    </section>
+  );
+};

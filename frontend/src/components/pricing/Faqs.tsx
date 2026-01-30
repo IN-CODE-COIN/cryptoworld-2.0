@@ -41,7 +41,7 @@ export const Faqs: React.FC = () => {
   return (
     <section className="w-full flex flex-col items-center">
       <div className="mb-12 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400">
           Preguntas Frecuentes
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">

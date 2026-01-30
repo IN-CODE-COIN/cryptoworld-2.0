@@ -59,8 +59,8 @@ export const LoginForm = ({ onClose, onSwitch }: LoginFormProps) => {
       <div
         className={`px-6 py-8 border-b ${
           theme === "dark"
-            ? "bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-gray-700"
-            : "bg-gradient-to-r from-blue-50 to-indigo-50 border-gray-200"
+            ? "bg-linear-to-r from-blue-900/20 to-indigo-900/20 border-gray-700"
+            : "bg-linear-to-r from-blue-50 to-indigo-50 border-gray-200"
         }`}
       >
         <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-1">
@@ -77,7 +77,9 @@ export const LoginForm = ({ onClose, onSwitch }: LoginFormProps) => {
       <div className="px-6 py-6">
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Form.Item
-            label={<span className="text-sm font-medium">Correo electrónico</span>}
+            label={
+              <span className="text-sm font-medium">Correo electrónico</span>
+            }
             name="email"
             rules={[
               { required: true, type: "email", message: "Correo inválido" },
@@ -109,7 +111,7 @@ export const LoginForm = ({ onClose, onSwitch }: LoginFormProps) => {
               type="primary"
               htmlType="submit"
               size="large"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-500"
+              className="w-full bg-linear-to-r from-blue-600 to-blue-500"
               loading={loading}
             >
               {loading ? "Ingresando..." : "Iniciar sesión"}
@@ -122,7 +124,9 @@ export const LoginForm = ({ onClose, onSwitch }: LoginFormProps) => {
             theme === "dark" ? "border-gray-700" : "border-gray-200"
           }`}
         >
-          <span className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
+          <span
+            className={theme === "dark" ? "text-gray-400" : "text-gray-600"}
+          >
             ¿No tienes cuenta?{" "}
           </span>
           <button

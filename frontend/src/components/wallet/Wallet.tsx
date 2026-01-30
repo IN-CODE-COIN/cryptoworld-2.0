@@ -5,7 +5,11 @@ import api from "../../lib/axios";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
-import { CheckOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  LockOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons";
 
 interface Movement {
   id: number;
@@ -68,26 +72,31 @@ export const Wallet: React.FC = () => {
     ];
 
     return (
-      <div className={`rounded-2xl border-2 border-dashed p-8 md:p-12 text-center ${
-        theme === "dark"
-          ? "bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-700/50"
-          : "bg-gradient-to-br from-blue-50 to-purple-50 border-blue-300"
-      }`}>
+      <div
+        className={`rounded-2xl border-2 border-dashed p-8 md:p-12 text-center ${
+          theme === "dark"
+            ? "bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-700/50"
+            : "bg-gradient-to-br from-blue-50 to-purple-50 border-blue-300"
+        }`}
+      >
         <div className="max-w-2xl mx-auto">
           {/* Icon */}
           <div className="mb-6 flex justify-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-20 h-20 bg-linear-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
               <LockOutlined className="text-4xl text-white" />
             </div>
           </div>
 
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-purple-600 mb-3">
             Desbloquea tu cartera
           </h2>
-          
-          <p className={`text-lg mb-8 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-            Accede a herramientas profesionales para gestionar y analizar tus inversiones en criptomonedas
+
+          <p
+            className={`text-lg mb-8 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
+          >
+            Accede a herramientas profesionales para gestionar y analizar tus
+            inversiones en criptomonedas
           </p>
 
           {/* Features Grid */}
@@ -95,7 +104,11 @@ export const Wallet: React.FC = () => {
             {features.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3">
                 <CheckOutlined className="text-green-500 text-lg flex-shrink-0 mt-1" />
-                <span className={theme === "dark" ? "text-gray-200" : "text-gray-800"}>
+                <span
+                  className={
+                    theme === "dark" ? "text-gray-200" : "text-gray-800"
+                  }
+                >
                   {feature}
                 </span>
               </div>
@@ -107,13 +120,16 @@ export const Wallet: React.FC = () => {
             type="primary"
             size="large"
             onClick={() => navigate("/pricing")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 border-none h-12 px-8 text-base font-semibold hover:shadow-lg hover:shadow-blue-500/50"
+            className="bg-linear-to-r from-blue-600 to-purple-600 border-none h-12 px-8 text-base font-semibold hover:shadow-lg hover:shadow-blue-500/50"
           >
             Mejorar a Plan Pro
           </Button>
 
-          <p className={`text-sm mt-6 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-            Consulta nuestros planes y elige el que mejor se adapte a tus necesidades
+          <p
+            className={`text-sm mt-6 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+          >
+            Consulta nuestros planes y elige el que mejor se adapte a tus
+            necesidades
           </p>
         </div>
       </div>
@@ -241,9 +257,11 @@ export const Wallet: React.FC = () => {
               : "bg-white border-gray-200 hover:border-gray-300"
           }`}
         >
-          <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
-            theme === "dark" ? "text-gray-400" : "text-gray-500"
-          }`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             Efectivo Disponible
           </p>
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -254,14 +272,20 @@ export const Wallet: React.FC = () => {
             })}
           </h3>
           <div className="flex items-center gap-2 group-hover:gap-3 transition-all">
-            <span className={`text-sm ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}>
+            <span
+              className={`text-sm ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
               Ingresar o retirar
             </span>
-            <ArrowRightOutlined className={`text-base transition-colors ${
-              theme === "dark" ? "text-gray-500 group-hover:text-gray-300" : "text-gray-400 group-hover:text-gray-600"
-            }`} />
+            <ArrowRightOutlined
+              className={`text-base transition-colors ${
+                theme === "dark"
+                  ? "text-gray-500 group-hover:text-gray-300"
+                  : "text-gray-400 group-hover:text-gray-600"
+              }`}
+            />
           </div>
         </Link>
 
@@ -274,33 +298,43 @@ export const Wallet: React.FC = () => {
               : "bg-white border-gray-200 hover:border-gray-300"
           }`}
         >
-          <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
-            theme === "dark" ? "text-gray-400" : "text-gray-500"
-          }`}>
+          <p
+            className={`text-xs font-semibold uppercase tracking-wide mb-2 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
             Registrar Movimiento
           </p>
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Nueva transacción
           </h3>
           <div className="flex items-center gap-2 group-hover:gap-3 transition-all">
-            <span className={`text-sm ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}>
+            <span
+              className={`text-sm ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
               Registrar compra/venta
             </span>
-            <ArrowRightOutlined className={`text-base transition-colors ${
-              theme === "dark" ? "text-gray-500 group-hover:text-gray-300" : "text-gray-400 group-hover:text-gray-600"
-            }`} />
+            <ArrowRightOutlined
+              className={`text-base transition-colors ${
+                theme === "dark"
+                  ? "text-gray-500 group-hover:text-gray-300"
+                  : "text-gray-400 group-hover:text-gray-600"
+              }`}
+            />
           </div>
         </Link>
       </div>
 
       {/* Últimos movimientos */}
-      <div className={`rounded-xl border p-6 ${
-        theme === "dark"
-          ? "bg-gray-800/50 border-gray-700"
-          : "bg-white border-gray-200"
-      }`}>
+      <div
+        className={`rounded-xl border p-6 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Últimos 5 movimientos</h3>
           <Link
@@ -323,41 +357,53 @@ export const Wallet: React.FC = () => {
       </div>
 
       {/* Posiciones */}
-      <div className={`rounded-xl border p-6 ${
-       theme === "dark"
-         ? "bg-gray-800/50 border-gray-700"
-         : "bg-white border-gray-200"
-      }`}>
-       <div className="flex justify-between items-start mb-6">
-         <div>
-           <h3 className="text-lg font-semibold mb-1">Posiciones activas</h3>
-           <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-             Tu portafolio de criptomonedas
-           </p>
-         </div>
-         <div className="text-right">
-           <div className="mb-1">
-             <p className={`text-xs font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-               P/G Total
-             </p>
-             <p className={`text-lg font-bold ${
-               data.totalProfit >= 0 ? "text-green-600" : "text-red-600"
-             }`}>
-               ${data.totalProfit.toFixed(2)}
-             </p>
-           </div>
-           <div>
-             <p className={`text-xs font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-               Cambio
-             </p>
-             <p className={`text-lg font-bold ${
-               data.totalChange >= 0 ? "text-green-600" : "text-red-600"
-             }`}>
-               {data.totalChange.toFixed(2)}%
-             </p>
-           </div>
-         </div>
-       </div>
+      <div
+        className={`rounded-xl border p-6 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-1">Posiciones activas</h3>
+            <p
+              className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+            >
+              Tu portafolio de criptomonedas
+            </p>
+          </div>
+          <div className="text-right">
+            <div className="mb-1">
+              <p
+                className={`text-xs font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+              >
+                P/G Total
+              </p>
+              <p
+                className={`text-lg font-bold ${
+                  data.totalProfit >= 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                ${data.totalProfit.toFixed(2)}
+              </p>
+            </div>
+            <div>
+              <p
+                className={`text-xs font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+              >
+                Cambio
+              </p>
+              <p
+                className={`text-lg font-bold ${
+                  data.totalChange >= 0 ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {data.totalChange.toFixed(2)}%
+              </p>
+            </div>
+          </div>
+        </div>
         <Table
           columns={positionColumns}
           dataSource={data.positions}

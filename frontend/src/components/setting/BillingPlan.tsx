@@ -21,7 +21,7 @@ export const BillingPlan: React.FC = () => {
       frequency = "Prueba gratuita";
       amount = 0;
       nextPayment = `Finaliza el ${dayjs(user.trial_ends_at).format(
-        "DD/MM/YYYY"
+        "DD/MM/YYYY",
       )}`;
     } else if (user.rol === "pro") {
       plan = "Profesional";
@@ -102,7 +102,7 @@ export const BillingPlan: React.FC = () => {
           </p>
           <button
             onClick={() => navigate("/pricing")}
-            className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg font-semibold hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200 active:scale-95"
+            className="w-full px-6 py-3 bg-linear-to-r from-blue-600 to-blue-400 text-white rounded-lg font-semibold hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-200 active:scale-95"
           >
             Gestionar planes
           </button>

@@ -106,7 +106,7 @@ export const LegalNotice: React.FC = () => {
               : "bg-white border-gray-200 hover:border-blue-400"
           }`}
         >
-          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-3">
+          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-3">
             {section.title}
           </h2>
           <p
@@ -118,10 +118,7 @@ export const LegalNotice: React.FC = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {section.items.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-2 text-sm"
-              >
+              <div key={idx} className="flex items-start gap-2 text-sm">
                 <CheckCircleOutlined className="text-blue-500 flex-shrink-0 mt-0.5" />
                 <span
                   className={
