@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  InputNumber,
-  Select,
-  Input,
-  Button,
-  message,
-  Spin,
-  Tag,
-} from "antd";
+import { Form, InputNumber, Select, Input, Button, message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import api from "../../lib/axios";
+import { useTheme } from "../../hooks/useTheme";
+import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 
 interface WalletCreateResponse {
   balance: number;
@@ -28,6 +21,7 @@ export const WalletMovementForm: React.FC = () => {
   const [balance, setBalance] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -42,7 +36,7 @@ export const WalletMovementForm: React.FC = () => {
     try {
       const res = await api.post("/cartera", values);
       message.success(
-        res.data.message || "Movimiento registrado correctamente"
+        res.data.message || "Movimiento registrado correctamente",
       );
       navigate("/cartera");
     } catch (error) {
@@ -56,52 +50,67 @@ export const WalletMovementForm: React.FC = () => {
   if (loading) return <Spin tip="Cargando..." fullscreen={true} size="large" />;
 
   return (
-    <section className="container md:w-5xl flex flex-col mx-auto">
-      <div className="text-left max-w-xl mb-10">
-        <Tag bordered color="blue" className="max-w-max font-semibold">
-          <span className="uppercase"> Efectivo </span>
-        </Tag>
-        <h2 className="text-4xl font-bold mt-4 text-gray-900 dark:text-gray-100">
-          Ingresar / Retirar
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-400 font-medium text-wrap">
-          Añade tus movimientos de efectivo y obten un control para las compras
-          y ventas de cryptomonedas.
-        </p>
-      </div>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-semibold text-2xl text-gray-800 flex items-center gap-4 dark:text-gray-100 mb-2">
-          Nuevo movimiento
-        </h3>
+    <section className="w-full space-y-6 max-w-4xl mx-auto">
+      {/* Header with Back Button */}
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-green-600 to-emerald-600 mb-2">
+            Ingresar / Retirar
+          </h1>
+          <p
+            className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+          >
+            Gestiona tus movimientos de efectivo
+          </p>
+        </div>
         <Button
-          size="small"
-          title="Volver a la cartera"
+          type="text"
           onClick={() => navigate("/cartera")}
+          className="ml-4 text-blue-600 dark:text-blue-400 hover:underline font-medium"
         >
-          Volver
+          ← Volver
         </Button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 shadow rounded p-6">
-        <p className="text-sm text-gray-500 mb-4">
-          Saldo disponible:{" "}
-          <strong>
-            $
-            {balance.toLocaleString("es-US", {
-              style: "currency",
-              currency: "USD",
-              minimumFractionDigits: 2,
-            })}
-          </strong>
+      {/* Balance Card */}
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-linear-to-r from-green-900/20 to-emerald-900/20 border-green-700/50"
+            : "bg-linear-to-r from-green-50 to-emerald-50 border-green-200"
+        }`}
+      >
+        <p
+          className={`text-sm font-medium mb-2 ${
+            theme === "dark" ? "text-green-300" : "text-green-700"
+          }`}
+        >
+          Saldo disponible
         </p>
+        <h3 className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-green-600 to-emerald-600">
+          $
+          {balance.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </h3>
+      </div>
 
+      {/* Form */}
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           initialValues={{ type: "deposito", method: "transfer" }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item label="Tipo" name="type" rules={[{ required: true }]}>
               <Select>
                 <Select.Option value="deposito">Ingreso</Select.Option>
@@ -123,13 +132,19 @@ export const WalletMovementForm: React.FC = () => {
             </Form.Item>
           </div>
 
-          <Form.Item label="Método" name="method" rules={[{ required: true }]}>
-            <Select>
-              <Select.Option value="transfer">Transferencia</Select.Option>
-              <Select.Option value="card">Tarjeta</Select.Option>
-              <Select.Option value="paypal">PayPal</Select.Option>
-            </Select>
-          </Form.Item>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Form.Item
+              label="Método"
+              name="method"
+              rules={[{ required: true }]}
+            >
+              <Select>
+                <Select.Option value="transfer">Transferencia</Select.Option>
+                <Select.Option value="card">Tarjeta</Select.Option>
+                <Select.Option value="paypal">PayPal</Select.Option>
+              </Select>
+            </Form.Item>
+          </div>
 
           <Form.Item label="Descripción (opcional)" name="description">
             <Input.TextArea
@@ -139,14 +154,23 @@ export const WalletMovementForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              size="small"
-              title="Guardar"
-              htmlType="submit"
-            >
-              Guardar
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="primary"
+                size="large"
+                htmlType="submit"
+                className="flex-1 bg-linear-to-r from-green-600 to-emerald-600 border-none h-10"
+              >
+                Guardar movimiento
+              </Button>
+              <Button
+                size="large"
+                onClick={() => navigate("/cartera")}
+                className="h-10"
+              >
+                Cancelar
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>

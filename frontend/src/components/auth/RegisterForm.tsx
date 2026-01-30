@@ -63,8 +63,8 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
       <div
         className={`px-6 py-8 border-b ${
           theme === "dark"
-            ? "bg-gradient-to-r from-green-900/20 to-emerald-900/20 border-gray-700"
-            : "bg-gradient-to-r from-green-50 to-emerald-50 border-gray-200"
+            ? "bg-linear-to-r from-green-900/20 to-emerald-900/20 border-gray-700"
+            : "bg-linear-to-r from-green-50 to-emerald-50 border-gray-200"
         }`}
       >
         <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-1">
@@ -93,7 +93,9 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
           </Form.Item>
 
           <Form.Item
-            label={<span className="text-sm font-medium">Correo electrónico</span>}
+            label={
+              <span className="text-sm font-medium">Correo electrónico</span>
+            }
             name="email"
             rules={[
               {
@@ -139,7 +141,7 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
               type="primary"
               htmlType="submit"
               size="large"
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-500"
+              className="w-full bg-linear-to-r from-green-600 to-emerald-500"
               loading={loading}
             >
               {loading ? "Creando..." : "Crear cuenta"}
@@ -152,7 +154,9 @@ export const RegisterForm = ({ onClose, onSwitch }: RegisterFormProps) => {
             theme === "dark" ? "border-gray-700" : "border-gray-200"
           }`}
         >
-          <span className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
+          <span
+            className={theme === "dark" ? "text-gray-400" : "text-gray-600"}
+          >
             ¿Ya tienes cuenta?{" "}
           </span>
           <button

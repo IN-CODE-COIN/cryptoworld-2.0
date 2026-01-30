@@ -118,7 +118,7 @@ export const PrivacyPolicy: React.FC = () => {
               : "bg-white border-gray-200 hover:border-green-400"
           }`}
         >
-          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-400 mb-3">
+          <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-linear-to-r from-green-600 to-green-400 mb-3">
             {section.title}
           </h2>
           <p
@@ -130,11 +130,8 @@ export const PrivacyPolicy: React.FC = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {section.items.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-2 text-sm"
-              >
-                <CheckCircleOutlined className="text-green-500 flex-shrink-0 mt-0.5" />
+              <div key={idx} className="flex items-start gap-2 text-sm">
+                <CheckCircleOutlined className="text-green-500 shrink-0 mt-0.5" />
                 <span
                   className={
                     theme === "dark" ? "text-gray-300" : "text-gray-700"
@@ -164,7 +161,8 @@ export const PrivacyPolicy: React.FC = () => {
             theme === "dark" ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          Si tienes preguntas sobre cómo procesamos tus datos, puedes contactar con nuestro Delegado de Protección de Datos en{" "}
+          Si tienes preguntas sobre cómo procesamos tus datos, puedes contactar
+          con nuestro Delegado de Protección de Datos en{" "}
           <a
             href="mailto:privacidad@cryptoworld.com"
             className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"

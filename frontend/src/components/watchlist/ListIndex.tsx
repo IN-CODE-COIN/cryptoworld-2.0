@@ -1,17 +1,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Spin, Empty, Button, Modal, message } from "antd";
+import { Empty, Button, Modal, message } from "antd";
 import { DeleteOutlined, ExclamationCircleFilled, EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/useTheme";
 import api from "../../lib/axios";
+import { SkeletonRowWatchlist } from "./SkeletonRowWatchlist";
 
-const CRYPTO_LIMIT = 10;
+const CRYPTO_LIMIT_NORMAL = 10;
+const CRYPTO_LIMIT_PRO = Infinity; // Plan profesional sin límite
 
 type Coin = {
   id: number;
+  uuid: string;
   name: string;
   symbol: string;
   icon_url?: string;
@@ -40,9 +43,11 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
   const isNormalPlan = user?.rol === "normal";
+  const isProfessionalPlan = user?.rol === "pro";
   const coinsCount = coins.length;
-  const canAddMore = coinsCount < CRYPTO_LIMIT;
-  const hasReachedLimit = isNormalPlan && coinsCount === CRYPTO_LIMIT;
+  const cryptoLimit = isNormalPlan ? CRYPTO_LIMIT_NORMAL : CRYPTO_LIMIT_PRO;
+  const canAddMore = coinsCount < cryptoLimit;
+  const hasReachedLimit = isNormalPlan && coinsCount === CRYPTO_LIMIT_NORMAL;
 
   const fetchWatchlist = useCallback(async () => {
     setLoading(true);
@@ -111,14 +116,65 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
     fetchWatchlist();
   }, [fetchWatchlist]);
 
-  return (
-    <Spin
-      spinning={loading}
-      tip="Cargando lista de seguimiento..."
-      size="large"
-    >
+  if (loading) {
+    return (
       <div className="space-y-4">
-        {isNormalPlan && canAddMore && (
+        <div
+          className={`rounded-xl border overflow-hidden ${
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
+          }`}
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr
+                  className={`border-b ${
+                    theme === "dark"
+                      ? "bg-gray-900 border-gray-700"
+                      : "bg-gray-50 border-gray-200"
+                  }`}
+                >
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    #
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Nombre
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Precio
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    24h
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Cap. Mercado
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody className={`divide-y ${
+                theme === "dark"
+                  ? "divide-gray-700"
+                  : "divide-gray-200"
+              }`}>
+                {Array.from({ length: 10 }).map((_, idx) => (
+                  <SkeletonRowWatchlist key={idx} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+        {canAddMore && (
           <button
             onClick={onOpenSearch}
             className={`w-full rounded-xl border-2 border-dashed p-4 transition-all ${
@@ -130,7 +186,7 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
             <div className="flex items-center justify-center gap-2">
               <PlusOutlined className="text-blue-600 dark:text-blue-400 text-lg" />
               <span className={`font-semibold ${theme === "dark" ? "text-blue-300" : "text-blue-700"}`}>
-                Añadir criptomonedas a tu lista ({coinsCount}/{CRYPTO_LIMIT})
+                Añadir criptomonedas a tu lista {isNormalPlan && `(${coinsCount}/${CRYPTO_LIMIT_NORMAL})`}
               </span>
             </div>
           </button>
@@ -266,7 +322,7 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                       <td className="px-4 py-3 text-center">
                         <div className="flex items-center justify-center gap-2 flex-wrap">
                           <button
-                            onClick={() => navigate(`/crypto/${coin.id}`)}
+                            onClick={() => navigate(`/crypto/${coin.uuid}`)}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                             title={`Ver detalles de ${coin.name}`}
                           >
@@ -297,7 +353,6 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
             </div>
           </div>
         )}
-      </div>
-    </Spin>
-  );
-};
+        </div>
+        );
+        };

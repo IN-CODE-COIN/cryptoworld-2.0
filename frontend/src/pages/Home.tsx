@@ -48,13 +48,11 @@ export const Home = () => {
   return (
     <section className="w-full space-y-8">
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
           Bienvenido, {user?.name}
         </h1>
         <p
-          className={`${
-            theme === "dark" ? "text-gray-400" : "text-gray-600"
-          }`}
+          className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
         >
           Accesos rápidos y monitoreo de criptomonedas en tiempo real
         </p>
@@ -73,7 +71,7 @@ export const Home = () => {
             }`}
           >
             <div
-              className={`flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-r ${shortcut.color} text-white flex-shrink-0 group-hover:scale-110 transition-transform`}
+              className={`flex items-center justify-center w-10 h-10 rounded-lg bg-linear-to-r ${shortcut.color} text-white shrink-0 group-hover:scale-110 transition-transform`}
             >
               {shortcut.icon}
             </div>

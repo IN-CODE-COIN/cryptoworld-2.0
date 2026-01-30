@@ -53,11 +53,12 @@ export const FormContact: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center">
       <div className="mb-12 text-center max-w-2xl">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400">
           Contacta con Nosotros
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          ¿Tienes alguna pregunta? Nos encantaría saber de ti. Envía un mensaje y nos pondremos en contacto lo antes posible.
+          ¿Tienes alguna pregunta? Nos encantaría saber de ti. Envía un mensaje
+          y nos pondremos en contacto lo antes posible.
         </p>
       </div>
 
@@ -103,7 +104,10 @@ export const FormContact: React.FC = () => {
               </span>
             }
             rules={[
-              { type: "email", message: "¡El correo electrónico no es válido!" },
+              {
+                type: "email",
+                message: "¡El correo electrónico no es válido!",
+              },
               {
                 required: true,
                 message: "¡El correo electrónico es obligatorio!",
@@ -159,7 +163,7 @@ export const FormContact: React.FC = () => {
             type="primary"
             htmlType="submit"
             size="large"
-            className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-blue-400 border-0 rounded-lg font-semibold"
+            className="w-full md:w-auto bg-linear-to-r from-blue-600 to-blue-400 border-0 rounded-lg font-semibold"
             loading={loading}
             disabled={loading || hasErrors() || isEmpty}
           >

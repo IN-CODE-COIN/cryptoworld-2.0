@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import axios, { AxiosError } from "axios";
-import { Spin, Empty, message } from "antd";
+import { Empty, message } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
+import { SkeletonRow } from "./SkeletonRow";
 
 type Coin = {
   uuid: string;
@@ -34,7 +35,8 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
 
-  const displayedCryptos = !expanded && limit ? data?.topCryptos.slice(0, limit) : data?.topCryptos;
+  const displayedCryptos =
+    !expanded && limit ? data?.topCryptos.slice(0, limit) : data?.topCryptos;
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -86,7 +88,7 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       message.success({
@@ -126,10 +128,10 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-            Top 10 Criptomonedas
+      <div className="space-y-6 max-w-5xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+            Top Criptomonedas
           </h2>
           <p
             className={`text-sm ${
@@ -139,17 +141,62 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
             Ordenadas por capitalización de mercado
           </p>
         </div>
-        <Spin tip="Cargando..." size="large" />
+        <div
+          className={`overflow-x-auto rounded-lg border ${
+            theme === "dark"
+              ? "border-gray-700 bg-gray-800"
+              : "border-gray-200 bg-white"
+          }`}
+        >
+          <table className="w-full text-sm">
+            <thead>
+              <tr
+                className={`border-b ${
+                  theme === "dark"
+                    ? "border-gray-700 bg-gray-900"
+                    : "border-gray-200 bg-gray-50"
+                }`}
+              >
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  #
+                </th>
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  Nombre
+                </th>
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  Símbolo
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  Precio
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  24h
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  Market Cap
+                </th>
+                <th className="px-2 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {Array.from({ length: 10 }).map((_, idx) => (
+                <SkeletonRow key={idx} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 
   if (!data || data.topCryptos.length === 0) {
     return (
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-            Top 10 Criptomonedas
+      <div className="space-y-4 max-w-5xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+            Top Criptomonedas
           </h2>
           <p
             className={`text-sm ${
@@ -159,16 +206,18 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
             Ordenadas por capitalización de mercado
           </p>
         </div>
-        <Empty description="Sin datos" />
+        <div className="flex justify-center">
+          <Empty description="Sin datos" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <div>
-        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-          Top 10 Criptomonedas
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+          Top Criptomonedas
         </h2>
         <p
           className={`text-sm ${
@@ -229,9 +278,7 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                 <tr
                   key={coin.uuid}
                   className={`transition-colors text-xs ${
-                    theme === "dark"
-                      ? "hover:bg-gray-700"
-                      : "hover:bg-gray-50"
+                    theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50"
                   }`}
                 >
                   <td className="px-2 py-2 font-medium text-gray-500 dark:text-gray-400">
@@ -255,7 +302,9 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                   <td className="px-2 py-2 text-right font-medium text-gray-900 dark:text-white">
                     ${parseFloat(coin.price).toFixed(2)}
                   </td>
-                  <td className={`px-2 py-2 text-right font-medium ${changeColor}`}>
+                  <td
+                    className={`px-2 py-2 text-right font-medium ${changeColor}`}
+                  >
                     {coin.change >= 0 ? "+" : ""}
                     {coin.change}%
                   </td>
@@ -265,7 +314,9 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                   <td className="px-2 py-2 text-center">
                     <div className="flex items-center justify-center gap-2 flex-wrap">
                       <button
-                        onClick={() => !isInWatchlist && handleAddToWatchlist(coin)}
+                        onClick={() =>
+                          !isInWatchlist && handleAddToWatchlist(coin)
+                        }
                         className={`text-xs font-medium px-2 py-1 rounded transition-colors whitespace-nowrap ${
                           isInWatchlist
                             ? "text-gray-400 cursor-not-allowed"
@@ -296,21 +347,21 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
             onClick={() => {
               const token = localStorage.getItem("token");
               if (!token) {
-                message.info("Regístrate o inicia sesión para ver todas las criptomonedas");
+                message.info(
+                  "Regístrate o inicia sesión para ver todas las criptomonedas",
+                );
               } else {
                 setExpanded(!expanded);
               }
             }}
             className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
               localStorage.getItem("token")
-                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg"
+                ? "bg-linear-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg"
                 : "text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
             }`}
           >
             <DownOutlined
-              className={`transition-transform ${
-                expanded ? "rotate-180" : ""
-              }`}
+              className={`transition-transform ${expanded ? "rotate-180" : ""}`}
             />
             {expanded ? "Mostrar menos" : "Ver todas las cryptos"}
           </button>

@@ -168,7 +168,9 @@ export const CookiePolicy: React.FC = () => {
               key={index}
               className={`rounded-xl border p-6 ${color.bg} ${color.border}`}
             >
-              <h3 className={`text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r ${color.gradient} mb-2`}>
+              <h3
+                className={`text-lg font-semibold bg-clip-text text-transparent bg-linear-to-r ${color.gradient} mb-2`}
+              >
                 {type.title}
               </h3>
               <p
@@ -181,7 +183,9 @@ export const CookiePolicy: React.FC = () => {
               <div className="space-y-1">
                 {type.items.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2 text-sm">
-                    <CheckCircleOutlined className={`${color.icon} flex-shrink-0 mt-0.5`} />
+                    <CheckCircleOutlined
+                      className={`${color.icon} shrink-0 mt-0.5`}
+                    />
                     <span
                       className={
                         theme === "dark" ? "text-gray-300" : "text-gray-700"
@@ -208,7 +212,7 @@ export const CookiePolicy: React.FC = () => {
                 : "bg-white border-gray-200 hover:border-amber-400"
             }`}
           >
-            <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-amber-400 mb-3">
+            <h2 className="text-xl font-semibold bg-clip-text text-transparent bg-linear-to-r from-amber-600 to-amber-400 mb-3">
               {section.title}
             </h2>
             <p
@@ -220,11 +224,8 @@ export const CookiePolicy: React.FC = () => {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {section.items.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2 text-sm"
-                >
-                  <CheckCircleOutlined className="text-amber-500 flex-shrink-0 mt-0.5" />
+                <div key={idx} className="flex items-start gap-2 text-sm">
+                  <CheckCircleOutlined className="text-amber-500 shrink-0 mt-0.5" />
                   <span
                     className={
                       theme === "dark" ? "text-gray-300" : "text-gray-700"

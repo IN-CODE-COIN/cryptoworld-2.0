@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button, message, Spin } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import {
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 import api from "../../lib/axios";
 import axios, { AxiosError } from "axios";
 import { useTheme } from "../../hooks/useTheme";
@@ -23,11 +27,9 @@ type Coin = {
   links?: { type: string; url: string }[];
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const formatNumber = (
   value: number,
-  options: Intl.NumberFormatOptions = {}
+  options: Intl.NumberFormatOptions = {},
 ) => {
   return new Intl.NumberFormat("fr-FR", {
     minimumFractionDigits: 0,
@@ -88,7 +90,7 @@ export const CryptoDetail: React.FC = () => {
       message.loading({ content: "Añadiendo...", key: "add_watchlist" });
 
       const response = await api.post(
-        `${API_BASE_URL}/watchlist`,
+        "/watchlist",
         {
           uuid: coin.uuid,
           name: coin.name,
@@ -101,7 +103,7 @@ export const CryptoDetail: React.FC = () => {
         {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       message.success({
@@ -128,6 +130,57 @@ export const CryptoDetail: React.FC = () => {
     }
   }, [coin]);
 
+  const handleRemoveFromWatchlist = useCallback(async () => {
+    if (!coin) return;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      message.error("Necesitas iniciar sesión.");
+      return;
+    }
+
+    try {
+      message.loading({ content: "Removiendo...", key: "remove_watchlist" });
+
+      // Encontrar el ID de la watchlist entry por UUID
+      const watchlistEntry = await api.get<{
+        data: { id: number; uuid: string }[];
+      }>("/watchlist", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const entryToDelete = watchlistEntry.data.data.find(
+        (item: { uuid: string }) => item.uuid === coin.uuid,
+      );
+
+      if (!entryToDelete) {
+        message.error("No se encontró la entrada en tu lista.");
+        return;
+      }
+
+      await api.delete(`/watchlist/${entryToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      message.success({
+        content: "Removido de tu lista de seguimiento",
+        key: "remove_watchlist",
+        duration: 2,
+      });
+
+      setWatchlist((prev) => prev.filter((uuid) => uuid !== coin.uuid));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<{ message?: string }>;
+        if (err.response?.status === 401) {
+          message.error("Sesión expirada, inicia sesión de nuevo.");
+          localStorage.removeItem("token");
+        } else {
+          message.error(err.response?.data?.message || "Error al remover.");
+        }
+      }
+    }
+  }, [coin]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-96">
@@ -138,7 +191,9 @@ export const CryptoDetail: React.FC = () => {
 
   if (!coin)
     return (
-      <p className={`text-center mt-10 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+      <p
+        className={`text-center mt-10 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+      >
         No se encontró la criptomoneda
       </p>
     );
@@ -160,8 +215,8 @@ export const CryptoDetail: React.FC = () => {
       <div
         className={`rounded-xl border p-8 ${
           theme === "dark"
-            ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
-            : "bg-gradient-to-br from-white to-gray-50 border-gray-200"
+            ? "bg-linear-to-br from-gray-800 to-gray-900 border-gray-700"
+            : "bg-linear-to-br from-white to-gray-50 border-gray-200"
         }`}
       >
         <div className="flex items-start justify-between gap-4 mb-6">
@@ -172,34 +227,64 @@ export const CryptoDetail: React.FC = () => {
               className="w-16 h-16 md:w-20 md:h-20 rounded-full"
             />
             <div>
-              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400">
+              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400">
                 {coin.name}
               </h1>
-              <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              <p
+                className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+              >
                 {coin.symbol.toUpperCase()} · Ranking #{coin.rank}
               </p>
             </div>
           </div>
-          <Button
-            size="large"
-            title={
-              isInWatchlist
-                ? "Ya en tu lista de seguimiento"
-                : "Añadir a tu lista de seguimiento"
-            }
-            type={isInWatchlist ? "default" : "primary"}
-            disabled={isInWatchlist}
-            onClick={!isInWatchlist ? handleAddToWatchlist : undefined}
-            className="bg-gradient-to-r from-blue-600 to-blue-400 border-0 text-white"
-          >
-            {isInWatchlist ? "✓ En tu lista" : "Añadir a Watchlist"}
-          </Button>
+          <div className="flex items-center gap-2">
+            {isInWatchlist ? (
+              <>
+                <div
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+                    theme === "dark"
+                      ? "bg-green-900/20 border border-green-700"
+                      : "bg-green-50 border border-green-300"
+                  }`}
+                >
+                  <span className="text-green-600 dark:text-green-400 text-lg">
+                    ✓
+                  </span>
+                  <span className="font-medium text-green-700 dark:text-green-300">
+                    En tu lista
+                  </span>
+                </div>
+                <Button
+                  size="small"
+                  type="text"
+                  danger
+                  onClick={handleRemoveFromWatchlist}
+                  className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  title="Remover de tu lista de seguimiento"
+                >
+                  Remover
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="large"
+                type="primary"
+                onClick={handleAddToWatchlist}
+                className="bg-linear-to-r from-blue-600 to-blue-400 border-0 text-white"
+                title="Añadir a tu lista de seguimiento"
+              >
+                Añadir a tu lista
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Price Section */}
         <div className="space-y-3">
           <div>
-            <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+            <p
+              className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+            >
               Precio Actual
             </p>
             <p className="text-5xl font-bold dark:text-white">
@@ -219,7 +304,8 @@ export const CryptoDetail: React.FC = () => {
               <ArrowDownOutlined className="text-lg" />
             )}
             <span className="font-semibold">
-              {isPositive ? "+" : ""}{formatNumber(coin.change)}% últimas 24h
+              {isPositive ? "+" : ""}
+              {formatNumber(coin.change)}% últimas 24h
             </span>
           </div>
         </div>
@@ -228,10 +314,22 @@ export const CryptoDetail: React.FC = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { label: "Capitalización de Mercado", value: `$${formatNumber(coin.marketCap)}` },
-          { label: "Volumen 24h", value: `$${formatNumber(coin["24hVolume"])}` },
-          { label: "Máximo Histórico", value: `$${formatNumber(coin.allTimeHigh.price, { minimumFractionDigits: 2 })}` },
-          { label: "Suministro Circulante", value: formatNumber(coin.supply.circulating) },
+          {
+            label: "Capitalización de Mercado",
+            value: `$${formatNumber(coin.marketCap)}`,
+          },
+          {
+            label: "Volumen 24h",
+            value: `$${formatNumber(coin["24hVolume"])}`,
+          },
+          {
+            label: "Máximo Histórico",
+            value: `$${formatNumber(coin.allTimeHigh.price, { minimumFractionDigits: 2 })}`,
+          },
+          {
+            label: "Suministro Circulante",
+            value: formatNumber(coin.supply.circulating),
+          },
           { label: "Suministro Total", value: formatNumber(coin.supply.total) },
         ].map((stat, idx) => (
           <div
@@ -242,10 +340,14 @@ export const CryptoDetail: React.FC = () => {
                 : "bg-white border-gray-200"
             }`}
           >
-            <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+            <p
+              className={`text-sm font-medium ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+            >
               {stat.label}
             </p>
-            <p className="text-xl font-bold dark:text-white mt-2">{stat.value}</p>
+            <p className="text-xl font-bold dark:text-white mt-2">
+              {stat.value}
+            </p>
           </div>
         ))}
       </div>
@@ -257,18 +359,20 @@ export const CryptoDetail: React.FC = () => {
             href={coin.websiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg font-medium hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-blue-600 to-blue-400 text-white rounded-lg font-medium hover:shadow-lg transition-all"
           >
             🌐 Sitio web oficial
           </a>
         )}
 
         {coin.links && coin.links.length > 0 && (
-          <div className={`rounded-lg border p-6 ${
-            theme === "dark"
-              ? "bg-gray-800 border-gray-700"
-              : "bg-white border-gray-200"
-          }`}>
+          <div
+            className={`rounded-lg border p-6 ${
+              theme === "dark"
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
+            }`}
+          >
             <h3 className="text-lg font-semibold dark:text-white mb-4">
               Redes y Enlaces
             </h3>

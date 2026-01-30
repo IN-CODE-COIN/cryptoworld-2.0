@@ -14,7 +14,7 @@ interface TablePlansProps {
 }
 
 const isVariablePrice = (
-  price: string | { mensual: string; anual: string }
+  price: string | { mensual: string; anual: string },
 ): price is { mensual: string; anual: string } => {
   return typeof price !== "string";
 };
@@ -38,7 +38,7 @@ export const TablePlans: React.FC<TablePlansProps> = ({
 
   return (
     <section className="mx-auto">
-      <div className="md:mt-10">
+      <div>
         <div className="relative">
           <div
             className="sticky top-0 z-20 h-28 w-full"

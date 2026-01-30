@@ -52,6 +52,7 @@ class WatchlistController extends Controller
 
             return [
                 'id' => $coin->id,
+                'uuid' => $coin->coin_uuid,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
                 'icon_url' => $coin->icon_url,

@@ -2,7 +2,7 @@ import { Layout } from "antd";
 import { ConfigProvider, theme as antdTheme } from "antd";
 import { useTheme } from "./hooks/useTheme";
 import { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import { SidebarMenu } from "./components/layout/SideBarMenu";
 import { HeaderBar } from "./components/layout/HeaderBar";
@@ -66,22 +66,33 @@ const App: React.FC = () => {
             : antdTheme.defaultAlgorithm,
       }}
     >
-      <Layout className="min-h-screen" data-testid="app-layout">
-        <ScrollToTop />
-        <SidebarMenu
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          data-testid="sidebar"
+      <Routes>
+        {/* Redirigir "/" a "/home" para usuarios autenticados */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        
+        {/* Layout principal con sidebar */}
+        <Route
+          path="*"
+          element={
+            <Layout className="min-h-screen" data-testid="app-layout">
+              <ScrollToTop />
+              <SidebarMenu
+                collapsed={collapsed}
+                onCollapse={setCollapsed}
+                data-testid="sidebar"
+              />
+              <Layout>
+                <HeaderBar
+                  data-testid="header-bar"
+                  collapsed={collapsed}
+                  toggleCollapsed={() => setCollapsed(!collapsed)}
+                />
+                <MainContent data-testid="main-content" />
+              </Layout>
+            </Layout>
+          }
         />
-        <Layout>
-          <HeaderBar
-            data-testid="header-bar"
-            collapsed={collapsed}
-            toggleCollapsed={() => setCollapsed(!collapsed)}
-          />
-          <MainContent data-testid="main-content" />
-        </Layout>
-      </Layout>
+      </Routes>
     </ConfigProvider>
   );
 };

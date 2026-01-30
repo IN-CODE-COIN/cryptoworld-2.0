@@ -6,6 +6,8 @@ import { AuthModal } from "../auth/AuthModal";
 import { PlanSelectorForm } from "./PlanSelectorForm";
 import { Divider, message } from "antd";
 import api from "../../lib/axios";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 type Frequency = {
   value: "mensual" | "anual";
@@ -74,7 +76,7 @@ const plans: Plan[] = [
     features: ["Características personalizadas", "Diseños personalizados"],
     isRecommended: false,
     isEnterprise: true,
-    buttonText: "Próximamente",
+    buttonText: "Contactar",
   },
 ];
 
@@ -84,11 +86,18 @@ export const PricingCards = () => {
   const { isAuthenticated, user, login } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleScrollToContact = () => {
-    const element = document.querySelector("#contact");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    if (isAuthenticated) {
+      // Si está logueado, navega a la página de contacto
+      navigate("/contact");
+    } else {
+      // Si no está logueado, intenta hacer scroll (útil si estamos en la landing)
+      const element = document.querySelector("#contact");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -117,32 +126,12 @@ export const PricingCards = () => {
 
   const handleFrequencyChange = (freq: Frequency) => setFrequency(freq);
 
-  const getCardClass = (
-    isAuthenticated: boolean,
-    isActivePlan: boolean,
-    isRecommended: boolean
-  ) => {
-    let borderClass = "";
-    if (isAuthenticated && isActivePlan) {
-      borderClass = "border-2 border-indigo-600 dark:border-indigo-400";
-    } else if (!isAuthenticated && isRecommended) {
-      borderClass = "border-2 border-indigo-600 dark:border-indigo-400";
-    } else {
-      borderClass = "border border-gray-300 dark:border-gray-700";
-    }
-
-    return classNames(
-      borderClass,
-      "relative flex flex-col justify-between rounded-lg bg-white dark:bg-gray-800 p-4 shadow max-w-[300px] w-full"
-    );
-  };
-
   const getButtonClass = (isActive: boolean, isEnterprise: boolean) => {
     if (isEnterprise)
-      return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
+      return "mt-6 w-full rounded-md bg-linear-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
     if (isActive)
       return "mt-6 w-full rounded-md bg-green-500 border border-green-500 text-white px-4 py-2 font-medium";
-    return "mt-6 w-full rounded-md bg-gradient-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
+    return "mt-6 w-full rounded-md bg-linear-to-r from-blue-600 to-blue-400 text-white hover:shadow-lg px-4 py-2 font-medium transition-all";
   };
 
   const getButtonText = (plan: Plan, isActive: boolean) => {
@@ -169,16 +158,35 @@ export const PricingCards = () => {
 
   return (
     <section className="w-full">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12"
+      >
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl font-bold mb-4"
+        >
+          <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
             Planes de Precios
           </span>
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Elige el plan perfecto para ti y comienza a gestionar tu portafolio cripto
-        </p>
-      </div>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12"
+        >
+          Elige el plan perfecto para ti y comienza a gestionar tu portafolio
+          cripto
+        </motion.p>
+      </motion.div>
 
       <div className="flex flex-wrap justify-center items-stretch gap-6">
         {plans.map((plan, idx) => {
@@ -189,15 +197,20 @@ export const PricingCards = () => {
               : (plan.price as string);
 
           return (
-            <div
+            <motion.div
               id="pricing-cards"
               key={idx}
-              className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 max-w-[350px] w-full ${
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+              className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 max-w-87.5 w-full ${
                 isAuthenticated && isActivePlan
-                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                  ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
                   : !isAuthenticated && plan.isRecommended
-                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
-                  : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                    ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                    : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               }`}
             >
               {plan.isRecommended && (
@@ -239,7 +252,7 @@ export const PricingCards = () => {
                           f.value === frequency.value
                             ? "bg-indigo-600 text-white"
                             : "text-gray-700 dark:text-gray-300",
-                          "cursor-pointer rounded-full px-3 py-1"
+                          "cursor-pointer rounded-full px-3 py-1",
                         )}
                       >
                         <input
@@ -259,8 +272,8 @@ export const PricingCards = () => {
                   <Divider />
                 </div>
               )}
-              <div className="flex flex-col flex-grow justify-between mt-2">
-                <div className="flex flex-col flex-grow">
+              <div className="flex flex-col grow justify-between mt-2">
+                <div className="flex flex-col grow">
                   <p className="font-medium text-gray-700 dark:text-gray-200 text-left">
                     Incluido:
                   </p>
@@ -275,17 +288,19 @@ export const PricingCards = () => {
                       </li>
                     ))}
                   </ul>
-                  <div className="flex-grow" />
+                  <div className="grow" />
                 </div>
                 <button
                   onClick={() => handleClick(plan)}
-                  disabled={isActivePlan && !plan.isRecommended && !plan.isEnterprise}
+                  disabled={
+                    isActivePlan && !plan.isRecommended && !plan.isEnterprise
+                  }
                   className={getButtonClass(isActivePlan, plan.isEnterprise)}
                 >
                   {getButtonText(plan, isActivePlan)}
                 </button>
               </div>
-            </div>
+            </motion.div>
           );
         })}
 

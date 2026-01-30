@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Modal, Form, Select, Radio, Button, message, DatePicker, Spin } from "antd";
+import {
+  Modal,
+  Form,
+  Select,
+  Radio,
+  Button,
+  message,
+  DatePicker,
+  Spin,
+} from "antd";
 import { CheckCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { RadioChangeEvent } from "antd";
 import dayjs from "dayjs";
@@ -22,7 +31,10 @@ const planDescriptions: Record<string, string> = {
   pro: "Acceso completo a todas las funcionalidades premium",
 };
 
-const planColors: Record<string, { gradient: string; bg: string; border: string }> = {
+const planColors: Record<
+  string,
+  { gradient: string; bg: string; border: string }
+> = {
   normal: {
     gradient: "from-blue-600 to-blue-400",
     bg: "bg-blue-50 dark:bg-blue-900/20",
@@ -64,7 +76,9 @@ export const PlanSelectorForm = ({
           rol: values.plan,
           frequency: values.plan === "pro" ? values.frequency : null,
         });
-        message.success(`Plan actualizado a ${values.plan === "pro" ? "Profesional" : "Gratuito"}`);
+        message.success(
+          `Plan actualizado a ${values.plan === "pro" ? "Profesional" : "Gratuito"}`,
+        );
         onSubscribe?.();
       }
       onClose();
@@ -74,7 +88,7 @@ export const PlanSelectorForm = ({
       } else if (typeof err === "object" && err !== null && "response" in err) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
         message.error(
-          axiosErr.response?.data?.message || "Error al actualizar el plan"
+          axiosErr.response?.data?.message || "Error al actualizar el plan",
         );
       } else {
         message.error("Error al actualizar el plan");
@@ -112,8 +126,8 @@ export const PlanSelectorForm = ({
           <div
             className={`px-6 py-8 border-b ${
               theme === "dark"
-                ? `bg-gradient-to-r ${planColor.gradient} bg-opacity-10 border-gray-700`
-                : `bg-gradient-to-r ${planColor.gradient} bg-opacity-5 border-gray-200`
+                ? `bg-linear-to-r ${planColor.gradient} bg-opacity-10 border-gray-700`
+                : `bg-linear-to-r ${planColor.gradient} bg-opacity-5 border-gray-200`
             }`}
           >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
@@ -170,10 +184,15 @@ export const PlanSelectorForm = ({
                 {({ getFieldValue }) =>
                   getFieldValue("plan") === "pro" && (
                     <Form.Item
-                      label={<span className="font-medium">Frecuencia de pago</span>}
+                      label={
+                        <span className="font-medium">Frecuencia de pago</span>
+                      }
                       name="frequency"
                       rules={[
-                        { required: true, message: "Selecciona mensual o anual" },
+                        {
+                          required: true,
+                          message: "Selecciona mensual o anual",
+                        },
                       ]}
                     >
                       <Radio.Group className="space-y-3">
@@ -184,8 +203,8 @@ export const PlanSelectorForm = ({
                                 ? "border-emerald-600 bg-emerald-900/20"
                                 : "border-emerald-600 bg-emerald-50"
                               : theme === "dark"
-                              ? "border-gray-700 bg-gray-700/30"
-                              : "border-gray-200 bg-gray-50"
+                                ? "border-gray-700 bg-gray-700/30"
+                                : "border-gray-200 bg-gray-50"
                           }`}
                         >
                           <Radio value="mensual" className="w-full">
@@ -212,8 +231,8 @@ export const PlanSelectorForm = ({
                                 ? "border-emerald-600 bg-emerald-900/20"
                                 : "border-emerald-600 bg-emerald-50"
                               : theme === "dark"
-                              ? "border-gray-700 bg-gray-700/30"
-                              : "border-gray-200 bg-gray-50"
+                                ? "border-gray-700 bg-gray-700/30"
+                                : "border-gray-200 bg-gray-50"
                           }`}
                         >
                           <Radio value="anual" className="w-full">
@@ -259,9 +278,7 @@ export const PlanSelectorForm = ({
                   >
                     <p
                       className={`text-sm font-medium ${
-                        theme === "dark"
-                          ? "text-yellow-300"
-                          : "text-yellow-700"
+                        theme === "dark" ? "text-yellow-300" : "text-yellow-700"
                       }`}
                     >
                       ✓ Ya has utilizado tu período de prueba gratuito
@@ -279,8 +296,8 @@ export const PlanSelectorForm = ({
                             ? "border-emerald-600 bg-emerald-900/20"
                             : "border-emerald-600 bg-emerald-50"
                           : theme === "dark"
-                          ? "border-gray-700 bg-gray-700/30"
-                          : "border-gray-200 bg-gray-50"
+                            ? "border-gray-700 bg-gray-700/30"
+                            : "border-gray-200 bg-gray-50"
                       }`}
                     >
                       <Radio value={true} className="w-full">
@@ -307,8 +324,8 @@ export const PlanSelectorForm = ({
                             ? "border-blue-600 bg-blue-900/20"
                             : "border-blue-600 bg-blue-50"
                           : theme === "dark"
-                          ? "border-gray-700 bg-gray-700/30"
-                          : "border-gray-200 bg-gray-50"
+                            ? "border-gray-700 bg-gray-700/30"
+                            : "border-gray-200 bg-gray-50"
                       }`}
                     >
                       <Radio value={false} className="w-full">
@@ -346,9 +363,7 @@ export const PlanSelectorForm = ({
                       <CalendarOutlined className="text-blue-600 dark:text-blue-400" />
                       <p
                         className={`font-medium ${
-                          theme === "dark"
-                            ? "text-blue-300"
-                            : "text-blue-700"
+                          theme === "dark" ? "text-blue-300" : "text-blue-700"
                         }`}
                       >
                         Período de prueba
@@ -362,9 +377,7 @@ export const PlanSelectorForm = ({
                     />
                     <p
                       className={`text-xs mt-2 ${
-                        theme === "dark"
-                          ? "text-blue-400"
-                          : "text-blue-600"
+                        theme === "dark" ? "text-blue-400" : "text-blue-600"
                       }`}
                     >
                       Tu prueba gratuita terminará el{" "}
@@ -382,7 +395,7 @@ export const PlanSelectorForm = ({
                   type="primary"
                   htmlType="submit"
                   size="large"
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500"
+                  className="w-full bg-linear-to-r from-blue-600 to-blue-500"
                   disabled={loading}
                 >
                   {loading ? "Procesando..." : "Guardar plan"}

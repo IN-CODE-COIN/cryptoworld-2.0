@@ -21,7 +21,7 @@ export const CryptoDetailLayout = ({ children }: Props) => {
         }}
         className="flex items-center sticky top-0 z-50"
       >
-        <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+        <div className="text-xl font-bold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
           CryptoWorld
         </div>
       </Header>

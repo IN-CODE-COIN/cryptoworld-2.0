@@ -6,7 +6,6 @@ import {
   Input,
   Button,
   message,
-  Tag,
   DatePicker,
   AutoComplete,
   Spin,
@@ -17,6 +16,8 @@ import api from "../../lib/axios";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import type { InputRef } from "antd";
+import { useTheme } from "../../hooks/useTheme";
+import { ShoppingCartOutlined, ThunderboltOutlined } from "@ant-design/icons";
 
 interface WalletTransactionFormValues {
   crypto_id: string;
@@ -54,6 +55,7 @@ export const WalletTransactionForm: React.FC = () => {
   const [selectedCrypto, setSelectedCrypto] = useState<Coin | null>(null);
   const [, setShowSuggestions] = useState(false);
   const [cryptosInWallet, setCryptosInWallet] = useState<Coin[]>([]);
+  const { theme } = useTheme();
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ export const WalletTransactionForm: React.FC = () => {
     try {
       setLoading(true);
       const res = await api.get(
-        `/crypto/autocomplete?query=${encodeURIComponent(query)}`
+        `/crypto/autocomplete?query=${encodeURIComponent(query)}`,
       );
       setCryptoOptions(res.data);
       setShowSuggestions(true);
@@ -85,18 +87,36 @@ export const WalletTransactionForm: React.FC = () => {
     if (!cryptoUuid || !dateStr) return;
 
     try {
-      const timestamp = Math.floor(new Date(dateStr).getTime() / 1000); // Unix timestamp
+      // Validar que el UUID no sea vacío
+      if (!cryptoUuid || cryptoUuid.trim() === "") {
+        console.warn("UUID inválido:", cryptoUuid);
+        return;
+      }
+
+      const date = new Date(dateStr);
+      const timestamp = Math.floor(date.getTime() / 1000); // Unix timestamp
+
+      console.log("Fetching price for:", { cryptoUuid, dateStr, timestamp });
+
       const response = await api.get(`/coin/price`, {
         params: { uuid: cryptoUuid, timestamp },
       });
 
+      console.log("Price response:", response.data);
+
       if (response.data?.status === "success" && response.data?.data?.price) {
+        const price = parseFloat(response.data.data.price).toFixed(2);
+        form.setFieldsValue({ price_usd: parseFloat(price) });
+      } else if (response.data?.data?.price) {
+        // Si hay precio pero sin "success" status
         const price = parseFloat(response.data.data.price).toFixed(2);
         form.setFieldsValue({ price_usd: parseFloat(price) });
       } else {
         form.setFieldsValue({ price_usd: undefined });
       }
-    } catch {
+    } catch (error) {
+      // En caso de error, simplemente limpiar el campo
+      console.error("Error fetching historical price:", error);
       form.setFieldsValue({ price_usd: undefined });
     }
   };
@@ -121,7 +141,14 @@ export const WalletTransactionForm: React.FC = () => {
   const updateQuantity = () => {
     const amount = form.getFieldValue("amount_usd");
     const price = form.getFieldValue("price_usd");
-    if (!isNaN(amount) && amount > 0 && !isNaN(price) && price > 0) {
+    if (
+      amount &&
+      price &&
+      !isNaN(amount) &&
+      amount > 0 &&
+      !isNaN(price) &&
+      price > 0
+    ) {
       form.setFieldsValue({
         quantity: parseFloat((amount / price).toFixed(8)),
       });
@@ -158,7 +185,7 @@ export const WalletTransactionForm: React.FC = () => {
   }, []);
 
   return (
-    <section className="container md:w-5xl flex flex-col mx-auto">
+    <section className="w-full space-y-6 max-w-4xl mx-auto">
       {loading && (
         <Spin
           fullscreen={true}
@@ -168,39 +195,42 @@ export const WalletTransactionForm: React.FC = () => {
         />
       )}
 
-      <div className="text-left max-w-xl mb-10">
-        <Tag bordered color="purple" className="max-w-max font-semibold">
-          <span className="uppercase"> Criptomonedas </span>
-        </Tag>
-        <h2 className="text-4xl font-bold mt-4 text-gray-900 dark:text-gray-100">
-          Comprar / Vender
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-400 font-medium">
-          Registra tus operaciones de compra o venta de criptomonedas.
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-semibold text-2xl text-gray-800 dark:text-gray-100 mb-2">
-          Nueva transacción
-        </h3>
+      {/* Header with Back Button */}
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-purple-600 mb-2">
+            Registrar Transacción
+          </h1>
+          <p
+            className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
+          >
+            Compra o venta de criptomonedas
+          </p>
+        </div>
         <Button
-          size="small"
+          type="text"
           onClick={() => navigate("/cartera")}
-          title="Volver a la cartera"
+          className="ml-4 text-blue-600 dark:text-blue-400 hover:underline font-medium"
         >
-          Volver
+          ← Volver
         </Button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 shadow rounded p-6">
+      {/* Form */}
+      <div
+        className={`rounded-xl border p-6 lg:p-8 ${
+          theme === "dark"
+            ? "bg-gray-800/50 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
+      >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           initialValues={{ type: "buy", date: dayjs() }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item label="Tipo" name="type" rules={[{ required: true }]}>
               <Select>
                 <Select.Option value="buy">Compra</Select.Option>
@@ -237,7 +267,7 @@ export const WalletTransactionForm: React.FC = () => {
                     onSearch={fetchCryptoSuggestions}
                     onSelect={(value) => {
                       const selected = cryptoOptions.find(
-                        (c) => `${c.name} (${c.symbol})` === value
+                        (c) => `${c.name} (${c.symbol})` === value,
                       );
                       if (selected) {
                         setSelectedCrypto(selected);
@@ -249,7 +279,7 @@ export const WalletTransactionForm: React.FC = () => {
                         if (date)
                           fetchPriceAtDate(
                             selected.uuid,
-                            date.format("YYYY-MM-DD")
+                            date.format("YYYY-MM-DD"),
                           );
                       }
                       setShowSuggestions(false);
@@ -266,7 +296,7 @@ export const WalletTransactionForm: React.FC = () => {
                   placeholder="Selecciona una criptomoneda de tu cartera"
                   onChange={(uuid) => {
                     const selected = cryptosInWallet.find(
-                      (c) => c.uuid === uuid
+                      (c) => c.uuid === uuid,
                     );
                     if (selected) {
                       setSelectedCrypto(selected);
@@ -278,7 +308,7 @@ export const WalletTransactionForm: React.FC = () => {
                       if (date)
                         fetchPriceAtDate(
                           selected.uuid,
-                          date.format("YYYY-MM-DD")
+                          date.format("YYYY-MM-DD"),
                         );
                     }
                   }}
@@ -308,14 +338,14 @@ export const WalletTransactionForm: React.FC = () => {
                   if (selectedCrypto && date)
                     fetchPriceAtDate(
                       selectedCrypto.uuid,
-                      date.format("YYYY-MM-DD")
+                      date.format("YYYY-MM-DD"),
                     );
                 }}
               />
             </Form.Item>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Form.Item
               label="Cantidad (USD)"
               name="amount_usd"
@@ -334,6 +364,7 @@ export const WalletTransactionForm: React.FC = () => {
               label="Precio por unidad (USD)"
               name="price_usd"
               rules={[{ required: true, message: "Ingrese el precio" }]}
+              help="Se intenta autocompletar según la fecha. Si no aparece, ingresa manualmente."
             >
               <InputNumber
                 min={0.01}
@@ -358,24 +389,35 @@ export const WalletTransactionForm: React.FC = () => {
             </Form.Item>
           </div>
 
-          <Form.Item label="Comisiones (USD)" name="fees">
-            <InputNumber
-              min={0}
-              step={0.01}
-              style={{ width: "100%" }}
-              placeholder="0.00"
-            />
-          </Form.Item>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Form.Item label="Comisiones (USD)" name="fees">
+              <InputNumber
+                min={0}
+                step={0.01}
+                style={{ width: "100%" }}
+                placeholder="0.00"
+              />
+            </Form.Item>
+          </div>
 
           <Form.Item>
-            <Button
-              type="primary"
-              size="small"
-              htmlType="submit"
-              title="Guardar"
-            >
-              Guardar
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                type="primary"
+                size="large"
+                htmlType="submit"
+                className="flex-1 bg-linear-to-r from-blue-600 to-purple-600 border-none h-10"
+              >
+                Guardar transacción
+              </Button>
+              <Button
+                size="large"
+                onClick={() => navigate("/cartera")}
+                className="h-10"
+              >
+                Cancelar
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </div>
