@@ -149,7 +149,7 @@ export const CryptoDetail: React.FC = () => {
       });
 
       const entryToDelete = watchlistEntry.data.data.find(
-        (item: any) => item.uuid === coin.uuid,
+        (item: { uuid: string }) => item.uuid === coin.uuid,
       );
 
       if (!entryToDelete) {

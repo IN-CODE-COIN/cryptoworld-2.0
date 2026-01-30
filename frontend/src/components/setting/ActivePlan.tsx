@@ -13,8 +13,8 @@ export const ActivePlan: React.FC = () => {
     <div
       className={`rounded-xl border p-6 ${
         theme === "dark"
-          ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
-          : "bg-gradient-to-br from-white to-gray-50 border-gray-200"
+          ? "bg-linear-to-br from-gray-800 to-gray-900 border-gray-700"
+          : "bg-linear-to-br from-white to-gray-50 border-gray-200"
       }`}
     >
       <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">

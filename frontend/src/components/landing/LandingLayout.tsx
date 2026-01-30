@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { NavbarLanding } from "./NavbarLanding";
 import { Footer } from "./Footer";
 import { useTheme } from "../../hooks/useTheme";

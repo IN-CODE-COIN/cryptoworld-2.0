@@ -75,8 +75,8 @@ export const Wallet: React.FC = () => {
       <div
         className={`rounded-2xl border-2 border-dashed p-8 md:p-12 text-center ${
           theme === "dark"
-            ? "bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-700/50"
-            : "bg-gradient-to-br from-blue-50 to-purple-50 border-blue-300"
+            ? "bg-linear-to-br from-blue-900/20 to-purple-900/20 border-blue-700/50"
+            : "bg-linear-to-br from-blue-50 to-purple-50 border-blue-300"
         }`}
       >
         <div className="max-w-2xl mx-auto">
@@ -103,7 +103,7 @@ export const Wallet: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left">
             {features.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3">
-                <CheckOutlined className="text-green-500 text-lg flex-shrink-0 mt-1" />
+                <CheckOutlined className="text-green-500 text-lg shrink-0 mt-1" />
                 <span
                   className={
                     theme === "dark" ? "text-gray-200" : "text-gray-800"

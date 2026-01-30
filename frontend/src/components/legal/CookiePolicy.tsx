@@ -184,7 +184,7 @@ export const CookiePolicy: React.FC = () => {
                 {type.items.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2 text-sm">
                     <CheckCircleOutlined
-                      className={`${color.icon} flex-shrink-0 mt-0.5`}
+                      className={`${color.icon} shrink-0 mt-0.5`}
                     />
                     <span
                       className={
@@ -225,7 +225,7 @@ export const CookiePolicy: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {section.items.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-2 text-sm">
-                  <CheckCircleOutlined className="text-amber-500 flex-shrink-0 mt-0.5" />
+                  <CheckCircleOutlined className="text-amber-500 shrink-0 mt-0.5" />
                   <span
                     className={
                       theme === "dark" ? "text-gray-300" : "text-gray-700"
