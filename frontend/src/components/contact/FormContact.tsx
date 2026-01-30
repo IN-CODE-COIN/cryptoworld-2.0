@@ -162,8 +162,8 @@ export const FormContact: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
-            size="large"
-            className="w-full md:w-auto bg-linear-to-r from-blue-600 to-blue-400 border-0 rounded-lg font-semibold"
+            size="middle"
+            className="bg-linear-to-r from-blue-600 to-blue-400 border-0 rounded-lg font-semibold"
             loading={loading}
             disabled={loading || hasErrors() || isEmpty}
           >

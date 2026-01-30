@@ -69,7 +69,7 @@ export const sections: Section[] = [
       {
         name: "Número de criptomonedas en listas",
         plans: {
-          Gratuito: "5",
+          Gratuito: "10",
           Profesional: "Ilimitado",
           Empresa: "Ilimitado",
         },

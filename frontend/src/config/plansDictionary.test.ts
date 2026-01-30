@@ -87,7 +87,7 @@ describe("Secciones y Características", () => {
       );
     expect(feature).toBeDefined();
     expect(feature!.plans).toEqual({
-      Gratuito: "5",
+      Gratuito: "10",
       Profesional: "Ilimitado",
       Empresa: "Ilimitado",
     });

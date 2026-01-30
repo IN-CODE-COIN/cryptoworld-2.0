@@ -201,11 +201,16 @@ export const TablePlans: React.FC<TablePlansProps> = ({
 
                   const handleClick = (e: React.MouseEvent) => {
                     e.preventDefault();
-                    if (!isAuthenticated) {
+                    if (plan.name === "Empresa") {
+                      const contactElement = document.querySelector("#contact");
+                      if (contactElement) {
+                        contactElement.scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        navigate("/#contact");
+                      }
+                    } else if (!isAuthenticated) {
                       setModalOpen(true);
                     } else if (!isActivePlan) {
-                      if (plan.name === "Empresa") navigate(plan.buttonLink);
-
                       const element = document.getElementById("pricing-cards");
                       if (element) {
                         element.scrollIntoView({ behavior: "smooth" });

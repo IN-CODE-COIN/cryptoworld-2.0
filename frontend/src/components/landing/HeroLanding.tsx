@@ -75,17 +75,16 @@ export const HeroLanding = () => {
         </motion.h1>
 
         {/* Subheading */}
-        <motion.p
-          variants={paragraphVariants}
-          initial="hidden"
-          animate="visible"
-          className={`text-xl md:text-2xl mb-8 ${
-            theme === "dark" ? "text-gray-400" : "text-gray-600"
-          } max-w-2xl mx-auto`}
-        >
-          Análisis en tiempo real, seguimiento de tus inversiones y las últimas
-          noticias del mercado cripto, todo en un solo lugar.
-        </motion.p>
+         <motion.p
+           variants={paragraphVariants}
+           initial="hidden"
+           animate="visible"
+           className={`text-xl md:text-2xl mb-8 ${
+             theme === "dark" ? "text-gray-400" : "text-gray-600"
+           } max-w-2xl mx-auto`}
+         >
+           Análisis en tiempo real, listas de seguimiento personalizadas y gráficos detallados de tu cartera, todo en un solo lugar.
+         </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
@@ -136,14 +135,14 @@ export const HeroLanding = () => {
             custom={0}
           >
             <div className="text-3xl font-bold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              1000+
+              14.000+
             </div>
             <p
               className={`text-sm ${
                 theme === "dark" ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              Criptos Monitoreadas
+              Criptos Disponibles
             </p>
           </motion.div>
           <motion.div
