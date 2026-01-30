@@ -46,12 +46,17 @@ export const Faqs: React.FC = () => {
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           ¿No encuentras la respuesta? Contacta con nuestro{" "}
-          <Link
-            to="#contact"
+          <a
+            href="#contact"
             className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
+            onClick={(e) => {
+              e.preventDefault();
+              const element = document.querySelector("#contact");
+              element?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             equipo de soporte
-          </Link>
+          </a>
           .
         </p>
       </div>

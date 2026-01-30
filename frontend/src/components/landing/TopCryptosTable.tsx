@@ -128,18 +128,18 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
   if (loading) {
     return (
       <div className="space-y-6 max-w-5xl mx-auto">
-        <div>
-          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-            Top 10 Criptomonedas
-          </h2>
-          <p
-            className={`text-sm ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}
-          >
-            Ordenadas por capitalización de mercado
-          </p>
-        </div>
+        <div className="text-center mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+              Top Criptomonedas
+             </h2>
+            <p
+              className={`text-sm ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              Ordenadas por capitalización de mercado
+            </p>
+          </div>
         <div
           className={`overflow-x-auto rounded-lg border ${
             theme === "dark"
@@ -191,20 +191,20 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
   }
 
   if (!data || data.topCryptos.length === 0) {
-    return (
-      <div className="space-y-4 max-w-5xl mx-auto">
-        <div>
-          <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-            Top 10 Criptomonedas
-          </h2>
-          <p
-            className={`text-sm ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}
-          >
-            Ordenadas por capitalización de mercado
-          </p>
-        </div>
+     return (
+       <div className="space-y-4 max-w-5xl mx-auto">
+         <div className="text-center mb-8">
+           <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+             Top Criptomonedas
+           </h2>
+           <p
+             className={`text-sm ${
+               theme === "dark" ? "text-gray-400" : "text-gray-600"
+             }`}
+           >
+             Ordenadas por capitalización de mercado
+           </p>
+         </div>
         <div className="flex justify-center">
           <Empty description="Sin datos" />
         </div>
@@ -214,9 +214,9 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
-      <div>
-        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
-          Top 10 Criptomonedas
+      <div className="text-center mb-8">
+        <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-blue-400 mb-2">
+          Top Criptomonedas
         </h2>
         <p
           className={`text-sm ${

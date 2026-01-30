@@ -92,7 +92,7 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
       >
         <div className="demo-logo-vertical p-4 flex justify-between items-center">
           <div
-            className={`text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent ${
+            className={`text-xl font-bold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent ${
               collapsed ? "text-center w-full" : ""
             }`}
             style={{
@@ -111,7 +111,10 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
               display: isMobile ? "block" : "none",
               padding: "8px",
               borderRadius: "4px",
-              backgroundColor: theme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.05)",
+              backgroundColor:
+                theme === "dark"
+                  ? "rgba(255, 255, 255, 0.15)"
+                  : "rgba(0, 0, 0, 0.05)",
             }}
           />
         </div>

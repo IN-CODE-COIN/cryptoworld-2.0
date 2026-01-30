@@ -7,6 +7,7 @@ import { PlanSelectorForm } from "./PlanSelectorForm";
 import { Divider, message } from "antd";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 type Frequency = {
   value: "mensual" | "anual";
@@ -157,37 +158,60 @@ export const PricingCards = () => {
 
   return (
     <section className="w-full">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12"
+      >
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl font-bold mb-4"
+        >
+          <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
             Planes de Precios
           </span>
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12"
+        >
           Elige el plan perfecto para ti y comienza a gestionar tu portafolio cripto
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       <div className="flex flex-wrap justify-center items-stretch gap-6">
         {plans.map((plan, idx) => {
-          const isActivePlan = plan.name === activePlanName;
-          const priceToShow =
-            plan.name === "Profesional" && typeof plan.price !== "string"
-              ? plan.price[frequency.value]
-              : (plan.price as string);
+           const isActivePlan = plan.name === activePlanName;
+           const priceToShow =
+             plan.name === "Profesional" && typeof plan.price !== "string"
+               ? plan.price[frequency.value]
+               : (plan.price as string);
 
-          return (
-            <div
-              id="pricing-cards"
-              key={idx}
-              className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 max-w-[350px] w-full ${
-                isAuthenticated && isActivePlan
-                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
-                  : !isAuthenticated && plan.isRecommended
-                  ? "border-2 border-blue-600 dark:border-blue-400 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
-                  : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-              }`}
-            >
+           return (
+             <motion.div
+               id="pricing-cards"
+               key={idx}
+               initial={{ opacity: 0, y: 30 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-100px" }}
+               transition={{ duration: 0.5, delay: idx * 0.15 }}
+               whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+               className={`relative flex flex-col justify-between rounded-xl backdrop-blur-sm p-8 border transition-all duration-300 max-w-87.5 w-full ${
+                 isAuthenticated && isActivePlan
+                    ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                    : !isAuthenticated && plan.isRecommended
+                    ? "border-2 border-blue-600 dark:border-blue-400 bg-linear-to-br from-blue-50 to-white dark:from-blue-900/30 dark:to-gray-800 shadow-lg"
+                   : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+               }`}
+             >
               {plan.isRecommended && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-300 dark:border-blue-600 bg-blue-100 dark:bg-blue-900/40 px-4 py-1.5 text-xs text-blue-800 dark:text-blue-200 font-semibold">
@@ -247,23 +271,23 @@ export const PricingCards = () => {
                   <Divider />
                 </div>
               )}
-              <div className="flex flex-col flex-grow justify-between mt-2">
-                <div className="flex flex-col flex-grow">
-                  <p className="font-medium text-gray-700 dark:text-gray-200 text-left">
-                    Incluido:
-                  </p>
-                  <ul className="mt-2 space-y-2 text-gray-700 dark:text-gray-300 flex flex-col">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center space-x-2">
-                        <RiCheckLine
-                          className="h-5 w-5 text-indigo-600 dark:text-indigo-400"
-                          aria-hidden="true"
-                        />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex-grow" />
+              <div className="flex flex-col grow justify-between mt-2">
+                <div className="flex flex-col grow">
+                    <p className="font-medium text-gray-700 dark:text-gray-200 text-left">
+                      Incluido:
+                    </p>
+                    <ul className="mt-2 space-y-2 text-gray-700 dark:text-gray-300 flex flex-col">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-center space-x-2">
+                          <RiCheckLine
+                            className="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+                            aria-hidden="true"
+                          />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="grow" />
                 </div>
                 <button
                   onClick={() => handleClick(plan)}
@@ -273,11 +297,11 @@ export const PricingCards = () => {
                   {getButtonText(plan, isActivePlan)}
                 </button>
               </div>
-            </div>
-          );
-        })}
+            </motion.div>
+            );
+            })}
 
-        {selectedPlan && (
+            {selectedPlan && (
           <PlanSelectorForm
             open={paymentModalOpen}
             onClose={() => setPaymentModalOpen(false)}
