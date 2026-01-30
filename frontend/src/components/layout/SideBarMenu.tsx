@@ -107,7 +107,12 @@ export const SidebarMenu = ({ collapsed, onCollapse }: Props) => {
             theme={theme}
             iconSize={20}
             className="sm:block hidden"
-            style={{ display: isMobile ? "block" : "none" }}
+            style={{
+              display: isMobile ? "block" : "none",
+              padding: "8px",
+              borderRadius: "4px",
+              backgroundColor: theme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.05)",
+            }}
           />
         </div>
         <Menu

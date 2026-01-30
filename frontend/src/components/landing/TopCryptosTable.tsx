@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import axios, { AxiosError } from "axios";
-import { Spin, Empty, message } from "antd";
+import { Empty, message } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
+import { SkeletonRow } from "./SkeletonRow";
 
 type Coin = {
   uuid: string;
@@ -126,7 +127,7 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6 max-w-5xl mx-auto">
         <div>
           <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
             Top 10 Criptomonedas
@@ -139,14 +140,59 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
             Ordenadas por capitalización de mercado
           </p>
         </div>
-        <Spin tip="Cargando..." size="large" />
+        <div
+          className={`overflow-x-auto rounded-lg border ${
+            theme === "dark"
+              ? "border-gray-700 bg-gray-800"
+              : "border-gray-200 bg-white"
+          }`}
+        >
+          <table className="w-full text-sm">
+            <thead>
+              <tr
+                className={`border-b ${
+                  theme === "dark"
+                    ? "border-gray-700 bg-gray-900"
+                    : "border-gray-200 bg-gray-50"
+                }`}
+              >
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  #
+                </th>
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  Nombre
+                </th>
+                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                  Símbolo
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  Precio
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  24h
+                </th>
+                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  Market Cap
+                </th>
+                <th className="px-2 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {Array.from({ length: 10 }).map((_, idx) => (
+                <SkeletonRow key={idx} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 
   if (!data || data.topCryptos.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-5xl mx-auto">
         <div>
           <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
             Top 10 Criptomonedas
@@ -159,13 +205,15 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
             Ordenadas por capitalización de mercado
           </p>
         </div>
-        <Empty description="Sin datos" />
+        <div className="flex justify-center">
+          <Empty description="Sin datos" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <div>
         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 mb-2">
           Top 10 Criptomonedas

@@ -239,22 +239,54 @@ class CryptoController extends Controller
             ], 500);
         }
 
-        $url = "https://api.coinranking.com/v2/coin/{$uuid}/price";
+        try {
+            $url = "https://api.coinranking.com/v2/coin/{$uuid}/price";
 
-        $response = Http::withHeaders([
-            'x-access-token' => $apiKey,
-        ])->get($url, [
-            'timestamp' => $timestamp,
-        ]);
+            $httpClient = Http::withHeaders([
+                'x-access-token' => $apiKey,
+            ]);
 
-        if (!$response->successful()) {
+            // Configurar SSL verification para desarrollo local
+            if (app()->environment('local')) {
+                $httpClient = $httpClient->withOptions(['verify' => false]);
+            }
+
+            $response = $httpClient->timeout(10)->get($url, [
+                'timestamp' => $timestamp,
+            ]);
+
+            if (!$response->successful()) {
+                \Log::error('Coinranking API Error', [
+                    'uuid' => $uuid,
+                    'timestamp' => $timestamp,
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No se pudo obtener el precio histórico',
+                    'data' => null
+                ], 200); // Devolver 200 para que el frontend lo maneje gracefully
+            }
+
+            $data = $response->json();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data['data'] ?? null
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Precio histórico - Excepción', [
+                'error' => $e->getMessage(),
+                'uuid' => $uuid,
+                'timestamp' => $timestamp
+            ]);
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error en Coinranking',
-                'body' => $response->body()
-            ], $response->status());
+                'message' => 'Error al obtener precio histórico',
+                'data' => null
+            ], 200); // Devolver 200 para que el frontend lo maneje gracefully
         }
-
-        return $response->json();
     }
 }

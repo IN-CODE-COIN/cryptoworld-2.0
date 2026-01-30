@@ -6,6 +6,7 @@ import { AuthModal } from "../auth/AuthModal";
 import { PlanSelectorForm } from "./PlanSelectorForm";
 import { Divider, message } from "antd";
 import api from "../../lib/axios";
+import { useNavigate } from "react-router-dom";
 
 type Frequency = {
   value: "mensual" | "anual";
@@ -74,7 +75,7 @@ const plans: Plan[] = [
     features: ["Características personalizadas", "Diseños personalizados"],
     isRecommended: false,
     isEnterprise: true,
-    buttonText: "Próximamente",
+    buttonText: "Contactar",
   },
 ];
 
@@ -84,11 +85,18 @@ export const PricingCards = () => {
   const { isAuthenticated, user, login } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleScrollToContact = () => {
-    const element = document.querySelector("#contact");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    if (isAuthenticated) {
+      // Si está logueado, navega a la página de contacto
+      navigate("/contact");
+    } else {
+      // Si no está logueado, intenta hacer scroll (útil si estamos en la landing)
+      const element = document.querySelector("#contact");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -116,26 +124,6 @@ export const PricingCards = () => {
   };
 
   const handleFrequencyChange = (freq: Frequency) => setFrequency(freq);
-
-  const getCardClass = (
-    isAuthenticated: boolean,
-    isActivePlan: boolean,
-    isRecommended: boolean
-  ) => {
-    let borderClass = "";
-    if (isAuthenticated && isActivePlan) {
-      borderClass = "border-2 border-indigo-600 dark:border-indigo-400";
-    } else if (!isAuthenticated && isRecommended) {
-      borderClass = "border-2 border-indigo-600 dark:border-indigo-400";
-    } else {
-      borderClass = "border border-gray-300 dark:border-gray-700";
-    }
-
-    return classNames(
-      borderClass,
-      "relative flex flex-col justify-between rounded-lg bg-white dark:bg-gray-800 p-4 shadow max-w-[300px] w-full"
-    );
-  };
 
   const getButtonClass = (isActive: boolean, isEnterprise: boolean) => {
     if (isEnterprise)

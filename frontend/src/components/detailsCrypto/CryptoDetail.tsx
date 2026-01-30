@@ -23,8 +23,6 @@ type Coin = {
   links?: { type: string; url: string }[];
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const formatNumber = (
   value: number,
   options: Intl.NumberFormatOptions = {}
@@ -88,7 +86,7 @@ export const CryptoDetail: React.FC = () => {
       message.loading({ content: "Añadiendo...", key: "add_watchlist" });
 
       const response = await api.post(
-        `${API_BASE_URL}/watchlist`,
+        "/watchlist",
         {
           uuid: coin.uuid,
           name: coin.name,
@@ -123,6 +121,53 @@ export const CryptoDetail: React.FC = () => {
           localStorage.removeItem("token");
         } else {
           message.error(err.response?.data?.message || "Error al añadir.");
+        }
+      }
+    }
+  }, [coin]);
+
+  const handleRemoveFromWatchlist = useCallback(async () => {
+    if (!coin) return;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      message.error("Necesitas iniciar sesión.");
+      return;
+    }
+
+    try {
+      message.loading({ content: "Removiendo...", key: "remove_watchlist" });
+
+      // Encontrar el ID de la watchlist entry por UUID
+      const watchlistEntry = await api.get<{ data: { id: number; uuid: string }[] }>("/watchlist", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const entryToDelete = watchlistEntry.data.data.find((item: any) => item.uuid === coin.uuid);
+      
+      if (!entryToDelete) {
+        message.error("No se encontró la entrada en tu lista.");
+        return;
+      }
+
+      await api.delete(`/watchlist/${entryToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      message.success({
+        content: "Removido de tu lista de seguimiento",
+        key: "remove_watchlist",
+        duration: 2,
+      });
+
+      setWatchlist((prev) => prev.filter((uuid) => uuid !== coin.uuid));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const err = error as AxiosError<{ message?: string }>;
+        if (err.response?.status === 401) {
+          message.error("Sesión expirada, inicia sesión de nuevo.");
+          localStorage.removeItem("token");
+        } else {
+          message.error(err.response?.data?.message || "Error al remover.");
         }
       }
     }
@@ -180,20 +225,40 @@ export const CryptoDetail: React.FC = () => {
               </p>
             </div>
           </div>
-          <Button
-            size="large"
-            title={
-              isInWatchlist
-                ? "Ya en tu lista de seguimiento"
-                : "Añadir a tu lista de seguimiento"
-            }
-            type={isInWatchlist ? "default" : "primary"}
-            disabled={isInWatchlist}
-            onClick={!isInWatchlist ? handleAddToWatchlist : undefined}
-            className="bg-gradient-to-r from-blue-600 to-blue-400 border-0 text-white"
-          >
-            {isInWatchlist ? "✓ En tu lista" : "Añadir a Watchlist"}
-          </Button>
+          <div className="flex items-center gap-2">
+            {isInWatchlist ? (
+              <>
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+                  theme === "dark"
+                    ? "bg-green-900/20 border border-green-700"
+                    : "bg-green-50 border border-green-300"
+                }`}>
+                  <span className="text-green-600 dark:text-green-400 text-lg">✓</span>
+                  <span className="font-medium text-green-700 dark:text-green-300">En tu lista</span>
+                </div>
+                <Button
+                  size="small"
+                  type="text"
+                  danger
+                  onClick={handleRemoveFromWatchlist}
+                  className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  title="Remover de tu lista de seguimiento"
+                >
+                  Remover
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="large"
+                type="primary"
+                onClick={handleAddToWatchlist}
+                className="bg-gradient-to-r from-blue-600 to-blue-400 border-0 text-white"
+                title="Añadir a tu lista de seguimiento"
+              >
+                Añadir a tu lista
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Price Section */}

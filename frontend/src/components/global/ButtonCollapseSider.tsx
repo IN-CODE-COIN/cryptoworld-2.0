@@ -29,9 +29,12 @@ export const ButtonCollapseSider: React.FC<Props> = ({
       className={className}
       style={{
         fontSize: `${iconSize}px`,
-        color: theme === "dark" ? "#fff" : "#001529",
+        color: theme === "dark" ? "#ffffff" : "#001529",
         margin: 0,
         padding: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         ...style,
       }}
     />
