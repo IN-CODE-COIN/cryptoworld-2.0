@@ -100,7 +100,9 @@ export const NavbarLanding = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2"
+            className={`md:hidden p-2 ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
           >
             <svg
               className="w-6 h-6"
