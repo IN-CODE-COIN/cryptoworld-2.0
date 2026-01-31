@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\CryptoTransactionController;
 use App\Http\Controllers\Api\PricingController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\PricesController;
 
 /*Rutas protegidas*/
 Route::middleware('auth.jwt')->group(function () {
@@ -36,6 +37,10 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/pricing', [PricingController::class, 'show']);
     Route::post('/start-trial', [PricingController::class, 'startTrial']);
     Route::post('/change-plan', [PricingController::class, 'changePlan']);
+    //* Rutas de precios actualizados (CoinLore) *//
+    Route::get('/prices/watchlist', [PricesController::class, 'getWatchlistPrices']);
+    Route::post('/prices/by-symbols', [PricesController::class, 'getPricesBySymbols']);
+    Route::get('/prices/{coinId}', [PricesController::class, 'getCoinPrice']);
 });
 
 //*Ruta de prueba*//
@@ -46,6 +51,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 //* Home *//
 Route::get('/home', [HomeController::class, 'index']);
+//* Precios actualizados sin autenticación *//
+Route::get('/prices/top', [PricesController::class, 'getTopPrices']);
 //* Ruta de autocompletado *//
 Route::get('/crypto/autocomplete', [CryptoController::class, 'autocomplete']);
 //* Ruta precio/fecha *//
