@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import axios, { AxiosError } from "axios";
-import { Empty, message } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { Empty, message, Tooltip } from "antd";
+import { DownOutlined, EyeOutlined, PlusOutlined, CheckOutlined } from "@ant-design/icons";
 import api from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
@@ -157,26 +157,23 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                     : "border-gray-200 bg-gray-50"
                 }`}
               >
-                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                <th className="px-1 sm:px-3 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white w-8">
                   #
                 </th>
-                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+                <th className="px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">
                   Nombre
                 </th>
-                <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
-                  Símbolo
-                </th>
-                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                <th className="px-2 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
                   Precio
                 </th>
-                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
                   24h
                 </th>
-                <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
-                  Market Cap
+                <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                  Cap.
                 </th>
-                <th className="px-2 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">
-                  Acciones
+                <th className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">
+                  Acc.
                 </th>
               </tr>
             </thead>
@@ -245,34 +242,32 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                   : "border-gray-200 bg-gray-50"
               }`}
             >
-              <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+              <th className="px-1 sm:px-3 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white w-8">
                 #
               </th>
-              <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
+              <th className="px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-900 dark:text-white">
                 Nombre
               </th>
-              <th className="px-2 py-2 text-left text-xs font-semibold text-gray-900 dark:text-white">
-                Símbolo
-              </th>
-              <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+              <th className="px-2 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
                 Precio
               </th>
-              <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
+              <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
                 24h
               </th>
-              <th className="px-2 py-2 text-right text-xs font-semibold text-gray-900 dark:text-white">
-                Market Cap
+              <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-900 dark:text-white">
+                Cap.
               </th>
-              <th className="px-2 py-2 text-center text-xs font-semibold text-gray-900 dark:text-white">
-                Acciones
+              <th className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-900 dark:text-white">
+                Acc.
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {displayedCryptos?.map((coin, idx) => {
               const isInWatchlist = watchlist.includes(coin.uuid);
+              const changeValue = parseFloat(String(coin.change));
               const changeColor =
-                coin.change >= 0 ? "text-green-500" : "text-red-500";
+                changeValue >= 0 ? "text-green-500" : "text-red-500";
 
               return (
                 <tr
@@ -281,56 +276,74 @@ export const TopCryptosTable = ({ limit, showViewMore = false }: Props) => {
                     theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50"
                   }`}
                 >
-                  <td className="px-2 py-2 font-medium text-gray-500 dark:text-gray-400">
+                  <td className="px-1 sm:px-3 py-3 font-medium text-gray-500 dark:text-gray-400 w-8">
                     {idx + 1}
                   </td>
-                  <td className="px-2 py-2 font-medium">
-                    <div className="flex items-center gap-2">
+                  <td className="px-2 sm:px-4 py-3 font-medium">
+                    <div className="flex items-center gap-1 sm:gap-3">
                       <img
                         src={coin.iconUrl}
                         alt={coin.name}
-                        className="w-5 h-5 rounded-full"
+                        className="w-6 h-6 rounded-full flex-shrink-0"
                       />
-                      <span className="text-gray-900 dark:text-white">
-                        {coin.name}
-                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-medium text-gray-900 dark:text-white truncate text-sm sm:text-base">
+                          {coin.name}
+                        </span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {coin.symbol.toUpperCase()}
+                        </span>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-2 py-2 text-left font-medium text-gray-600 dark:text-gray-300">
-                    {coin.symbol.toUpperCase()}
-                  </td>
-                  <td className="px-2 py-2 text-right font-medium text-gray-900 dark:text-white">
+                  <td className="px-2 sm:px-4 py-3 text-right font-medium text-gray-900 dark:text-white text-sm sm:text-base">
                     ${parseFloat(coin.price).toFixed(2)}
                   </td>
                   <td
-                    className={`px-2 py-2 text-right font-medium ${changeColor}`}
+                    className={`px-1 sm:px-4 py-3 text-right font-medium text-sm sm:text-base ${changeColor}`}
                   >
-                    {coin.change >= 0 ? "+" : ""}
-                    {coin.change}%
+                    {changeValue >= 0 ? "+" : ""}
+                    {changeValue.toFixed(2)}%
                   </td>
-                  <td className="px-2 py-2 text-right text-gray-600 dark:text-gray-300">
+                  <td className="px-1 sm:px-4 py-3 text-right text-gray-600 dark:text-gray-400 text-sm sm:text-base">
                     ${(parseFloat(coin.marketCap) / 1e9).toFixed(2)}B
                   </td>
-                  <td className="px-2 py-2 text-center">
-                    <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <button
-                        onClick={() =>
-                          !isInWatchlist && handleAddToWatchlist(coin)
-                        }
-                        className={`text-xs font-medium px-2 py-1 rounded transition-colors whitespace-nowrap ${
-                          isInWatchlist
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 dark:text-blue-400"
-                        }`}
-                      >
-                        {isInWatchlist ? "✓" : "+"}
-                      </button>
-                      <button
-                        onClick={() => navigate(`/crypto/${coin.uuid}`)}
-                        className="text-xs font-medium px-2 py-1 rounded text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
-                      >
-                        Ver
-                      </button>
+                  <td className="px-2 sm:px-4 py-3 text-center">
+                    <div className="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+                      <Tooltip title={isInWatchlist ? "En tu lista" : "Añadir a la lista"}>
+                        <button
+                          onClick={() =>
+                            !isInWatchlist && handleAddToWatchlist(coin)
+                          }
+                          className={`inline-flex items-center gap-1 text-xs font-medium px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap ${
+                            isInWatchlist
+                              ? "text-green-600 dark:text-green-400 cursor-default"
+                              : "text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 dark:text-blue-400"
+                          }`}
+                          disabled={isInWatchlist}
+                        >
+                          {isInWatchlist ? (
+                            <>
+                              <CheckOutlined className="text-base sm:text-lg" />
+                              <span className="hidden sm:inline">En lista</span>
+                            </>
+                          ) : (
+                            <>
+                              <PlusOutlined className="text-base sm:text-lg" />
+                              <span className="hidden sm:inline">Añadir</span>
+                            </>
+                          )}
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Ver detalles">
+                        <button
+                          onClick={() => navigate(`/crypto/${coin.uuid}`)}
+                          className="inline-flex items-center gap-1 text-xs font-medium px-1.5 sm:px-2 py-1 rounded text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors whitespace-nowrap"
+                        >
+                          <EyeOutlined className="text-base sm:text-lg" />
+                          <span className="hidden sm:inline">Ver</span>
+                        </button>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>

@@ -136,23 +136,23 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                       : "bg-gray-50 border-gray-200"
                   }`}
                 >
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="px-1 sm:px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 w-8">
                     #
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                     Nombre
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="px-2 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
                     Precio
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
                     24h
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
-                    Cap. Mercado
+                  <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Cap.
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
-                    Acciones
+                  <th className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Acc.
                   </th>
                 </tr>
               </thead>
@@ -241,23 +241,23 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                         : "bg-gray-50 border-gray-200"
                     }`}
                   >
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    <th className="px-1 sm:px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 w-8">
                       #
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                       Nombre
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    <th className="px-2 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
                       Precio
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
                       24h
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
-                      Cap. Mercado
+                    <th className="px-1 sm:px-4 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      Cap.
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
-                      Acciones
+                    <th className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      Acc.
                     </th>
                   </tr>
                 </thead>
@@ -275,21 +275,21 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                           : "hover:bg-gray-50"
                       }`}
                     >
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
+                      <td className="px-1 sm:px-3 py-3 text-gray-500 dark:text-gray-400 font-medium w-8">
                         {idx + 1}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
+                      <td className="px-2 sm:px-4 py-3">
+                        <div className="flex items-center gap-1 sm:gap-3">
                           <img
                             src={coin.icon_url}
                             alt={coin.name}
-                            className="w-6 h-6 rounded-full"
+                            className="w-6 h-6 rounded-full flex-shrink-0"
                             onError={(e) => {
                               e.currentTarget.src = "https://via.placeholder.com/24";
                             }}
                           />
-                          <div className="flex flex-col">
-                            <span className="font-medium text-gray-900 dark:text-white">
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-medium text-gray-900 dark:text-white truncate text-sm sm:text-base">
                               {coin.name}
                             </span>
                             <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -298,13 +298,13 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right font-medium text-gray-900 dark:text-white">
+                      <td className="px-2 sm:px-4 py-3 text-right font-medium text-gray-900 dark:text-white text-sm sm:text-base">
                         ${coin.price.toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-1 sm:px-4 py-3 text-right text-sm sm:text-base">
                         <span
                           className={`font-medium ${
                             coin.change >= 0
@@ -316,11 +316,11 @@ export const ListIndex = ({ onOpenSearch }: ListIndexProps) => {
                           {coin.change.toFixed(2)}%
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-400">
+                      <td className="px-1 sm:px-4 py-3 text-right text-gray-600 dark:text-gray-400 text-sm sm:text-base">
                         {formatMarketCap(coin.market_cap)}
                       </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                      <td className="px-2 sm:px-4 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
                           <button
                             onClick={() => navigate(`/crypto/${coin.uuid}`)}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"

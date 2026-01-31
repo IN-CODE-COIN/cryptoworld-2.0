@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, message, Spin } from "antd";
+import { Button, message, Spin, Tooltip } from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -36,6 +36,27 @@ const formatNumber = (
     maximumFractionDigits: 3,
     ...options,
   }).format(value);
+};
+
+const formatCompactNumber = (value: number) => {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
+const CompactNumberDisplay = ({ value, prefix = "" }: { value: number; prefix?: string }) => {
+  const compact = formatCompactNumber(value);
+  const full = formatNumber(value);
+  return (
+    <Tooltip title={`${prefix}${full}`} placement="top">
+      <span className="cursor-help">
+        {prefix}
+        {compact}
+      </span>
+    </Tooltip>
+  );
 };
 
 export const CryptoDetail: React.FC = () => {
@@ -219,7 +240,7 @@ export const CryptoDetail: React.FC = () => {
             : "bg-linear-to-br from-white to-gray-50 border-gray-200"
         }`}
       >
-        <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
             <img
               src={coin.iconUrl}
@@ -237,7 +258,7 @@ export const CryptoDetail: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 w-full md:w-auto">
             {isInWatchlist ? (
               <>
                 <div
@@ -270,7 +291,7 @@ export const CryptoDetail: React.FC = () => {
                 size="large"
                 type="primary"
                 onClick={handleAddToWatchlist}
-                className="bg-linear-to-r from-blue-600 to-blue-400 border-0 text-white"
+                className="bg-linear-to-r from-blue-600 to-blue-400 border-0 text-white w-full md:w-auto"
                 title="Añadir a tu lista de seguimiento"
               >
                 Añadir a tu lista
@@ -316,11 +337,11 @@ export const CryptoDetail: React.FC = () => {
         {[
           {
             label: "Capitalización de Mercado",
-            value: `$${formatNumber(coin.marketCap)}`,
+            value: <CompactNumberDisplay value={coin.marketCap} prefix="$" />,
           },
           {
             label: "Volumen 24h",
-            value: `$${formatNumber(coin["24hVolume"])}`,
+            value: <CompactNumberDisplay value={coin["24hVolume"]} prefix="$" />,
           },
           {
             label: "Máximo Histórico",
@@ -328,9 +349,9 @@ export const CryptoDetail: React.FC = () => {
           },
           {
             label: "Suministro Circulante",
-            value: formatNumber(coin.supply.circulating),
+            value: <CompactNumberDisplay value={coin.supply.circulating} />,
           },
-          { label: "Suministro Total", value: formatNumber(coin.supply.total) },
+          { label: "Suministro Total", value: <CompactNumberDisplay value={coin.supply.total} /> },
         ].map((stat, idx) => (
           <div
             key={idx}
@@ -359,7 +380,11 @@ export const CryptoDetail: React.FC = () => {
             href={coin.websiteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-blue-600 to-blue-400 text-white rounded-lg font-medium hover:shadow-lg transition-all"
+            className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all border ${
+              theme === "dark"
+                ? "bg-blue-900/30 text-blue-300 border-blue-700 hover:bg-blue-900/50"
+                : "bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100"
+            }`}
           >
             🌐 Sitio web oficial
           </a>
